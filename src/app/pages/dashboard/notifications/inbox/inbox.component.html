@@ -73,6 +73,77 @@
     <!-- COLUMNA IZQUIERDA -->
     <main class="notifications-page__main">
 
+      <a
+        *ngIf="showSchedulingBanner"
+        class="notifications-page__scheduling-banner"
+        routerLink="/dashboard/instructor/lead-scheduling-requests"
+        [attr.aria-label]="
+          'Ir a solicitudes de agendamiento: ' + schedulingBannerText
+        "
+      >
+        <span class="notifications-page__scheduling-banner-title">
+          Solicitudes de agendamiento
+        </span>
+        <span class="notifications-page__scheduling-banner-meta">
+          {{ schedulingBannerText }}
+        </span>
+        <span class="notifications-page__scheduling-banner-cta">
+          Ver cola
+        </span>
+      </a>
+
+      <div
+        *ngIf="isInstructor"
+        class="notifications-page__categories"
+        role="tablist"
+        aria-label="Categoría de notificaciones"
+      >
+        <button
+          type="button"
+          role="tab"
+          class="notifications-page__category"
+          [class.notifications-page__category--active]="
+            (filters.inboxCategory || 'all') === 'all'
+          "
+          [attr.aria-selected]="
+            (filters.inboxCategory || 'all') === 'all'
+          "
+          (click)="setInboxCategory('all')"
+        >
+          Todas
+        </button>
+
+        <button
+          type="button"
+          role="tab"
+          class="notifications-page__category"
+          [class.notifications-page__category--active]="
+            filters.inboxCategory === 'communications'
+          "
+          [attr.aria-selected]="
+            filters.inboxCategory === 'communications'
+          "
+          (click)="setInboxCategory('communications')"
+        >
+          Comunicaciones
+        </button>
+
+        <button
+          type="button"
+          role="tab"
+          class="notifications-page__category"
+          [class.notifications-page__category--active]="
+            filters.inboxCategory === 'action'
+          "
+          [attr.aria-selected]="
+            filters.inboxCategory === 'action'
+          "
+          (click)="setInboxCategory('action')"
+        >
+          Requiere acción
+        </button>
+      </div>
+
       <div
         *ngIf="!loading && !errorMsg && hasFilteredNotifications"
         class="notifications-page__bulk-actions"
@@ -192,6 +263,7 @@
         [selectedIds]="selectedNotificationIdsList"
         [allVisibleSelected]="allVisibleSelected"
         [someVisibleSelected]="someVisibleSelected"
+        [showActionChips]="isInstructor"
         (selectionToggle)="onToggleSelection($event)"
         (selectAllToggle)="onSelectAllVisible($event)"
         (notificationSelected)="onRowClick($event)"

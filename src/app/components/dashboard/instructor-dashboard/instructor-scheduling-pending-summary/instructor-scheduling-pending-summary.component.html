@@ -1,0 +1,47 @@
+<section
+  *ngIf="hasPendingWork"
+  class="scheduling-pending-summary"
+  aria-labelledby="scheduling-pending-summary-title"
+>
+  <div class="scheduling-pending-summary__header">
+    <h2
+      id="scheduling-pending-summary-title"
+      class="scheduling-pending-summary__title"
+    >
+      Solicitudes de agendamiento
+    </h2>
+    <p class="scheduling-pending-summary__subtitle">
+      Trabajo pendiente de cortesía, speaking y ubicación
+    </p>
+  </div>
+
+  <div class="scheduling-pending-summary__actions">
+    <a
+      class="scheduling-pending-summary__card"
+      routerLink="/dashboard/instructor/lead-scheduling-requests"
+      [queryParams]="{ queue: 'pending' }"
+      aria-label="Ver solicitudes por atender"
+    >
+      <span class="scheduling-pending-summary__count">
+        {{ pendingAssignmentCount }}
+      </span>
+      <span class="scheduling-pending-summary__label">
+        Por atender
+      </span>
+    </a>
+
+    <a
+      class="scheduling-pending-summary__card scheduling-pending-summary__card--report"
+      routerLink="/dashboard/instructor/lead-scheduling-requests"
+      [queryParams]="{ queue: 'report' }"
+      aria-label="Ver solicitudes con informe pendiente"
+    >
+      <span class="scheduling-pending-summary__count">
+        {{ scheduledReportPendingCount }}
+      </span>
+      <span class="scheduling-pending-summary__label">
+        Informe pendiente
+      </span>
+    </a>
+  </div>
+</section>

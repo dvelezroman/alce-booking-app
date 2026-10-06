@@ -395,6 +395,16 @@ navItems: SidebarNavItem[] = [
     return this.leadPendingCountForRoute(route) > 0;
   }
 
+  leadPendingBadgeLabel(route: string): string {
+    if (route === '/dashboard/instructor/lead-scheduling-requests') {
+      return this.leadSchedulingPending.instructorBadgeBreakdownLabel();
+    }
+    const count = this.leadPendingCountForRoute(route);
+    return count === 1
+      ? '1 solicitud pendiente'
+      : `${count} solicitudes pendientes`;
+  }
+
   toggleSubCategory(title: string) {
     this.subCategoryStates[title] = !this.subCategoryStates[title];
   }

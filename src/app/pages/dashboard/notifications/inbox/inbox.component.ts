@@ -1,25 +1,30 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
 import { Store } from '@ngrx/store';
-import { take } from 'rxjs';
+import { Subscription, take } from 'rxjs';
 
 import {
   InboxFilters,
   Notification,
   NotificationTypeEnum,
 } from '../../../../services/dtos/notification.dto';
-import { UserDto } from '../../../../services/dtos/user.dto';
+import { UserDto, UserRole } from '../../../../services/dtos/user.dto';
 
 import { NotificationService } from '../../../../services/notification.service';
 import { UsersService } from '../../../../services/users.service';
+import { LeadSchedulingPendingCountService } from '../../../../services/lead-scheduling-pending-count.service';
 
 import { selectUserData } from '../../../../store/user.selector';
 
 import {
   sanitizeNotificationBody,
 } from '../../../../shared/utils/notification-message.util';
+import {
+  isInstructorOperationalNotification,
+  resolveInstructorNotificationTarget,
+} from '../../../../shared/utils/notification-routing.util';
 
 import {
   InboxHeaderComponent,
@@ -78,6 +83,7 @@ export interface NotificationTypeSummary {
   standalone: true,
   imports: [
     CommonModule,
+    RouterModule,
     InboxHeaderComponent,
     InboxFiltersComponent,
     NotificationListComponent,
@@ -93,8 +99,13 @@ export interface NotificationTypeSummary {
   templateUrl: './inbox.component.html',
   styleUrl: './inbox.component.scss',
 })
-export class InboxComponent implements OnInit {
+export class InboxComponent implements OnInit, OnDestroy {
   private currentUserId: number | null = null;
+  private readonly subs = new Subscription();
+
+  isInstructor = false;
+  pendingAssignmentCount = 0;
+  scheduledReportPendingCount = 0;
 
   notifications: Notification[] = [];
   showMobileFilters = false;
@@ -123,27 +134,99 @@ export class InboxComponent implements OnInit {
     toDate: '',
     priority: '',
     readState: 'all',
+    inboxCategory: 'all',
   };
 
   constructor(
     private notificationService: NotificationService,
     private router: Router,
+    private route: ActivatedRoute,
     private store: Store,
-    private usersService: UsersService
+    private usersService: UsersService,
+    private leadSchedulingPending: LeadSchedulingPendingCountService,
   ) {}
 
   ngOnInit(): void {
     this.inboxUnreadCount =
       this.notificationService.currentUnreadCount;
 
+    this.subs.add(
+      this.leadSchedulingPending.instructorPendingAssignmentCount$.subscribe(
+        (count) => (this.pendingAssignmentCount = count),
+      ),
+    );
+    this.subs.add(
+      this.leadSchedulingPending.instructorScheduledReportPendingCount$.subscribe(
+        (count) => (this.scheduledReportPendingCount = count),
+      ),
+    );
+
+    this.subs.add(
+      this.route.queryParamMap.subscribe((params) => {
+        const category = params.get('category');
+        if (
+          category === 'action' ||
+          category === 'communications' ||
+          category === 'all'
+        ) {
+          this.filters = {
+            ...this.filters,
+            inboxCategory: category,
+          };
+        }
+      }),
+    );
+
     this.store
       .select(selectUserData)
       .pipe(take(1))
       .subscribe((user: UserDto | null) => {
         this.currentUserId = user?.id ?? null;
+        this.isInstructor = user?.role === UserRole.INSTRUCTOR;
+
+        if (this.isInstructor) {
+          this.leadSchedulingPending
+            .refresh(UserRole.INSTRUCTOR)
+            .subscribe();
+        }
 
         this.fetchNotifications();
       });
+  }
+
+  ngOnDestroy(): void {
+    this.subs.unsubscribe();
+  }
+
+  get showSchedulingBanner(): boolean {
+    return (
+      this.isInstructor &&
+      (this.pendingAssignmentCount > 0 ||
+        this.scheduledReportPendingCount > 0)
+    );
+  }
+
+  get schedulingBannerText(): string {
+    return `${this.pendingAssignmentCount} por atender · ${this.scheduledReportPendingCount} informe pendiente`;
+  }
+
+  setInboxCategory(
+    category: NonNullable<InboxFilters['inboxCategory']>,
+  ): void {
+    this.filters = {
+      ...this.filters,
+      inboxCategory: category,
+    };
+    this.page = 1;
+    this.selectedNotificationIds.clear();
+
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        category: category === 'all' ? null : category,
+      },
+      queryParamsHandling: 'merge',
+    });
   }
 
   toggleMobileFilters(): void {
@@ -258,25 +341,66 @@ export class InboxComponent implements OnInit {
       return;
     }
 
-    this.bulkActionLoading = true;
+    const hasOperationalUnread =
+      this.isInstructor &&
+      this.notifications.some(
+        (notification) =>
+          !notification.isRead &&
+          isInstructorOperationalNotification(notification),
+      );
 
-    this.notificationService.markAllAsRead().subscribe({
-      next: () => {
-        this.notifications = this.notifications.map((notification) => ({
-          ...notification,
-          isRead: true,
-          status: 'READ',
-          readAt: notification.readAt || new Date().toISOString(),
-        }));
-        this.inboxUnreadCount = 0;
-        this.notificationService.setUnreadCount(0);
-        this.bulkActionLoading = false;
-      },
-      error: (error) => {
-        console.error('[Inbox] mark all as read failed:', error);
-        this.bulkActionLoading = false;
-      },
-    });
+    const runMarkAll = (): void => {
+      this.bulkActionLoading = true;
+
+      this.notificationService.markAllAsRead().subscribe({
+        next: () => {
+          this.notifications = this.notifications.map((notification) => ({
+            ...notification,
+            isRead: true,
+            status: 'READ',
+            readAt: notification.readAt || new Date().toISOString(),
+          }));
+          this.inboxUnreadCount = 0;
+          this.notificationService.setUnreadCount(0);
+          this.bulkActionLoading = false;
+
+          if (hasOperationalUnread) {
+            this.showFeedbackModal({
+              title: 'Notificaciones marcadas como leídas',
+              message:
+                'Las solicitudes de agendamiento pendientes siguen en Solicitudes de agendamiento. Marcar como leído no cierra el trabajo.',
+              isSuccess: true,
+            });
+          }
+        },
+        error: (error) => {
+          console.error('[Inbox] mark all as read failed:', error);
+          this.bulkActionLoading = false;
+        },
+      });
+    };
+
+    if (hasOperationalUnread) {
+      this.modal = {
+        ...modalInitializer(),
+        show: true,
+        title: 'Marcar todas como leídas',
+        message:
+          'Esto solo marca avisos como leídos. Las solicitudes de cortesía, speaking u otras colas operativas siguen pendientes en Solicitudes de agendamiento.',
+        isInfo: true,
+        showButtons: true,
+        close: () => {
+          this.modal.show = false;
+        },
+        confirm: () => {
+          this.modal.show = false;
+          runMarkAll();
+        },
+      };
+      return;
+    }
+
+    runMarkAll();
   }
 
   onDeleteSelected(): void {
@@ -378,9 +502,16 @@ export class InboxComponent implements OnInit {
       toDate: '',
       priority: '',
       readState: 'all',
+      inboxCategory: 'all',
     };
 
     this.page = 1;
+
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { category: null },
+      queryParamsHandling: 'merge',
+    });
   }
 
   onPrev(): void {
@@ -439,7 +570,33 @@ export class InboxComponent implements OnInit {
       return;
     }
 
-    const goToDetail = (): void => {
+    const goToDestination = (): void => {
+      if (this.isInstructor) {
+        const target =
+          resolveInstructorNotificationTarget(
+            notification,
+          );
+
+        if (target) {
+          if (
+            /^https?:\/\//i.test(target.path)
+          ) {
+            window.location.href = target.path;
+            return;
+          }
+
+          let url = target.path;
+          if (target.queryParams) {
+            const qs = new URLSearchParams(
+              target.queryParams,
+            ).toString();
+            url = `${target.path}?${qs}`;
+          }
+          void this.router.navigateByUrl(url);
+          return;
+        }
+      }
+
       this.router.navigate(
         ['/dashboard/notifications-detail-v2'],
         {
@@ -452,7 +609,7 @@ export class InboxComponent implements OnInit {
     };
 
     if (notification.isRead) {
-      goToDetail();
+      goToDestination();
       return;
     }
 
@@ -474,11 +631,11 @@ export class InboxComponent implements OnInit {
           this.usersService
             .refreshLogin()
             .subscribe({
-              next: () => goToDetail(),
-              error: () => goToDetail(),
+              next: () => goToDestination(),
+              error: () => goToDestination(),
             });
         },
-        error: () => goToDetail(),
+        error: () => goToDestination(),
       });
   }
 
@@ -558,6 +715,11 @@ export class InboxComponent implements OnInit {
             notification
           );
 
+        const matchesCategory =
+          this.matchesInboxCategory(
+            notification
+          );
+
         return (
           matchesSearch &&
           matchesStatus &&
@@ -566,10 +728,37 @@ export class InboxComponent implements OnInit {
           matchesPriority &&
           matchesReadState &&
           matchesFromDate &&
-          matchesToDate
+          matchesToDate &&
+          matchesCategory
         );
       }
     );
+  }
+
+  private matchesInboxCategory(
+    notification: Notification,
+  ): boolean {
+    if (!this.isInstructor) {
+      return true;
+    }
+
+    const category =
+      this.filters.inboxCategory || 'all';
+
+    if (category === 'all') {
+      return true;
+    }
+
+    const isAction =
+      isInstructorOperationalNotification(
+        notification,
+      );
+
+    if (category === 'action') {
+      return isAction;
+    }
+
+    return !isAction;
   }
 
   get startIndex(): number {

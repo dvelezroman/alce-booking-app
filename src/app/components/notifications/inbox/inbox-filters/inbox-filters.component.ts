@@ -249,6 +249,11 @@ export class InboxFiltersComponent implements OnChanges {
         this.localFilters.readState &&
         this.localFilters.readState !==
           'all'
+      ) ||
+      (
+        this.localFilters.inboxCategory &&
+        this.localFilters.inboxCategory !==
+          'all'
       )
     );
   }
@@ -348,6 +353,7 @@ export class InboxFiltersComponent implements OnChanges {
       toDate: '',
       priority: '',
       readState: 'all',
+      inboxCategory: 'all',
     };
   }
 }

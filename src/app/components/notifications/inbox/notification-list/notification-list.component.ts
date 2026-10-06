@@ -8,6 +8,7 @@ import {
 import { CommonModule } from '@angular/common';
 
 import { Notification } from '../../../../../../src/app/services/dtos/notification.dto';
+import { isInstructorOperationalNotification } from '../../../../shared/utils/notification-routing.util';
 
 @Component({
   selector: 'app-notification-list',
@@ -25,6 +26,8 @@ export class NotificationListComponent {
   @Input() selectedIds: number[] = [];
   @Input() allVisibleSelected = false;
   @Input() someVisibleSelected = false;
+  /** Show “Requiere acción” chip on operational rows (instructor). */
+  @Input() showActionChips = false;
 
   @Output()
   notificationSelected =
@@ -32,6 +35,17 @@ export class NotificationListComponent {
 
   @Output() selectionToggle = new EventEmitter<number>();
   @Output() selectAllToggle = new EventEmitter<boolean>();
+
+  isActionRequired(
+    notification: Notification,
+  ): boolean {
+    return (
+      this.showActionChips &&
+      isInstructorOperationalNotification(
+        notification,
+      )
+    );
+  }
 
   onNotificationClick(
     notification: Notification,

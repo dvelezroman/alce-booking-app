@@ -16,6 +16,7 @@ import { Announcement } from '../../../services/dtos/announcement.dto';
 import { AnnouncementService } from '../../../services/announcement.service';
 import { InstructorSummaryCardComponent } from "./instructor-summary-card/instructor-summary-card.component";
 import { InstructorQuickActionsComponent } from "./instructor-quick-actions/instructor-quick-actions.component";
+import { InstructorSchedulingPendingSummaryComponent } from "./instructor-scheduling-pending-summary/instructor-scheduling-pending-summary.component";
 import { InstructorUpcomingClassesComponent } from "./instructor-upcoming-classes/instructor-upcoming-classes.component";
 import { InstructorDaySummaryComponent } from "./instructor-day-summary/instructor-day-summary.component";
 import { InstructorWeeklyOverviewComponent } from "./instructor-weekly-overview/instructor-weekly-overview.component";
@@ -38,6 +39,7 @@ type AnnouncementViewerUser = {
     AnnouncementViewerComponent,
     InstructorSummaryCardComponent,
     InstructorQuickActionsComponent,
+    InstructorSchedulingPendingSummaryComponent,
     InstructorUpcomingClassesComponent,
     InstructorDaySummaryComponent,
     InstructorWeeklyOverviewComponent,

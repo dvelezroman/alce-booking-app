@@ -332,4 +332,6 @@ export interface InboxFilters {
   toDate?: string;
   priority?: 0 | 1 | 2 | 3 | '';
   readState?: 'all' | 'unread' | 'read';
+  /** Instructor inbox tabs: all | communications | action-required. */
+  inboxCategory?: 'all' | 'communications' | 'action';
 }

@@ -20,11 +20,20 @@ const ACTIVE_STATUSES: LeadSchedulingRequestStatus[] = [
 @Injectable({ providedIn: 'root' })
 export class LeadSchedulingPendingCountService {
   private readonly adminPendingSubject = new BehaviorSubject<number>(0);
+  /** Total instructor badge = pending assignment + scheduled report. */
   private readonly instructorPendingSubject = new BehaviorSubject<number>(0);
+  private readonly instructorPendingAssignmentSubject =
+    new BehaviorSubject<number>(0);
+  private readonly instructorScheduledReportPendingSubject =
+    new BehaviorSubject<number>(0);
   private readonly assignedInductionPendingSubject = new BehaviorSubject<number>(0);
 
   readonly adminPending$ = this.adminPendingSubject.asObservable();
   readonly instructorPending$ = this.instructorPendingSubject.asObservable();
+  readonly instructorPendingAssignmentCount$ =
+    this.instructorPendingAssignmentSubject.asObservable();
+  readonly instructorScheduledReportPendingCount$ =
+    this.instructorScheduledReportPendingSubject.asObservable();
   readonly assignedInductionPending$ =
     this.assignedInductionPendingSubject.asObservable();
 
@@ -32,6 +41,14 @@ export class LeadSchedulingPendingCountService {
   private readonly fetchCap = 5000;
 
   constructor(private readonly leadScheduling: LeadSchedulingRequestService) {}
+
+  get instructorPendingAssignmentCount(): number {
+    return this.instructorPendingAssignmentSubject.value;
+  }
+
+  get instructorScheduledReportPendingCount(): number {
+    return this.instructorScheduledReportPendingSubject.value;
+  }
 
   getCountForRoute(route: string): number {
     if (route === ADMIN_LEAD_ROUTE || route.startsWith(ADMIN_LEAD_ROUTE + '/')) {
@@ -67,6 +84,13 @@ export class LeadSchedulingPendingCountService {
     return 0;
   }
 
+  /** Sidebar / aria desglose instructor. */
+  instructorBadgeBreakdownLabel(): string {
+    const pending = this.instructorPendingAssignmentSubject.value;
+    const report = this.instructorScheduledReportPendingSubject.value;
+    return `${pending} por atender · ${report} informe pendiente`;
+  }
+
   refresh(role: UserRole | null | undefined): Observable<void> {
     if (role === UserRole.ADMIN) {
       return forkJoin({
@@ -87,10 +111,21 @@ export class LeadSchedulingPendingCountService {
     }
 
     if (role === UserRole.INSTRUCTOR) {
-      return this.countInstructorPendingReport().pipe(
-        tap((count) => this.instructorPendingSubject.next(count)),
+      return forkJoin({
+        pendingAssignment: this.countInstructorPendingAssignment(),
+        scheduledReport: this.countInstructorPendingReport(),
+      }).pipe(
+        tap(({ pendingAssignment, scheduledReport }) => {
+          this.instructorPendingAssignmentSubject.next(pendingAssignment);
+          this.instructorScheduledReportPendingSubject.next(scheduledReport);
+          this.instructorPendingSubject.next(
+            pendingAssignment + scheduledReport,
+          );
+        }),
         map(() => void 0),
         catchError(() => {
+          this.instructorPendingAssignmentSubject.next(0);
+          this.instructorScheduledReportPendingSubject.next(0);
           this.instructorPendingSubject.next(0);
           return of(void 0);
         }),
@@ -99,6 +134,8 @@ export class LeadSchedulingPendingCountService {
 
     this.adminPendingSubject.next(0);
     this.instructorPendingSubject.next(0);
+    this.instructorPendingAssignmentSubject.next(0);
+    this.instructorScheduledReportPendingSubject.next(0);
     this.assignedInductionPendingSubject.next(0);
     return of(void 0);
   }
@@ -106,6 +143,8 @@ export class LeadSchedulingPendingCountService {
   reset(): void {
     this.adminPendingSubject.next(0);
     this.instructorPendingSubject.next(0);
+    this.instructorPendingAssignmentSubject.next(0);
+    this.instructorScheduledReportPendingSubject.next(0);
     this.assignedInductionPendingSubject.next(0);
   }
 
@@ -129,7 +168,14 @@ export class LeadSchedulingPendingCountService {
     );
   }
 
-  /** Solicitudes asignadas al instructor sin asistencia/informe enviado. */
+  /** Asignaciones nuevas aún PENDING. */
+  private countInstructorPendingAssignment(): Observable<number> {
+    return this.fetchAllInstructorRows({ status: 'PENDING' }).pipe(
+      map((rows) => rows.length),
+    );
+  }
+
+  /** Solicitudes SCHEDULED sin asistencia/informe enviado. */
   private countInstructorPendingReport(): Observable<number> {
     return this.fetchAllInstructorRows({ status: 'SCHEDULED' }).pipe(
       map((rows) => rows.filter((row) => this.isInstructorActionPending(row)).length),

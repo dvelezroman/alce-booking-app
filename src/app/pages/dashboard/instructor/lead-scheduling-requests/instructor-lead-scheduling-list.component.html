@@ -6,6 +6,57 @@
       (refreshRequested)="load()">
     </app-instructor-scheduling-request-header>
 
+    <div
+      class="instructor-scheduling-page__queues"
+      role="tablist"
+      aria-label="Cola de trabajo"
+    >
+      <button
+        type="button"
+        role="tab"
+        class="instructor-scheduling-page__queue"
+        [class.instructor-scheduling-page__queue--active]="activeQueue === 'pending'"
+        [attr.aria-selected]="activeQueue === 'pending'"
+        (click)="setQueue('pending')"
+      >
+        Por atender
+        <span
+          *ngIf="pendingAssignmentCount > 0"
+          class="instructor-scheduling-page__queue-badge"
+        >
+          {{ pendingAssignmentCount }}
+        </span>
+      </button>
+
+      <button
+        type="button"
+        role="tab"
+        class="instructor-scheduling-page__queue"
+        [class.instructor-scheduling-page__queue--active]="activeQueue === 'report'"
+        [attr.aria-selected]="activeQueue === 'report'"
+        (click)="setQueue('report')"
+      >
+        Informe pendiente
+        <span
+          *ngIf="scheduledReportPendingCount > 0"
+          class="instructor-scheduling-page__queue-badge"
+        >
+          {{ scheduledReportPendingCount }}
+        </span>
+      </button>
+
+      <button
+        type="button"
+        role="tab"
+        class="instructor-scheduling-page__queue"
+        [class.instructor-scheduling-page__queue--active]="activeQueue === 'all'"
+        [attr.aria-selected]="activeQueue === 'all'"
+        (click)="setQueue('all')"
+      >
+        Todas
+      </button>
+    </div>
+
     <app-instructor-scheduling-request-filters
       [searchName]="searchName"
       [dateFrom]="dateFrom"

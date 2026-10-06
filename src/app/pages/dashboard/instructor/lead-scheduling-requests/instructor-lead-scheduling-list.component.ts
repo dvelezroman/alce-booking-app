@@ -31,6 +31,8 @@ import {
   type LeadSchedulingListSortBy,
 } from '../../../../shared/utils/lead-scheduling-request.util';
 
+export type InstructorSchedulingQueue = 'pending' | 'report' | 'all';
+
 @Component({
   selector: 'app-instructor-lead-scheduling-list',
   standalone: true,
@@ -64,8 +66,14 @@ export class InstructorLeadSchedulingListComponent implements OnInit {
   sortBy: LeadSchedulingListSortBy = 'createdAt';
   dateField: LeadSchedulingDateField = 'session';
 
+  /** Work queue tabs: pending assignment vs report due. */
+  activeQueue: InstructorSchedulingQueue = 'pending';
+
   statusFilter: '' | LeadSchedulingRequestStatus = 'PENDING';
   kindFilter: '' | LeadSchedulingRequestKind = '';
+
+  pendingAssignmentCount = 0;
+  scheduledReportPendingCount = 0;
 
   readonly pageSizeChoices = LEAD_SCHEDULING_PAGE_SIZE_OPTIONS;
 
@@ -84,20 +92,78 @@ export class InstructorLeadSchedulingListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.leadSchedulingPending.instructorPendingAssignmentCount$.subscribe(
+      (count) => (this.pendingAssignmentCount = count),
+    );
+    this.leadSchedulingPending.instructorScheduledReportPendingCount$.subscribe(
+      (count) => {
+        this.scheduledReportPendingCount = count;
+        if (this.activeQueue === 'report' && !this.kindFilter) {
+          this.total = count;
+        }
+      },
+    );
+
     this.route.queryParamMap.subscribe((params) => {
       this.applyKindFromRoute(params.get('kind'));
-      const status = params.get('status');
-      if (
-        status === 'PENDING' ||
-        status === 'SCHEDULED' ||
-        status === 'CANCELLED' ||
-        status === 'COMPLETED'
-      ) {
-        this.statusFilter = status;
-      }
+      this.applyQueueFromRoute(params.get('queue'), params.get('status'));
       this.pageIndex = 0;
       this.load();
     });
+  }
+
+  private applyQueueFromRoute(
+    queue: string | null,
+    status: string | null,
+  ): void {
+    if (queue === 'pending' || queue === 'report' || queue === 'all') {
+      this.setQueue(queue, false);
+      return;
+    }
+
+    if (
+      status === 'PENDING' ||
+      status === 'SCHEDULED' ||
+      status === 'CANCELLED' ||
+      status === 'COMPLETED'
+    ) {
+      this.statusFilter = status;
+      if (status === 'PENDING') {
+        this.activeQueue = 'pending';
+      } else if (status === 'SCHEDULED') {
+        this.activeQueue = 'report';
+      } else {
+        this.activeQueue = 'all';
+      }
+      return;
+    }
+
+    this.setQueue('pending', false);
+  }
+
+  setQueue(
+    queue: InstructorSchedulingQueue,
+    syncUrl = true,
+  ): void {
+    this.activeQueue = queue;
+    if (queue === 'pending') {
+      this.statusFilter = 'PENDING';
+    } else if (queue === 'report') {
+      this.statusFilter = 'SCHEDULED';
+    } else {
+      this.statusFilter = '';
+    }
+
+    if (syncUrl) {
+      void this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams: {
+          queue: queue === 'all' ? null : queue,
+          status: null,
+        },
+        queryParamsHandling: 'merge',
+      });
+    }
   }
 
   private applyKindFromRoute(kind: string | null): void {
@@ -157,8 +223,16 @@ export class InstructorLeadSchedulingListComponent implements OnInit {
 
     this.leadScheduling.listMine(this.buildListQuery()).subscribe({
       next: (res) => {
-        this.items = res.items;
-        this.total = res.total;
+        let rows = res.items;
+        if (this.activeQueue === 'report') {
+          rows = rows.filter((row) => !row.instructorReportSubmittedAt);
+        }
+        this.items = rows;
+        if (this.activeQueue === 'report' && !this.kindFilter) {
+          this.total = this.scheduledReportPendingCount || rows.length;
+        } else {
+          this.total = res.total;
+        }
         this.loading = false;
         this.clampPageIndex();
         this.leadSchedulingPending.refresh(UserRole.INSTRUCTOR).subscribe();
@@ -215,6 +289,13 @@ export class InstructorLeadSchedulingListComponent implements OnInit {
   }
 
   onServerFiltersChange(): void {
+    if (this.statusFilter === 'PENDING') {
+      this.activeQueue = 'pending';
+    } else if (this.statusFilter === 'SCHEDULED') {
+      this.activeQueue = 'report';
+    } else {
+      this.activeQueue = 'all';
+    }
     this.pageIndex = 0;
     this.load();
   }
@@ -282,12 +363,16 @@ export class InstructorLeadSchedulingListComponent implements OnInit {
     this.dateFrom = '';
     this.dateTo = '';
     this.sessionTodayOnly = false;
-    this.statusFilter = 'PENDING';
     this.kindFilter = '';
     this.sortBy = 'createdAt';
     this.dateField = 'session';
     this.pageIndex = 0;
-    this.load();
+    if (this.activeQueue === 'pending') {
+      this.statusFilter = 'PENDING';
+      this.load();
+      return;
+    }
+    this.setQueue('pending', true);
   }
 
   kindText(row: LeadSchedulingRequestRow): string {

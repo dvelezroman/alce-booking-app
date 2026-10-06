@@ -569,11 +569,13 @@
                 <span
                   *ngIf="showLeadPendingBadge(item.route)"
                   class="sidebar__child-notification"
-                  aria-hidden="true"
+                  [attr.title]="leadPendingBadgeLabel(item.route)"
+                  [attr.aria-label]="leadPendingBadgeLabel(item.route)"
                 >
 
                   <svg
                     viewBox="0 -960 960 960"
+                    aria-hidden="true"
                   >
                     <path
                       d="M160-200v-80h80v-280q0-83 50-147.5
@@ -587,7 +589,7 @@
                     />
                   </svg>
 
-                  <span class="sidebar__child-badge">
+                  <span class="sidebar__child-badge" aria-hidden="true">
                     {{
                       leadPendingCountForRoute(
                         item.route
