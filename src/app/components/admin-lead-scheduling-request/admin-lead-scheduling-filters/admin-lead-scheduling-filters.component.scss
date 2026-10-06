@@ -13,10 +13,10 @@
   min-width: 0;
 
   display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
+  flex-direction: column;
+  align-items: stretch;
 
-  gap: 1.25rem;
+  gap: 1rem;
 
   padding: 1rem 1.1rem;
 
@@ -34,16 +34,11 @@
 ========================= */
 
 .lead-scheduling-filters__fields {
+  width: 100%;
   min-width: 0;
 
   display: grid;
-  grid-template-columns:
-    minmax(11rem, 14rem)
-    minmax(11rem, 14rem)
-    minmax(11rem, 14rem)
-    minmax(9rem, 12rem)
-    minmax(9rem, 11rem)
-    minmax(9rem, 11rem);
+  grid-template-columns: repeat(6, minmax(0, 1fr));
 
   gap: 0.85rem;
 }
@@ -202,10 +197,12 @@
 ========================= */
 
 .lead-scheduling-filters__actions {
-  flex: 0 0 auto;
+  width: 100%;
 
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
+  justify-content: flex-end;
 
   gap: .7rem;
 }
@@ -215,7 +212,7 @@
 ========================= */
 
 .lead-scheduling-filters__button {
-  min-width: 10.5rem;
+  min-width: 9rem;
   height: 2.75rem;
 
   display: inline-flex;
@@ -268,15 +265,6 @@
 
 .lead-scheduling-filters__button--secondary:active:not(:disabled) {
   transform: scale(.98);
-}
-
-.lead-scheduling-filters__button--link {
-  text-decoration: none;
-  box-sizing: border-box;
-}
-
-.lead-scheduling-filters__button--link:hover {
-  text-decoration: none;
 }
 
 /* =========================
@@ -337,44 +325,18 @@
    MEDIUM DESKTOP
 ========================= */
 
-@media (max-width: 1100px) {
+@media (max-width: 1200px) {
 
   .lead-scheduling-filters__fields {
-    flex: 1;
-
-    grid-template-columns:
-      repeat(2, minmax(0, 1fr));
-  }
-
-  .lead-scheduling-filters__button {
-    min-width: 9rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
 }
 
-/* =========================
-   TABLET
-========================= */
-
 @media (max-width: 850px) {
 
-  .lead-scheduling-filters {
-    align-items: stretch;
-
-    flex-direction: column;
-  }
-
   .lead-scheduling-filters__fields {
-    width: 100%;
-
-    grid-template-columns:
-      repeat(2, minmax(0, 1fr));
-  }
-
-  .lead-scheduling-filters__actions {
-    width: 100%;
-
-    justify-content: flex-end;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
 }

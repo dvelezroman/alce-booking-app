@@ -9,9 +9,7 @@ import {
 import {
   FormsModule,
 } from '@angular/forms';
-import { RouterModule } from '@angular/router';
 import {
-  LEAD_SCHEDULING_COURTESY_MONTHLY_REPORT_PATH,
   type LeadSchedulingDateField,
   type LeadSchedulingListSortBy,
 } from '../../../shared/utils/lead-scheduling-request.util';
@@ -27,14 +25,11 @@ import {
   imports: [
     CommonModule,
     FormsModule,
-    RouterModule,
   ],
   templateUrl: './admin-lead-scheduling-filters.component.html',
   styleUrl: './admin-lead-scheduling-filters.component.scss',
 })
 export class AdminLeadSchedulingFiltersComponent {
-  readonly courtesyReportPath = LEAD_SCHEDULING_COURTESY_MONTHLY_REPORT_PATH;
-
   @Input()
   filterKind: '' | LeadSchedulingRequestKind = '';
 

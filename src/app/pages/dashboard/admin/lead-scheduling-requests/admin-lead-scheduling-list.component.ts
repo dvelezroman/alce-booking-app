@@ -57,7 +57,7 @@ export class AdminLeadSchedulingListComponent implements OnInit {
   error: string | null = null;
 
   filterKind: '' | LeadSchedulingRequestKind = '';
-  filterStatus: '' | LeadSchedulingRequestStatus = 'PENDING';
+  filterStatus: '' | LeadSchedulingRequestStatus = '';
   sortBy: LeadSchedulingListSortBy = 'createdAt';
   dateField: LeadSchedulingDateField = 'created';
   dateFrom = '';
@@ -116,6 +116,8 @@ export class AdminLeadSchedulingListComponent implements OnInit {
       kind === 'INDUCTION'
     ) {
       this.filterKind = kind;
+    } else {
+      this.filterKind = '';
     }
 
     const status = params.get('status');
@@ -126,7 +128,7 @@ export class AdminLeadSchedulingListComponent implements OnInit {
       status === 'COMPLETED'
     ) {
       this.filterStatus = status;
-    } else if (status === '') {
+    } else {
       this.filterStatus = '';
     }
 
@@ -278,7 +280,7 @@ export class AdminLeadSchedulingListComponent implements OnInit {
 
   clearFilters(): void {
     this.filterKind = '';
-    this.filterStatus = 'PENDING';
+    this.filterStatus = '';
     this.sortBy = 'createdAt';
     this.dateField = 'created';
     this.dateFrom = '';
