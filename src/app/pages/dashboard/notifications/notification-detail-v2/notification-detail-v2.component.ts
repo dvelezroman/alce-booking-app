@@ -1218,6 +1218,13 @@ export class NotificationDetailV2Component
 
     if (
       this.notification?.message?.kind ===
+      'stage-assessment-assigned'
+    ) {
+      return false;
+    }
+
+    if (
+      this.notification?.message?.kind ===
       'assessment-results-ready'
     ) {
       return false;

@@ -368,102 +368,42 @@
         <p class="body-text" [innerHTML]="formattedBody | safeNoteHtml"></p>
       </div>
 
-      <!-- ASSESSMENT ASSIGNED (S2S) -->
+      <!-- EVALUACIÓN ASIGNADA (plataforma / etapa) -->
       <section
         class="demo-class-card assessment-assigned-card"
-        *ngIf="isAssessmentAssignedNotification && assessmentMessage as am"
+        *ngIf="isAssessmentAssignedNotification || isStageAssessmentAssignedNotification"
       >
-        <header class="demo-class-header">
-          <div>
-            <p class="eyebrow">{{ isAssessmentRetake ? "Nuevo intento" : "Nuevo assessment" }}</p>
-            <h3>{{ am.templateTitle || notification?.title }}</h3>
-          </div>
-          <span
-            class="demo-badge"
-            [class.due-soon]="!isAssessmentExpired"
-            [class.outcome-failed]="isAssessmentExpired"
-          >
-            {{ isAssessmentExpired ? "Vencido" : (assessmentDueRelative || "Pendiente") }}
-          </span>
-        </header>
-
-        <p class="assessment-lead">
-          {{
-            isAssessmentRetake
-              ? "Se te autorizó un nuevo intento. Abre el enlace de abajo para comenzar."
-              : "Se te asignó este assessment. Abre el enlace de abajo para comenzar."
-          }}
-        </p>
-
-        <div
-          class="assessment-cta-row"
-          *ngIf="am.directAccessUrl && !isAssessmentExpired"
-        >
-          <a
-            class="btn-assessment-primary"
-            [href]="am.directAccessUrl"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Abrir assessment
-          </a>
-          <p class="cta-hint assessment-link-wrap">
-            <span>Enlace directo</span>
-            <a
-              class="assessment-url"
-              [href]="am.directAccessUrl"
-              target="_blank"
-              rel="noopener noreferrer"
-            >{{ am.directAccessUrl }}</a>
-          </p>
-        </div>
-
-        <div class="alert warn" *ngIf="isAssessmentExpired">
-          Este assessment ya venció. Ya no puedes abrirlo desde aquí.
-        </div>
-
-        <div class="demo-block">
-          <h4>Detalles</h4>
-          <div class="demo-class-grid">
-            <div class="demo-field" *ngIf="am.maxAttempts != null">
-              <span>Intentos máximos</span>
-              <strong>{{ am.maxAttempts }}</strong>
-            </div>
-            <div class="demo-field">
-              <span>Vence</span>
-              <strong>{{ assessmentDueLabel }}</strong>
-            </div>
-          </div>
-        </div>
-
-        <div class="demo-block assessment-steps" *ngIf="!isAssessmentExpired">
-          <h4>Cómo empezar</h4>
-          <ol>
-            <li>Toca <strong>Abrir assessment</strong> o el enlace.</li>
-            <li>Completa la evaluación en una sola sesión si puedes.</li>
-            <li>Hazlo antes de la fecha límite.</li>
-          </ol>
-        </div>
+        <app-assessment-assignment-notification-card
+          [variant]="isStageAssessmentAssignedNotification ? 'stage' : 'platform'"
+          [title]="assessmentAssignmentTitle"
+          [reason]="notification?.message?.reason"
+          [expiresAt]="notification?.message?.expiresAt"
+          [expiresAtLabel]="notification?.message?.expiresAtLabel"
+          [maxAttempts]="notification?.message?.maxAttempts"
+          [directAccessUrl]="notification?.message?.directAccessUrl"
+          [actionUrl]="notification?.message?.actionUrl"
+          [stageNumber]="notification?.message?.stageNumber"
+        />
       </section>
 
-      <!-- ASSESSMENT UNASSIGNED (S2S) -->
+      <!-- EVALUACIÓN RETIRADA -->
       <section
         class="demo-class-card assessment-assigned-card"
         *ngIf="isAssessmentUnassignedNotification"
       >
         <header class="demo-class-header">
           <div>
-            <p class="eyebrow">Assessment retirado</p>
+            <p class="eyebrow">Evaluación retirada</p>
             <h3>{{ notification?.message?.templateTitle || notification?.title }}</h3>
           </div>
         </header>
 
         <p class="assessment-lead">
-          Ya no estás asignado a este assessment. No aparece en tu listado y el enlace anterior ya no es válido.
+          Ya no necesitas completar esta evaluación. Si tenías un enlace guardado, ya no funciona.
         </p>
       </section>
 
-      <!-- ASSESSMENT RESULTS READY (S2S) — outcome only, never numeric score -->
+      <!-- RESULTADOS LISTOS -->
       <section
         class="demo-class-card assessment-assigned-card assessment-results-ready-card"
         *ngIf="isAssessmentResultsReadyNotification && assessmentResultsMessage as rm"
@@ -494,7 +434,7 @@
             Ver resultados
           </button>
           <p class="cta-hint">
-            Abre el detalle: preguntas fallidas y feedback. Sin nota numérica.
+            Revisa qué preguntas fallaste y los comentarios de tu evaluación.
           </p>
         </div>
 
@@ -506,7 +446,7 @@
               <strong>{{ assessmentResultsOutcomeLabel }}</strong>
             </div>
             <div class="demo-field" *ngIf="rm.studentStage != null">
-              <span>Stage</span>
+              <span>Tu etapa</span>
               <strong>{{ rm.studentStage }}</strong>
             </div>
           </div>

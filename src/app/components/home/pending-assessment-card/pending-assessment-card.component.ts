@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { interval, Subscription } from 'rxjs';
 
 import { StageAssessment } from '../../../services/dtos/stage-assessment.dto';
+import { computeAssessmentCountdown } from '../../../shared/utils/assessment-countdown.util';
 
 export type StageAssessmentWithCountdown = StageAssessment & {
   timeFormatted?: string;
@@ -63,64 +64,28 @@ export class PendingAssessmentCardComponent
     const now = Date.now();
 
     this.assessments = this.assessments.map((assessment) => {
-      const target = this.getAssessmentTimestamp(
-        assessment.dueDate
-      );
-
-      if (!target) {
-        return {
-          ...assessment,
-          timeFormatted: '',
-          isUrgent: false,
-        };
-      }
-
-      const diff = target - now;
-
-      if (diff <= 0) {
-        return {
-          ...assessment,
-          timeFormatted: 'Tiempo finalizado',
-          isUrgent: false,
-        };
-      }
-
-      const days = Math.floor(diff / 86400000);
-      const hours = Math.floor(
-        (diff / 3600000) % 24
-      );
-
-      const minutes = Math.floor(
-        (diff / 60000) % 60
-      );
-
-      const seconds = Math.floor(
-        (diff / 1000) % 60
-      );
-
-      let formatted = '';
-
-      if (days > 0) {
-        formatted += `${days}d `;
-      }
-
-      formatted += `${this.pad(hours)}:${this.pad(
-        minutes
-      )}:${this.pad(seconds)}`;
-
+      const iso = this.getAssessmentIso(assessment.dueDate);
+      const countdown = computeAssessmentCountdown(iso, now);
       return {
         ...assessment,
-        timeFormatted: formatted,
-        isUrgent:
-          diff <= 12 * 60 * 60 * 1000,
+        timeFormatted: countdown.timeFormatted,
+        isUrgent: countdown.isUrgent,
       };
     });
   }
 
-  pad(value: number): string {
-    return value < 10
-      ? `0${value}`
-      : value.toString();
+  /** End-of-day local target (matches prior stage assessment countdown). */
+  private getAssessmentIso(dueDate: string | Date | null | undefined): string | null {
+    if (dueDate == null || dueDate === '') {
+      return null;
+    }
+    const raw = typeof dueDate === 'string' ? dueDate : dueDate.toISOString();
+    const date = this.parseLocalDate(raw);
+    if (!date) {
+      return null;
+    }
+    date.setHours(23, 59, 59, 999);
+    return date.toISOString();
   }
 
   // ================================
@@ -221,20 +186,6 @@ export class PendingAssessmentCardComponent
   // ================================
   // Helpers privados
   // ================================
-  private getAssessmentTimestamp(
-    dueDate: string
-  ): number | null {
-    const date = this.parseLocalDate(dueDate);
-
-    if (!date) {
-      return null;
-    }
-
-    date.setHours(23, 59, 59, 999);
-
-    return date.getTime();
-  }
-
   private parseLocalDate(
     dateValue: string
   ): Date | null {

@@ -15,6 +15,7 @@ import {
 import {
   PlatformAssessmentAssignment,
 } from '../../../services/dtos/platform-assessment.dto';
+import { computeAssessmentCountdown } from '../../../shared/utils/assessment-countdown.util';
 
 export type PlatformAssessmentWithCountdown =
   PlatformAssessmentAssignment & {
@@ -97,82 +98,17 @@ export class PendingPlatformAssessmentCardComponent
   updateCountdowns(): void {
     const now = Date.now();
 
-    this._assessments =
-      this._assessments.map(
-        (assessment) => {
-          if (!assessment.expiresAt) {
-            return {
-              ...assessment,
-              timeFormatted: '',
-              isUrgent: false,
-            };
-          }
-
-          const target = new Date(
-            assessment.expiresAt
-          ).getTime();
-
-          if (Number.isNaN(target)) {
-            return {
-              ...assessment,
-              timeFormatted: '',
-              isUrgent: false,
-            };
-          }
-
-          const diff = target - now;
-
-          if (diff <= 0) {
-            return {
-              ...assessment,
-              timeFormatted:
-                'Tiempo finalizado',
-              isUrgent: false,
-            };
-          }
-
-          const days = Math.floor(
-            diff / 86400000
-          );
-
-          const hours = Math.floor(
-            (diff / 3600000) % 24
-          );
-
-          const minutes = Math.floor(
-            (diff / 60000) % 60
-          );
-
-          const seconds = Math.floor(
-            (diff / 1000) % 60
-          );
-
-          let formatted = '';
-
-          if (days > 0) {
-            formatted += `${days}d `;
-          }
-
-          formatted +=
-            `${this.pad(hours)}:` +
-            `${this.pad(minutes)}:` +
-            `${this.pad(seconds)}`;
-
-          return {
-            ...assessment,
-            timeFormatted: formatted,
-            isUrgent:
-              diff <=
-              12 * 60 * 60 * 1000,
-          };
-        }
+    this._assessments = this._assessments.map((assessment) => {
+      const countdown = computeAssessmentCountdown(
+        assessment.expiresAt,
+        now,
       );
-  }
-
-  pad(value: number): string {
-    return value < 10
-      ? `0${value}`
-      : value.toString();
+      return {
+        ...assessment,
+        timeFormatted: countdown.timeFormatted,
+        isUrgent: countdown.isUrgent,
+      };
+    });
   }
 
   // ================================

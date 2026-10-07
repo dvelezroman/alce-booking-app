@@ -29,11 +29,19 @@ import { StudentsService } from '../../../../services/students.service';
 import { sanitizeNotificationBody } from '../../../../shared/utils/notification-message.util';
 import { isPlacementTestExam, leadSchedulingModeLabel } from '../../../../shared/utils/lead-scheduling-request.util';
 import { formatRelativeDueDateEs } from '../../../../shared/utils/dates.util';
+import { AssessmentAssignmentNotificationCardComponent } from '../../../../components/notifications/assessment-assignment-notification-card/assessment-assignment-notification-card.component';
 
 @Component({
   selector: 'app-notification-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule, ModalComponent, SafeNoteHtmlPipe, StudentEditModalComponent,],
+  imports: [
+    CommonModule,
+    RouterModule,
+    ModalComponent,
+    SafeNoteHtmlPipe,
+    StudentEditModalComponent,
+    AssessmentAssignmentNotificationCardComponent,
+  ],
   templateUrl: './notification-detail.component.html',
   styleUrls: ['./notification-detail.component.scss'],
 })
@@ -291,6 +299,22 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
 
   get isAssessmentAssignedNotification(): boolean {
     return this.notification?.message?.kind === 'assessment-assigned';
+  }
+
+  get isStageAssessmentAssignedNotification(): boolean {
+    return this.notification?.message?.kind === 'stage-assessment-assigned';
+  }
+
+  get assessmentAssignmentTitle(): string {
+    const msg = this.notification?.message;
+    if (this.isStageAssessmentAssignedNotification) {
+      return (
+        msg?.resourceTitle ||
+        this.notification?.title ||
+        'Evaluación de etapa'
+      );
+    }
+    return msg?.templateTitle || this.notification?.title || 'Evaluación';
   }
 
   get isAssessmentRetake(): boolean {
@@ -603,6 +627,9 @@ export class NotificationDetailComponent implements OnInit, OnDestroy {
       return false;
     }
     if (this.notification?.message?.kind === 'assessment-assigned') {
+      return false;
+    }
+    if (this.notification?.message?.kind === 'stage-assessment-assigned') {
       return false;
     }
     if (this.notification?.message?.kind === 'assessment-results-ready') {

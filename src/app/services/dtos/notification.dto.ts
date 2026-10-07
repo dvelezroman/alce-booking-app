@@ -40,6 +40,7 @@ export interface NotificationMessage {
     | 'assessment-assigned'
     | 'assessment-results-ready'
     | 'assessment-unassigned'
+    | 'stage-assessment-assigned'
     | 'S2S_NEW_STUDENTS_TO_CREATE'
     | 'lead-scheduling-assigned'
     | 'lead-scheduling-cancelled'
@@ -68,7 +69,18 @@ export interface NotificationMessage {
   maxAttempts?: number;
   batchId?: string | null;
   eventId?: string;
-  reason?: 'ASSIGNED' | 'RETAKE' | 'MANUAL_NOTIFY' | 'ACCESS_CODE_RESET' | string;
+  reason?:
+    | 'ASSIGNED'
+    | 'RETAKE'
+    | 'MANUAL_NOTIFY'
+    | 'ACCESS_CODE_RESET'
+    | 'DEADLINE_EXTENDED'
+    | string;
+  /** Stage assessment deep link in Booking */
+  actionUrl?: string;
+  stageAssessmentId?: number;
+  resourceTitle?: string;
+  stageNumber?: number;
   [key: string]: any;
 }
 

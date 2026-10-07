@@ -34,388 +34,11 @@
 
   </section>
 
-    <!-- ================================
-      ACCESO AL ASSESSMENT
-  ================================= -->
-  <section
-    *ngIf="isStudentAssessmentAccess"
-    class="
-      notification-detail-content__section
-      notification-detail-content__assessment-access
-    "
-  >
-
-    <!-- ACCIÓN PRINCIPAL -->
-    <div class="notification-detail-content__assessment-cta">
-
-      <div class="notification-detail-content__assessment-cta-main">
-
-        <div
-          class="notification-detail-content__assessment-cta-icon"
-          aria-hidden="true"
-        >
-          <svg
-            width="21"
-            height="21"
-            viewBox="0 0 24 24"
-            fill="none"
-          >
-            <path
-              d="M14 4h6v6"
-              stroke="currentColor"
-              stroke-width="1.8"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-
-            <path
-              d="m20 4-9 9"
-              stroke="currentColor"
-              stroke-width="1.8"
-              stroke-linecap="round"
-            />
-
-            <path
-              d="M18 13v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h5"
-              stroke="currentColor"
-              stroke-width="1.8"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
-        </div>
-
-        <div class="notification-detail-content__assessment-cta-content">
-          <h3>
-            Comenzar assessment
-          </h3>
-
-          <p>
-            Abre el assessment directamente con un solo clic.
-          </p>
-        </div>
-
-      </div>
-
-      <button
-        *ngIf="assessmentDirectAccessUrl"
-        type="button"
-        class="
-          notification-detail-content__button
-          notification-detail-content__button--primary
-          notification-detail-content__assessment-open
-        "
-        (click)="openAssessment()"
-      >
-        <svg
-          width="17"
-          height="17"
-          viewBox="0 0 24 24"
-          fill="none"
-          aria-hidden="true"
-        >
-          <path
-            d="M14 4h6v6"
-            stroke="currentColor"
-            stroke-width="1.8"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-
-          <path
-            d="m20 4-9 9"
-            stroke="currentColor"
-            stroke-width="1.8"
-            stroke-linecap="round"
-          />
-
-          <path
-            d="M18 13v5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h5"
-            stroke="currentColor"
-            stroke-width="1.8"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          />
-        </svg>
-
-        <span>
-          Abrir assessment
-        </span>
-      </button>
-
-    </div>
-
-
-    <!-- ENLACES Y CÓDIGOS -->
-    <div
-      *ngIf="
-        assessmentDirectAccessUrl ||
-        assessmentShareUrl ||
-        assessmentAccessCode
-      "
-      class="notification-detail-content__assessment-resources"
-    >
-
-      <span class="notification-detail-content__label">
-        Enlaces y códigos
-      </span>
-
-
-      <!-- DIRECT ACCESS -->
-      <div
-        *ngIf="assessmentDirectAccessUrl"
-        class="notification-detail-content__assessment-resource"
-      >
-
-        <div class="notification-detail-content__assessment-resource-icon">
-          <svg
-            width="17"
-            height="17"
-            viewBox="0 0 24 24"
-            fill="none"
-            aria-hidden="true"
-          >
-            <path
-              d="M10.5 13.5 13.5 10.5"
-              stroke="currentColor"
-              stroke-width="1.8"
-              stroke-linecap="round"
-            />
-
-            <path
-              d="m8.5 15.5-2 2a3.5 3.5 0 0 1-5-5l4-4a3.5 3.5 0 0 1 5 0"
-              stroke="currentColor"
-              stroke-width="1.8"
-              stroke-linecap="round"
-            />
-
-            <path
-              d="m15.5 8.5 2-2a3.5 3.5 0 0 1 5 5l-4 4a3.5 3.5 0 0 1-5 0"
-              stroke="currentColor"
-              stroke-width="1.8"
-              stroke-linecap="round"
-            />
-          </svg>
-        </div>
-
-        <div class="notification-detail-content__assessment-resource-content">
-          <strong>
-            Enlace directo (acceso sin código)
-          </strong>
-
-          <span>
-            {{ assessmentDirectAccessUrl }}
-          </span>
-        </div>
-
-        <button
-          type="button"
-          class="notification-detail-content__assessment-copy"
-          aria-label="Copiar enlace directo"
-          (click)="copyToClipboard(assessmentDirectAccessUrl)"
-        >
-          <svg
-            width="17"
-            height="17"
-            viewBox="0 0 24 24"
-            fill="none"
-            aria-hidden="true"
-          >
-            <rect
-              x="9"
-              y="9"
-              width="10"
-              height="11"
-              rx="2"
-              stroke="currentColor"
-              stroke-width="1.7"
-            />
-
-            <path
-              d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"
-              stroke="currentColor"
-              stroke-width="1.7"
-            />
-          </svg>
-        </button>
-
-      </div>
-
-
-      <!-- SHARE URL -->
-      <div
-        *ngIf="assessmentShareUrl"
-        class="notification-detail-content__assessment-resource"
-      >
-
-        <div class="notification-detail-content__assessment-resource-icon">
-          <svg
-            width="17"
-            height="17"
-            viewBox="0 0 24 24"
-            fill="none"
-            aria-hidden="true"
-          >
-            <circle
-              cx="18"
-              cy="5"
-              r="2.5"
-              stroke="currentColor"
-              stroke-width="1.7"
-            />
-
-            <circle
-              cx="6"
-              cy="12"
-              r="2.5"
-              stroke="currentColor"
-              stroke-width="1.7"
-            />
-
-            <circle
-              cx="18"
-              cy="19"
-              r="2.5"
-              stroke="currentColor"
-              stroke-width="1.7"
-            />
-
-            <path
-              d="m8.3 10.8 7.4-4.4M8.3 13.2l7.4 4.4"
-              stroke="currentColor"
-              stroke-width="1.7"
-              stroke-linecap="round"
-            />
-          </svg>
-        </div>
-
-        <div class="notification-detail-content__assessment-resource-content">
-          <strong>
-            Enlace compartido (requiere código)
-          </strong>
-
-          <span>
-            {{ assessmentShareUrl }}
-          </span>
-        </div>
-
-        <button
-          type="button"
-          class="notification-detail-content__assessment-copy"
-          aria-label="Copiar enlace compartido"
-          (click)="copyToClipboard(assessmentShareUrl)"
-        >
-          <svg
-            width="17"
-            height="17"
-            viewBox="0 0 24 24"
-            fill="none"
-            aria-hidden="true"
-          >
-            <rect
-              x="9"
-              y="9"
-              width="10"
-              height="11"
-              rx="2"
-              stroke="currentColor"
-              stroke-width="1.7"
-            />
-
-            <path
-              d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"
-              stroke="currentColor"
-              stroke-width="1.7"
-            />
-          </svg>
-        </button>
-
-      </div>
-
-
-      <!-- ACCESS CODE -->
-      <div
-        *ngIf="assessmentAccessCode"
-        class="notification-detail-content__assessment-resource"
-      >
-
-        <div class="notification-detail-content__assessment-resource-icon">
-          <svg
-            width="17"
-            height="17"
-            viewBox="0 0 24 24"
-            fill="none"
-            aria-hidden="true"
-          >
-            <path
-              d="M20 13 13 20 4 11V4h7l9 9Z"
-              stroke="currentColor"
-              stroke-width="1.7"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-
-            <circle
-              cx="8.5"
-              cy="8.5"
-              r="1"
-              fill="currentColor"
-            />
-          </svg>
-        </div>
-
-        <div class="notification-detail-content__assessment-resource-content">
-          <strong>
-            Código de acceso del aula
-          </strong>
-
-          <span class="notification-detail-content__assessment-code">
-            {{ assessmentAccessCode }}
-          </span>
-        </div>
-
-        <button
-          type="button"
-          class="notification-detail-content__assessment-copy"
-          aria-label="Copiar código de acceso"
-          (click)="copyToClipboard(assessmentAccessCode)"
-        >
-          <svg
-            width="17"
-            height="17"
-            viewBox="0 0 24 24"
-            fill="none"
-            aria-hidden="true"
-          >
-            <rect
-              x="9"
-              y="9"
-              width="10"
-              height="11"
-              rx="2"
-              stroke="currentColor"
-              stroke-width="1.7"
-            />
-
-            <path
-              d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"
-              stroke="currentColor"
-              stroke-width="1.7"
-            />
-          </svg>
-        </button>
-
-      </div>
-
-    </div>
-
-  </section>
-
   <!-- ================================
-       ASSESSMENT ASIGNADO
+       EVALUACIÓN ASIGNADA (plataforma / etapa)
   ================================= -->
   <section
-    *ngIf="isAssessmentAssignedNotification"
+    *ngIf="isAssessmentAssignedNotification || isStageAssessmentAssignedNotification"
     class="
       notification-detail-content__section
       notification-detail-content__section--bordered
@@ -425,78 +48,21 @@
       Mensaje
     </span>
 
-    <div class="assessment-card">
-      <div class="assessment-card__header">
-        <div>
-          <p class="assessment-card__eyebrow">
-            {{ isAssessmentRetake ? 'Nuevo intento' : 'Nuevo assessment' }}
-          </p>
-          <h3 class="assessment-card__title">
-            {{ notification.message.templateTitle || notification.title }}
-          </h3>
-        </div>
-        <span
-          class="assessment-card__badge"
-          [class.assessment-card__badge--expired]="isAssessmentExpired"
-        >
-          {{ isAssessmentExpired ? 'Vencido' : assessmentDueRelative }}
-        </span>
-      </div>
-
-      <p class="assessment-card__lead">
-        {{
-          isAssessmentRetake
-            ? 'Se te autorizó un nuevo intento. Abre el enlace para comenzar.'
-            : 'Se te asignó este assessment. Abre el enlace para comenzar.'
-        }}
-      </p>
-
-      <ng-container *ngIf="assessmentDirectUrl && !isAssessmentExpired">
-        <a
-          class="assessment-card__cta"
-          [href]="assessmentDirectUrl"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Abrir assessment
-        </a>
-        <p class="assessment-card__link-label">Enlace directo</p>
-        <a
-          class="assessment-card__url"
-          [href]="assessmentDirectUrl"
-          target="_blank"
-          rel="noopener noreferrer"
-        >{{ assessmentDirectUrl }}</a>
-      </ng-container>
-
-      <p
-        *ngIf="isAssessmentExpired"
-        class="assessment-card__expired"
-      >
-        Este assessment ya venció. Ya no puedes abrirlo desde aquí.
-      </p>
-
-      <dl class="assessment-card__meta">
-        <div *ngIf="notification.message?.maxAttempts != null">
-          <dt>Intentos máximos</dt>
-          <dd>{{ notification.message.maxAttempts }}</dd>
-        </div>
-        <div>
-          <dt>Vence</dt>
-          <dd>{{ assessmentDueLabel }}</dd>
-        </div>
-      </dl>
-
-      <ol *ngIf="!isAssessmentExpired" class="assessment-card__steps">
-        <li>Toca <strong>Abrir assessment</strong> o el enlace.</li>
-        <li>Completa la evaluación en una sola sesión si puedes.</li>
-        <li>Hazlo antes de la fecha límite.</li>
-      </ol>
-    </div>
+    <app-assessment-assignment-notification-card
+      [variant]="isStageAssessmentAssignedNotification ? 'stage' : 'platform'"
+      [title]="assessmentAssignmentTitle"
+      [reason]="notification.message.reason"
+      [expiresAt]="notification.message.expiresAt"
+      [expiresAtLabel]="notification.message.expiresAtLabel"
+      [maxAttempts]="notification.message.maxAttempts"
+      [directAccessUrl]="notification.message.directAccessUrl"
+      [actionUrl]="notification.message.actionUrl"
+      [stageNumber]="notification.message.stageNumber"
+    />
   </section>
 
   <!-- ================================
-       RESULTADOS LISTOS (S2S)
+       RESULTADOS LISTOS
   ================================= -->
   <section
     *ngIf="isAssessmentResultsReadyNotification"
@@ -528,7 +94,7 @@
       </div>
 
       <p class="assessment-card__lead">
-        Ya puedes consultar el detalle de tu evaluación: preguntas fallidas y feedback (sin nota numérica).
+        Ya puedes ver el detalle de tu evaluación: qué preguntas fallaste y los comentarios.
       </p>
 
       <ng-container *ngIf="assessmentResultsUrl">
@@ -540,13 +106,6 @@
         >
           Ver resultados
         </a>
-        <p class="assessment-card__link-label">Enlace al assessment</p>
-        <a
-          class="assessment-card__url"
-          [href]="assessmentResultsUrl"
-          target="_blank"
-          rel="noopener noreferrer"
-        >{{ assessmentResultsUrl }}</a>
       </ng-container>
 
       <dl
@@ -554,7 +113,7 @@
         class="assessment-card__meta"
       >
         <div>
-          <dt>Stage</dt>
+          <dt>Tu etapa</dt>
           <dd>{{ notification.message.studentStage }}</dd>
         </div>
       </dl>
@@ -562,7 +121,7 @@
   </section>
 
   <!-- ================================
-       ASSESSMENT RETIRADO
+       EVALUACIÓN RETIRADA
   ================================= -->
   <section
     *ngIf="isAssessmentUnassignedNotification"
@@ -579,7 +138,7 @@
       <div class="assessment-card__header">
         <div>
           <p class="assessment-card__eyebrow">
-            Assessment retirado
+            Evaluación retirada
           </p>
           <h3 class="assessment-card__title">
             {{ notification.message.templateTitle || notification.title }}
@@ -588,7 +147,7 @@
       </div>
 
       <p class="assessment-card__lead">
-        Ya no estás asignado a este assessment. No aparece en tu listado y el enlace anterior ya no es válido.
+        Ya no necesitas completar esta evaluación. Si tenías un enlace guardado, ya no funciona.
       </p>
     </div>
   </section>

@@ -22,6 +22,7 @@ import {
 } from '../../../../pipes/safe-note-html.pipe';
 import { formatRelativeDueDateEs } from '../../../../shared/utils/dates.util';
 import { leadSchedulingModeLabel } from '../../../../shared/utils/lead-scheduling-request.util';
+import { AssessmentAssignmentNotificationCardComponent } from '../../assessment-assignment-notification-card/assessment-assignment-notification-card.component';
 
 @Component({
   selector: 'app-notification-detail-content',
@@ -29,6 +30,7 @@ import { leadSchedulingModeLabel } from '../../../../shared/utils/lead-schedulin
   imports: [
     CommonModule,
     SafeNoteHtmlPipe,
+    AssessmentAssignmentNotificationCardComponent,
   ],
   templateUrl:
     './notification-detail-content.component.html',
@@ -204,6 +206,22 @@ export class NotificationDetailContentComponent {
     return this.notification?.message?.kind === 'assessment-assigned';
   }
 
+  get isStageAssessmentAssignedNotification(): boolean {
+    return this.notification?.message?.kind === 'stage-assessment-assigned';
+  }
+
+  get assessmentAssignmentTitle(): string {
+    const msg = this.notification?.message;
+    if (this.isStageAssessmentAssignedNotification) {
+      return (
+        msg?.resourceTitle ||
+        this.notification?.title ||
+        'Evaluación de etapa'
+      );
+    }
+    return msg?.templateTitle || this.notification?.title || 'Evaluación';
+  }
+
   get isAssessmentUnassignedNotification(): boolean {
     return this.notification?.message?.kind === 'assessment-unassigned';
   }
@@ -290,14 +308,7 @@ export class NotificationDetailContentComponent {
   }
 
   get isStudentAssessmentAccess(): boolean {
-    return (
-      this.userRole === UserRole.STUDENT &&
-      this.notification?.message?.kind === 'assessment-assigned' &&
-      !!(
-        this.notification?.message?.directAccessUrl ||
-        this.notification?.message?.shareUrl
-      )
-    );
+    return false;
   }
 
   get assessmentDirectAccessUrl(): string {

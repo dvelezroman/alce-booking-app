@@ -1,0 +1,69 @@
+<div class="aan-card">
+  <div class="aan-card__header">
+    <div>
+      <p class="aan-card__eyebrow">{{ eyebrow }}</p>
+      <h3 class="aan-card__title">{{ title }}</h3>
+    </div>
+    <span
+      class="aan-card__badge"
+      [class.aan-card__badge--expired]="isExpired"
+      [class.aan-card__badge--urgent]="isUrgent && !isExpired"
+    >
+      {{ isExpired ? 'Vencido' : (timeFormatted ? 'Pendiente' : 'Sin vencimiento') }}
+    </span>
+  </div>
+
+  <p class="aan-card__lead">{{ lead }}</p>
+
+  <div
+    class="aan-card__countdown"
+    *ngIf="timeFormatted"
+    [class.aan-card__countdown--urgent]="isUrgent && !isExpired"
+  >
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.8" />
+      <path
+        d="M12 7.5V12l2.8 2"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+      />
+    </svg>
+    <span class="aan-card__countdown-label">Tiempo restante:</span>
+    <strong>{{ timeFormatted }}</strong>
+  </div>
+
+  <button
+    *ngIf="canOpen"
+    type="button"
+    class="aan-card__cta"
+    (click)="onCta()"
+  >
+    {{ ctaLabel }}
+  </button>
+
+  <p *ngIf="isExpired" class="aan-card__expired">
+    Esta evaluación ya venció. Ya no puedes abrirla desde aquí.
+  </p>
+
+  <dl class="aan-card__meta">
+    <div *ngIf="maxAttempts != null">
+      <dt>Intentos disponibles</dt>
+      <dd>{{ maxAttempts }}</dd>
+    </div>
+    <div *ngIf="stageNumber != null">
+      <dt>Tu etapa</dt>
+      <dd>{{ stageNumber }}</dd>
+    </div>
+    <div>
+      <dt>Fecha límite</dt>
+      <dd>{{ dueLabel }}</dd>
+    </div>
+  </dl>
+
+  <ol *ngIf="!isExpired" class="aan-card__steps">
+    <li>Toca <strong>{{ ctaLabel }}</strong>.</li>
+    <li>Responde con calma; procura terminarla en una sola vez.</li>
+    <li>Hazlo antes de la fecha límite.</li>
+  </ol>
+</div>
