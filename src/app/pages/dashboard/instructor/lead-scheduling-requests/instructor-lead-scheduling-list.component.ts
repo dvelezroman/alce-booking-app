@@ -67,9 +67,9 @@ export class InstructorLeadSchedulingListComponent implements OnInit {
   dateField: LeadSchedulingDateField = 'session';
 
   /** Work queue tabs: pending assignment vs report due. */
-  activeQueue: InstructorSchedulingQueue = 'pending';
+  activeQueue: InstructorSchedulingQueue = 'all';
 
-  statusFilter: '' | LeadSchedulingRequestStatus = 'PENDING';
+  statusFilter: '' | LeadSchedulingRequestStatus = '';
   kindFilter: '' | LeadSchedulingRequestKind = '';
 
   pendingAssignmentCount = 0;
@@ -138,7 +138,7 @@ export class InstructorLeadSchedulingListComponent implements OnInit {
       return;
     }
 
-    this.setQueue('pending', false);
+    this.setQueue('all', false);
   }
 
   setQueue(
@@ -282,7 +282,7 @@ export class InstructorLeadSchedulingListComponent implements OnInit {
       this.dateFrom.trim() !== '' ||
       this.dateTo.trim() !== '' ||
       this.sessionTodayOnly ||
-      this.statusFilter !== 'PENDING' ||
+      this.statusFilter !== '' ||
       this.kindFilter !== '' ||
       this.sortBy !== 'createdAt'
     );
@@ -367,12 +367,8 @@ export class InstructorLeadSchedulingListComponent implements OnInit {
     this.sortBy = 'createdAt';
     this.dateField = 'session';
     this.pageIndex = 0;
-    if (this.activeQueue === 'pending') {
-      this.statusFilter = 'PENDING';
-      this.load();
-      return;
-    }
-    this.setQueue('pending', true);
+    this.setQueue('all', true);
+    this.load();
   }
 
   kindText(row: LeadSchedulingRequestRow): string {
