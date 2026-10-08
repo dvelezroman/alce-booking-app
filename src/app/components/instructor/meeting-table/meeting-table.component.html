@@ -37,28 +37,30 @@
             </span>
         </td>
         <td data-label="Observación" class="observation-cell">
-          <span
-            class="comment-icon material-icons"
-            title="{{ getObservationTooltip(meeting) }}"
-            (click)="showComment(meeting)"
-          >
-            comment
-          </span>
+          <ng-container *ngIf="showObservationCell(meeting)">
+            <span
+              class="comment-icon material-icons"
+              [title]="getObservationTooltip(meeting)"
+              (click)="showComment(meeting)"
+            >
+              comment
+            </span>
 
-          <span
-            class="comment-text"
-            *ngIf="!hasReinforcement(meeting)"
-          >
-           {{ (meeting.assessments && meeting.assessments[0].note) || meeting.student?.user?.comment || 'Sin observación' }}
-          </span>
+            <span
+              class="comment-text"
+              *ngIf="!hasReinforcement(meeting)"
+            >
+              {{ getObservationText(meeting) }}
+            </span>
 
-          <span
-            *ngIf="hasReinforcement(meeting)"
-            class="reinforcement-badge"
-            title="Este estudiante tiene nota o recursos cargados"
-          >
-            Refuerzo
-          </span>
+            <span
+              *ngIf="hasReinforcement(meeting)"
+              class="reinforcement-badge"
+              title="Este estudiante tiene nota o recursos cargados"
+            >
+              Refuerzo
+            </span>
+          </ng-container>
         </td>
 
         <td data-label="Progreso" class="col-progress">

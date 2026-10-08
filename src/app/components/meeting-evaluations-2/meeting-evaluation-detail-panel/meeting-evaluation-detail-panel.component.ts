@@ -256,18 +256,20 @@ export class MeetingEvaluationDetailPanelComponent {
 
   getObservation(): string {
     if (!this.evaluation) {
-      return 'Sin observación';
+      return '';
     }
 
     const evaluation =
       this.evaluation as any;
 
-    return (
+    const text =
       evaluation.observation ||
+      evaluation.observations ||
       evaluation.comment ||
       evaluation.notes ||
-      'Sin observación'
-    );
+      '';
+
+    return typeof text === 'string' ? text.trim() : String(text ?? '').trim();
   }
 
   getCreatedAt(): string | Date | null {

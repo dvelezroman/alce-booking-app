@@ -24,10 +24,12 @@
 
       <p><strong>Calificación:</strong> {{ evaluation.rating }}/10</p>
 
-      <p><strong>Observación:</strong></p>
-      <div class="observation">
-        {{ evaluation.observation || 'Sin observación' }}
-      </div>
+      @if (evaluation.observation?.trim()) {
+        <p><strong>Observación:</strong></p>
+        <div class="observation">
+          {{ evaluation.observation }}
+        </div>
+      }
 
       <p><strong>Fecha de evaluación:</strong>
         {{ evaluation.createdAt | date:'medium' }}

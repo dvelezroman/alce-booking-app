@@ -48,9 +48,7 @@ export class MeetingTableComponent {
   }
 
   showComment(meeting: MeetingDTO): void {
-    const note = meeting.assessments && meeting.assessments.length > 0
-      ? meeting.assessments[0].note || 'Sin observación registrada.'
-      : 'Sin observación registrada.';
+    const note = this.getObservationText(meeting);
 
     this.commentViewRequested.emit({
       note,
@@ -70,14 +68,24 @@ export class MeetingTableComponent {
   }
 
   hasObservation(meeting: MeetingDTO): boolean {
-    return !!(
-      (meeting.assessments && meeting.assessments.some(a => !!a.note)) ||
-      meeting.student?.user?.comment
-    );
+    return !!this.getObservationText(meeting);
+  }
+
+  showObservationCell(meeting: MeetingDTO): boolean {
+    return this.hasReinforcement(meeting) || this.hasObservation(meeting);
+  }
+
+  getObservationText(meeting: MeetingDTO): string {
+    const assessmentNote =
+      meeting.assessments?.[0]?.note?.trim() ?? '';
+    const userComment =
+      meeting.student?.user?.comment?.trim() ?? '';
+
+    return assessmentNote || userComment;
   }
 
   getObservationTooltip(meeting: MeetingDTO): string {
-    return meeting.student?.user?.comment || 'Sin observación';
+    return this.getObservationText(meeting);
   }
 
   getFormattedDate(date: Date): string {

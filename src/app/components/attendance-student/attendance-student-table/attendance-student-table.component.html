@@ -125,12 +125,14 @@
                  OBSERVATION
             ========================== -->
             <td>
-              <span
-                class="attendance-student-table__observation"
-                [title]="getObservation(meeting)"
-              >
-                {{ getObservation(meeting) }}
-              </span>
+              @if (getObservation(meeting)) {
+                <span
+                  class="attendance-student-table__observation"
+                  [title]="getObservation(meeting)"
+                >
+                  {{ getObservation(meeting) }}
+                </span>
+              }
             </td>
 
 

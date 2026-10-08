@@ -232,11 +232,13 @@
 
           <!-- OBSERVATION -->
           <td>
-            <p
-              class="evaluations-table__observation"
-              [title]="getObservation(evaluation)">
-              {{ getObservation(evaluation) }}
-            </p>
+            @if (hasObservation(evaluation)) {
+              <p
+                class="evaluations-table__observation"
+                [title]="getObservation(evaluation)">
+                {{ getObservation(evaluation) }}
+              </p>
+            }
           </td>
 
           <!-- STATUS -->

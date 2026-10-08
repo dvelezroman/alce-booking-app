@@ -307,12 +307,15 @@ export class MeetingEvaluationsTableComponent {
   ): string {
     const value = evaluation as any;
 
-    return (
+    const text = (
       value.observation ||
       value.observations ||
       value.comment ||
-      'Sin observación'
+      value.notes ||
+      ''
     );
+
+    return typeof text === 'string' ? text.trim() : String(text ?? '').trim();
   }
 
   /* =========================

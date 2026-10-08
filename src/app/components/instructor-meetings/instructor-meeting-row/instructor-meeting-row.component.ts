@@ -389,11 +389,11 @@ export class InstructorMeetingRowComponent {
         ?.comment
         ?.trim();
 
-    return (
-      assessmentNote ||
-      userComment ||
-      'Sin observación'
-    );
+    return assessmentNote || userComment || '';
+  }
+
+  get showObservationButton(): boolean {
+    return this.hasReinforcement || !!this.observationText;
   }
 
 

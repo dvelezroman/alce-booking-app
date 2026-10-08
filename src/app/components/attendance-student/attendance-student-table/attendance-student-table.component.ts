@@ -226,12 +226,13 @@ export class AttendanceStudentTableComponent {
   getObservation(meeting: MeetingDTO): string {
     const meetingAny = meeting as any;
 
-    return (
+    const text =
       meetingAny.assistanceNote ||
       meetingAny.note ||
       meetingAny.comment ||
-      '—'
-    );
+      '';
+
+    return typeof text === 'string' ? text.trim() : String(text ?? '').trim();
   }
 
 
