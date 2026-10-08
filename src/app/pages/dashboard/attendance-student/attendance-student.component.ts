@@ -16,6 +16,7 @@ import {
 import { UsersService } from '../../../services/users.service';
 
 import { convertToLocalTimeZone } from '../../../shared/utils/dates.util';
+import { getMeetingObservationText } from '../../../shared/utils/meeting-observation.util';
 
 /* =========================
    CHILD COMPONENTS
@@ -82,7 +83,12 @@ export class AttendanceStudentComponent implements OnInit {
   ========================= */
 
   isModalOpen: boolean = false;
-  selectedMeeting: (MeetingThemeDto & { instructorName?: string }) | null = null;
+  selectedMeeting: (
+    MeetingThemeDto & {
+      instructorName?: string;
+      instructorObservation?: string;
+    }
+  ) | null = null;
 
 
   /* =========================
@@ -315,6 +321,7 @@ export class AttendanceStudentComponent implements OnInit {
       hour: meeting.hour,
       description: meeting.meetingTheme?.description || '',
       instructorName: instructorName || 'Sin instructor',
+      instructorObservation: getMeetingObservationText(meeting),
     };
 
     this.isModalOpen = true;

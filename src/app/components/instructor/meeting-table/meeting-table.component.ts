@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MeetingDTO } from '../../../services/dtos/booking.dto';
+import { getMeetingObservationText } from '../../../shared/utils/meeting-observation.util';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -76,12 +77,7 @@ export class MeetingTableComponent {
   }
 
   getObservationText(meeting: MeetingDTO): string {
-    const assessmentNote =
-      meeting.assessments?.[0]?.note?.trim() ?? '';
-    const userComment =
-      meeting.student?.user?.comment?.trim() ?? '';
-
-    return assessmentNote || userComment;
+    return getMeetingObservationText(meeting);
   }
 
   getObservationTooltip(meeting: MeetingDTO): string {

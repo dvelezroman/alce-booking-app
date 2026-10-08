@@ -17,6 +17,8 @@ import {
   Mode,
 } from '../../../services/dtos/student.dto';
 
+import { getMeetingObservationText } from '../../../shared/utils/meeting-observation.util';
+
 
 @Component({
   selector: 'app-instructor-meeting-row',
@@ -369,27 +371,7 @@ export class InstructorMeetingRowComponent {
   ===================================================== */
 
   get observationText(): string {
-
-    const meeting =
-      this.meeting as MeetingDTO & {
-        assessments?: Array<{
-          note?: string | null;
-        }>;
-      };
-
-    const assessmentNote =
-      meeting
-        .assessments
-        ?.[0]
-        ?.note
-        ?.trim();
-
-    const userComment =
-      this.studentUser
-        ?.comment
-        ?.trim();
-
-    return assessmentNote || userComment || '';
+    return getMeetingObservationText(this.meeting);
   }
 
   get showObservationButton(): boolean {

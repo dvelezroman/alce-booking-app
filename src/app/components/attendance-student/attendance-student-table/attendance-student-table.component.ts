@@ -9,6 +9,7 @@ import {
 import {
   MeetingDTO,
 } from '../../../services/dtos/booking.dto';
+import { getMeetingObservationText } from '../../../shared/utils/meeting-observation.util';
 
 @Component({
   selector: 'app-attendance-student-table',
@@ -224,15 +225,7 @@ export class AttendanceStudentTableComponent {
   ========================= */
 
   getObservation(meeting: MeetingDTO): string {
-    const meetingAny = meeting as any;
-
-    const text =
-      meetingAny.assistanceNote ||
-      meetingAny.note ||
-      meetingAny.comment ||
-      '';
-
-    return typeof text === 'string' ? text.trim() : String(text ?? '').trim();
+    return getMeetingObservationText(meeting);
   }
 
 

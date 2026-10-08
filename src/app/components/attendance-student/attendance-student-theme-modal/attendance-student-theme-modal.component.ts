@@ -10,6 +10,7 @@ import { MeetingThemeDto } from '../../../services/dtos/meeting-theme.dto';
 
 type AttendanceMeetingTheme = MeetingThemeDto & {
   instructorName?: string;
+  instructorObservation?: string;
 };
 
 @Component({
@@ -143,5 +144,14 @@ export class AttendanceStudentThemeModalComponent {
       this.meeting?.description ||
       'Sin descripción registrada.'
     );
+  }
+
+
+  /* =========================
+     INSTRUCTOR OBSERVATION
+  ========================= */
+
+  get instructorObservation(): string {
+    return this.meeting?.instructorObservation?.trim() ?? '';
   }
 }
