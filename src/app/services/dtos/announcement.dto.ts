@@ -1,11 +1,17 @@
 import { StudentClassification } from "./student.dto"
 import { UserRole } from "./user.dto"
 
+export type AnnouncementDisplayMode = 'modal' | 'banner' | 'both'
+export type AnnouncementBannerTone = 'brand' | 'accent' | 'info' | 'warning'
+
 export interface Announcement {
   id: string
   mediaUrl: string
   title?: string
+  message?: string
   type: 'notice'| 'promotion' | 'relocation'
+  displayMode?: AnnouncementDisplayMode
+  bannerTone?: AnnouncementBannerTone
   targetRole: UserRole | null
   targetStudentType?: StudentClassification | null
   city?: 'Portoviejo' | 'Cuenca' | null

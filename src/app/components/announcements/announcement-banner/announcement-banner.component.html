@@ -1,0 +1,34 @@
+<section
+  *ngIf="visible.length > 0"
+  class="announcement-banner"
+  aria-label="Avisos destacados"
+>
+  <article
+    *ngFor="let item of visible; trackBy: trackById"
+    class="announcement-banner__item"
+    [ngClass]="toneClass(item)"
+    role="status"
+  >
+    <div class="announcement-banner__content">
+      <p
+        *ngIf="item.title?.trim() && item.message?.trim()"
+        class="announcement-banner__title"
+      >
+        {{ item.title }}
+      </p>
+
+      <p class="announcement-banner__message">
+        {{ displayText(item) }}
+      </p>
+    </div>
+
+    <button
+      type="button"
+      class="announcement-banner__dismiss"
+      aria-label="Ocultar aviso"
+      (click)="dismiss(item)"
+    >
+      ✕
+    </button>
+  </article>
+</section>

@@ -34,12 +34,21 @@ import {
 } from '../../announcements/announcement-viewer/announcement-viewer.component';
 
 import {
+  AnnouncementBannerComponent,
+} from '../../announcements/announcement-banner/announcement-banner.component';
+
+import {
   Announcement,
 } from '../../../services/dtos/announcement.dto';
 
 import {
   AnnouncementService,
 } from '../../../services/announcement.service';
+
+import {
+  getVisibleModalAnnouncements,
+  markModalAnnouncementSeen,
+} from '../../../shared/utils/announcement-display.util';
 
 
 /* =========================
@@ -89,6 +98,7 @@ import { FilterMeetingsDto } from '../../../services/dtos/booking.dto';
     DashboardNotificationsWidgetComponent,
     DashboardSettingsWidgetComponent,
     AnnouncementViewerComponent,
+    AnnouncementBannerComponent,
 
     AdminDashboardStatsComponent,
     AdminDashboardShortcutsComponent,
@@ -433,8 +443,15 @@ export class AdminDashboardComponent
   get visibleAnnouncements():
     Announcement[] {
 
-    return this.filterByDisplayMode(
+    const user = this.announcementUser;
+
+    if (!user) {
+      return [];
+    }
+
+    return getVisibleModalAnnouncements(
       this.announcements,
+      user,
     );
   }
 
@@ -484,68 +501,11 @@ export class AdminDashboardComponent
      DISPLAY MODE
   ========================= */
 
-  filterByDisplayMode(
-    list: Announcement[],
-  ): Announcement[] {
-
-    return list.filter(
-      announcement => {
-
-        const key =
-          `announcement_seen_${announcement.id}`;
-
-        if (
-          announcement.showMode ===
-            'always' ||
-          !announcement.showMode
-        ) {
-          return true;
-        }
-
-        if (
-          announcement.showMode ===
-          'once_session'
-        ) {
-          return (
-            !sessionStorage
-              .getItem(key)
-          );
-        }
-
-        return true;
-      },
-    );
-  }
-
-
-  /* =========================
-     SEEN
-  ========================= */
-
-  markAsSeen(
-    announcement: Announcement,
-  ): void {
-
-    const key =
-      `announcement_seen_${announcement.id}`;
-
-    if (
-      announcement.showMode ===
-      'once_session'
-    ) {
-      sessionStorage.setItem(
-        key,
-        'true',
-      );
-    }
-  }
-
-
   onCustomAnnouncementClosed(
     announcement: Announcement,
   ): void {
 
-    this.markAsSeen(
+    markModalAnnouncementSeen(
       announcement,
     );
   }

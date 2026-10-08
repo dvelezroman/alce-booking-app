@@ -18,6 +18,8 @@ import {
 
 import {
   Announcement,
+  AnnouncementBannerTone,
+  AnnouncementDisplayMode,
 } from '../../../services/dtos/announcement.dto';
 
 import {
@@ -134,6 +136,15 @@ export class AnnouncementsComponent
 
   formTitle:
     string = '';
+
+  formMessage:
+    string = '';
+
+  formDisplayMode:
+    AnnouncementDisplayMode = 'modal';
+
+  formBannerTone:
+    AnnouncementBannerTone = 'accent';
 
   formType:
     | 'promotion'
@@ -428,26 +439,7 @@ export class AnnouncementsComponent
 
   submitAnnouncement() {
 
-    if (
-      !this.formTitle?.trim()
-    ) {
-
-      this.showError(
-        'Debes ingresar un título',
-      );
-
-      return;
-    }
-
-
-    if (
-      !this.formType
-    ) {
-
-      this.showError(
-        'Debes seleccionar un tipo de anuncio',
-      );
-
+    if (!this.validateAnnouncementForm()) {
       return;
     }
 
@@ -461,8 +453,17 @@ export class AnnouncementsComponent
       title:
         this.formTitle,
 
+      message:
+        this.formMessage.trim(),
+
+      displayMode:
+        this.formDisplayMode,
+
+      bannerTone:
+        this.formBannerTone,
+
       type:
-        this.formType,
+        this.formType!,
 
       mediaUrl:
         this.formMedia || '',
@@ -571,6 +572,10 @@ export class AnnouncementsComponent
       return;
     }
 
+    if (!this.validateAnnouncementForm()) {
+      return;
+    }
+
 
     const id =
       this.editingAnnouncement.id;
@@ -581,6 +586,15 @@ export class AnnouncementsComponent
 
       title:
         this.formTitle,
+
+      message:
+        this.formMessage.trim(),
+
+      displayMode:
+        this.formDisplayMode,
+
+      bannerTone:
+        this.formBannerTone,
 
       type:
         this.formType,
@@ -704,6 +718,15 @@ export class AnnouncementsComponent
     this.formTitle =
       a.title || '';
 
+    this.formMessage =
+      a.message || '';
+
+    this.formDisplayMode =
+      a.displayMode || 'modal';
+
+    this.formBannerTone =
+      a.bannerTone || 'accent';
+
     this.formType =
       a.type;
 
@@ -794,11 +817,42 @@ export class AnnouncementsComponent
     this.editingAnnouncement =
       null;
 
+    this.formMedia =
+      undefined;
 
-    // limpiar formulario
+    this.originalMedia =
+      undefined;
 
+    this.resetAnnouncementFormFields();
+  }
+
+
+  resetForm() {
+
+    this.editingAnnouncement =
+      null;
+
+    this.formMedia =
+      undefined;
+
+    this.originalMedia =
+      undefined;
+
+    this.resetAnnouncementFormFields();
+  }
+
+  private resetAnnouncementFormFields(): void {
     this.formTitle =
       '';
+
+    this.formMessage =
+      '';
+
+    this.formDisplayMode =
+      'modal';
+
+    this.formBannerTone =
+      'accent';
 
     this.formType =
       null;
@@ -815,13 +869,11 @@ export class AnnouncementsComponent
     this.formIsActive =
       true;
 
-
     this.formStartDate =
       undefined;
 
     this.formEndDate =
       undefined;
-
 
     this.formShowMode =
       'always';
@@ -829,7 +881,6 @@ export class AnnouncementsComponent
     this.formAspectRatio =
       'horizontal';
 
-
     this.formActions = [
       {
         id:
@@ -856,60 +907,43 @@ export class AnnouncementsComponent
           'Cerrar',
       },
     ];
-
-
-    this.formMedia =
-      undefined;
-
-    this.originalMedia =
-      undefined;
   }
 
+  private validateAnnouncementForm(): boolean {
+    if (
+      !this.formTitle?.trim()
+    ) {
+      this.showError(
+        'Debes ingresar un título',
+      );
+      return false;
+    }
 
-  resetForm() {
+    if (
+      !this.formType
+    ) {
+      this.showError(
+        'Debes seleccionar un tipo de anuncio',
+      );
+      return false;
+    }
 
-    this.formMedia =
-      undefined;
+    const usesBanner =
+      this.formDisplayMode === 'banner' ||
+      this.formDisplayMode === 'both';
 
-    this.originalMedia =
-      undefined;
+    if (
+      usesBanner &&
+      !this.formMessage?.trim()
+    ) {
+      this.showError(
+        'Debes ingresar el texto del banner',
+      );
+      return false;
+    }
 
-    this.formTitle =
-      '';
-
-
-    this.formActions = [
-      {
-        id:
-          crypto.randomUUID(),
-
-        type:
-          'action',
-
-        label:
-          'Más información',
-
-        url:
-          '',
-      },
-
-      {
-        id:
-          crypto.randomUUID(),
-
-        type:
-          'close',
-
-        label:
-          'Cerrar',
-      },
-    ];
-
-
-    this.formShowMode =
-      'always';
+    return true;
   }
-
 
   // ================= DELETE =================
 

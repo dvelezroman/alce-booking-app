@@ -15,6 +15,7 @@ import {
   Action,
   Announcement,
 } from '../../../services/dtos/announcement.dto';
+import { isAnnouncementForSurface } from '../../../shared/utils/announcement-display.util';
 import { UserRole } from '../../../services/dtos/user.dto';
 import { StudentClassification } from '../../../services/dtos/student.dto';
 
@@ -74,7 +75,10 @@ export class AnnouncementViewerComponent
   ngOnInit(): void {
     this.filtered = this
       .filterAnnouncementsForUser(
-        this.announcements
+        this.announcements,
+      )
+      .filter((announcement) =>
+        isAnnouncementForSurface(announcement, 'modal'),
       )
       .sort((a, b) => {
         const aIsImage =

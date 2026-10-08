@@ -152,6 +152,38 @@
 
       </div>
 
+
+      <!-- MESSAGE (banner) -->
+
+      <div
+        *ngIf="showsBannerFields"
+        class="announcement-v2-form__field announcement-v2-form__field--full"
+      >
+
+        <label
+          class="announcement-v2-form__label"
+          for="announcement-v2-message"
+        >
+          Texto del banner
+
+          <span>
+            *
+          </span>
+        </label>
+
+
+        <textarea
+          #messageInput
+          id="announcement-v2-message"
+          class="announcement-v2-form__control announcement-v2-form__control--textarea"
+          rows="3"
+          placeholder="Ej.: Equipo, mañana venimos de camiseta blanca"
+          [value]="message"
+          (input)="onMessageChange(messageInput.value)"
+        ></textarea>
+
+      </div>
+
     </div>
 
   </section>
@@ -584,6 +616,115 @@
             )
           "
         />
+
+      </div>
+
+
+      <!-- DISPLAY MODE -->
+
+      <div class="announcement-v2-form__field">
+
+        <label
+          class="announcement-v2-form__label"
+          for="announcement-v2-display-mode"
+        >
+          Formato de visualización
+
+          <span>
+            *
+          </span>
+        </label>
+
+
+        <div class="announcement-v2-form__select-wrapper">
+
+          <select
+            #displayModeSelect
+            id="announcement-v2-display-mode"
+            class="announcement-v2-form__control"
+            [value]="displayMode"
+            (change)="onDisplayModeChange(displayModeSelect.value)"
+          >
+
+            <option
+              *ngFor="let option of displayModeOptions"
+              [value]="option.value"
+            >
+              {{ option.label }}
+            </option>
+
+          </select>
+
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="m7 9 5 5 5-5"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+
+        </div>
+
+      </div>
+
+
+      <!-- BANNER TONE -->
+
+      <div
+        *ngIf="showsBannerFields"
+        class="announcement-v2-form__field"
+      >
+
+        <label
+          class="announcement-v2-form__label"
+          for="announcement-v2-banner-tone"
+        >
+          Estilo del banner
+        </label>
+
+
+        <div class="announcement-v2-form__select-wrapper">
+
+          <select
+            #bannerToneSelect
+            id="announcement-v2-banner-tone"
+            class="announcement-v2-form__control"
+            [value]="bannerTone"
+            (change)="onBannerToneChange(bannerToneSelect.value)"
+          >
+
+            <option
+              *ngFor="let option of bannerToneOptions"
+              [value]="option.value"
+            >
+              {{ option.label }}
+            </option>
+
+          </select>
+
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="m7 9 5 5 5-5"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+
+        </div>
 
       </div>
 

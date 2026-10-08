@@ -12,8 +12,13 @@ import { Router } from '@angular/router';
 import { StudentClassification } from '../../../services/dtos/student.dto';
 import { InstructorCalendarComponent } from '../../../components/home/instructor-calendar/instructor-calendar.component';
 import { AnnouncementViewerComponent } from '../../announcements/announcement-viewer/announcement-viewer.component';
+import { AnnouncementBannerComponent } from '../../announcements/announcement-banner/announcement-banner.component';
 import { Announcement } from '../../../services/dtos/announcement.dto';
 import { AnnouncementService } from '../../../services/announcement.service';
+import {
+  getVisibleModalAnnouncements,
+  markModalAnnouncementSeen,
+} from '../../../shared/utils/announcement-display.util';
 import { InstructorSummaryCardComponent } from "./instructor-summary-card/instructor-summary-card.component";
 import { InstructorQuickActionsComponent } from "./instructor-quick-actions/instructor-quick-actions.component";
 import { InstructorSchedulingPendingSummaryComponent } from "./instructor-scheduling-pending-summary/instructor-scheduling-pending-summary.component";
@@ -37,6 +42,7 @@ type AnnouncementViewerUser = {
     CommonModule,
     InstructorCalendarComponent,
     AnnouncementViewerComponent,
+    AnnouncementBannerComponent,
     InstructorSummaryCardComponent,
     InstructorQuickActionsComponent,
     InstructorSchedulingPendingSummaryComponent,
@@ -120,7 +126,12 @@ export class InstructorDashboardComponent implements OnInit, OnChanges {
   }
 
   get visibleAnnouncements(): Announcement[] {
-    return this.filterByDisplayMode(this.announcements);
+    const user = this.announcementUser;
+    if (!user) {
+      return [];
+    }
+
+    return getVisibleModalAnnouncements(this.announcements, user);
   }
 
   get announcementUser(): AnnouncementViewerUser | null {
@@ -143,38 +154,9 @@ export class InstructorDashboardComponent implements OnInit, OnChanges {
     };
   }
 
-  private filterByDisplayMode(
-    list: Announcement[]
-  ): Announcement[] {
-    return list.filter((announcement) => {
-      const key = `announcement_seen_${announcement.id}`;
-
-      if (
-        announcement.showMode === 'always' ||
-        !announcement.showMode
-      ) {
-        return true;
-      }
-
-      if (announcement.showMode === 'once_session') {
-        return !sessionStorage.getItem(key);
-      }
-
-      return true;
-    });
-  }
-
-  private markAsSeen(announcement: Announcement): void {
-    const key = `announcement_seen_${announcement.id}`;
-
-    if (announcement.showMode === 'once_session') {
-      sessionStorage.setItem(key, 'true');
-    }
-  }
-
   onCustomAnnouncementClosed(
     announcement: Announcement
   ): void {
-    this.markAsSeen(announcement);
+    markModalAnnouncementSeen(announcement);
   }
 }

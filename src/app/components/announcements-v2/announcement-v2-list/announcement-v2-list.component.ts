@@ -134,6 +134,19 @@ export class AnnouncementV2ListComponent {
      LABELS
   ========================================================= */
 
+  getDisplayModeLabel(
+    announcement: Announcement,
+  ): string {
+    switch (announcement.displayMode) {
+      case 'banner':
+        return 'Banner';
+      case 'both':
+        return 'Modal + banner';
+      default:
+        return 'Modal';
+    }
+  }
+
   getTypeLabel(
     type: string,
   ): string {

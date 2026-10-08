@@ -30,7 +30,12 @@ import { AssessmentPointsConfigService } from '../../../services/assessment-poin
 import { AlceKidsAvisoComponent } from '../../home/alce-kids-aviso/alce-kids-aviso.component';
 import { getDashboardAgendaBlockMessage } from '../../../utils/scheduling-block-reason.util';
 import { AnnouncementViewerComponent } from '../../announcements/announcement-viewer/announcement-viewer.component';
+import { AnnouncementBannerComponent } from '../../announcements/announcement-banner/announcement-banner.component';
 import { Announcement } from '../../../services/dtos/announcement.dto';
+import {
+  getVisibleModalAnnouncements,
+  markModalAnnouncementSeen,
+} from '../../../shared/utils/announcement-display.util';
 import { StudentClassification } from '../../../services/dtos/student.dto';
 import { AnnouncementService } from '../../../services/announcement.service';
 import { MeetingDTO, MeetingStatusEnum } from '../../../services/dtos/booking.dto';
@@ -71,6 +76,7 @@ type AnnouncementViewerUser = {
     // StudentIntroVideoComponent,
     // AlceKidsAvisoComponent,
     AnnouncementViewerComponent,
+    AnnouncementBannerComponent,
     StudentProgressCardComponent,
     StudentImportantNoticesComponent,
     StudentDailyQuoteComponent,
@@ -369,7 +375,12 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   get visibleAnnouncements(): Announcement[] {
-    return this.filterByDisplayMode(this.announcements);
+    const user = this.announcementUser;
+    if (!user) {
+      return [];
+    }
+
+    return getVisibleModalAnnouncements(this.announcements, user);
   }
 
   get todayTrivia(): DailySpark | null {
@@ -701,36 +712,8 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
     };
   }
 
-  filterByDisplayMode(list: Announcement[]): Announcement[] {
-    return list.filter(a => {
-
-      const key = `announcement_seen_${a.id}`;
-
-      // SIEMPRE
-      if (a.showMode === 'always' || !a.showMode) {
-        return true;
-      }
-
-      // UNA VEZ POR SESIÓN
-      if (a.showMode === 'once_session') {
-        return !sessionStorage.getItem(key);
-      }
-
-      return true;
-    });
-  }
-
-  markAsSeen(a: Announcement) {
-    const key = `announcement_seen_${a.id}`;
-
-    if (a.showMode === 'once_session') {
-      sessionStorage.setItem(key, 'true');
-    }
-
-  }
-
   onCustomAnnouncementClosed(a: Announcement) {
-    this.markAsSeen(a);
+    markModalAnnouncementSeen(a);
   }
 
   onAnnouncementQueueFinished(): void {

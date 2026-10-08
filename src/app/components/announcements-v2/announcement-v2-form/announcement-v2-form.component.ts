@@ -37,6 +37,17 @@ type AnnouncementAspectRatio =
   | 'vertical'
   | 'square';
 
+type AnnouncementDisplayMode =
+  | 'modal'
+  | 'banner'
+  | 'both';
+
+type AnnouncementBannerTone =
+  | 'brand'
+  | 'accent'
+  | 'info'
+  | 'warning';
+
 
 @Component({
   selector: 'app-announcement-v2-form',
@@ -62,6 +73,18 @@ export class AnnouncementV2FormComponent {
   @Input()
   title:
     string = '';
+
+  @Input()
+  message:
+    string = '';
+
+  @Input()
+  displayMode:
+    AnnouncementDisplayMode = 'modal';
+
+  @Input()
+  bannerTone:
+    AnnouncementBannerTone = 'accent';
 
   @Input()
   type:
@@ -109,6 +132,18 @@ export class AnnouncementV2FormComponent {
   @Output()
   titleChange =
     new EventEmitter<string>();
+
+  @Output()
+  messageChange =
+    new EventEmitter<string>();
+
+  @Output()
+  displayModeChange =
+    new EventEmitter<AnnouncementDisplayMode>();
+
+  @Output()
+  bannerToneChange =
+    new EventEmitter<AnnouncementBannerTone>();
 
   @Output()
   typeChange =
@@ -243,6 +278,46 @@ export class AnnouncementV2FormComponent {
   ];
 
 
+  readonly displayModeOptions: {
+    value: AnnouncementDisplayMode;
+    label: string;
+  }[] = [
+    {
+      value: 'modal',
+      label: 'Modal (popup)',
+    },
+    {
+      value: 'banner',
+      label: 'Banner en dashboard',
+    },
+    {
+      value: 'both',
+      label: 'Modal + banner',
+    },
+  ];
+
+  readonly bannerToneOptions: {
+    value: AnnouncementBannerTone;
+    label: string;
+  }[] = [
+    {
+      value: 'accent',
+      label: 'Naranja (destacado)',
+    },
+    {
+      value: 'brand',
+      label: 'Azul institucional',
+    },
+    {
+      value: 'info',
+      label: 'Informativo',
+    },
+    {
+      value: 'warning',
+      label: 'Advertencia',
+    },
+  ];
+
   readonly showModeOptions: {
     value: AnnouncementShowMode;
     label: string;
@@ -295,6 +370,20 @@ export class AnnouncementV2FormComponent {
     );
   }
 
+  get showsBannerFields(): boolean {
+    return (
+      this.displayMode === 'banner' ||
+      this.displayMode === 'both'
+    );
+  }
+
+  get showsModalFields(): boolean {
+    return (
+      this.displayMode === 'modal' ||
+      this.displayMode === 'both'
+    );
+  }
+
 
   /* =========================================================
      EVENTS
@@ -306,6 +395,36 @@ export class AnnouncementV2FormComponent {
 
     this.titleChange.emit(
       value,
+    );
+  }
+
+
+  onMessageChange(
+    value: string,
+  ): void {
+
+    this.messageChange.emit(
+      value,
+    );
+  }
+
+
+  onDisplayModeChange(
+    value: string,
+  ): void {
+
+    this.displayModeChange.emit(
+      value as AnnouncementDisplayMode,
+    );
+  }
+
+
+  onBannerToneChange(
+    value: string,
+  ): void {
+
+    this.bannerToneChange.emit(
+      value as AnnouncementBannerTone,
     );
   }
 
