@@ -932,12 +932,18 @@ export class AnnouncementsComponent
       this.formDisplayMode === 'banner' ||
       this.formDisplayMode === 'both';
 
+    const bannerMedia =
+      this.formMedia?.trim() ||
+      this.originalMedia?.trim() ||
+      '';
+
     if (
       usesBanner &&
-      !this.formMessage?.trim()
+      !this.formMessage?.trim() &&
+      !bannerMedia
     ) {
       this.showError(
-        'Debes ingresar el texto del banner',
+        'El banner necesita texto o una imagen (URL S3/Drive o archivo subido)',
       );
       return false;
     }

@@ -6,19 +6,43 @@
   <article
     *ngFor="let item of visible; trackBy: trackById"
     class="announcement-banner__item"
+    [class.announcement-banner__item--with-media]="!!imageSrc(item)"
     [ngClass]="toneClass(item)"
     role="status"
   >
+    <img
+      *ngIf="imageSrc(item) as src"
+      class="announcement-banner__media"
+      [src]="src"
+      [alt]="item.title || 'Imagen del aviso'"
+      loading="lazy"
+      (error)="onImageError(item)"
+    />
+
     <div class="announcement-banner__content">
       <p
-        *ngIf="item.title?.trim() && item.message?.trim()"
+        *ngIf="showTitleLabel(item)"
         class="announcement-banner__title"
       >
         {{ item.title }}
       </p>
 
-      <p class="announcement-banner__message">
+      <p
+        *ngIf="hasBodyText(item)"
+        class="announcement-banner__message"
+      >
         {{ displayText(item) }}
+      </p>
+
+      <p
+        *ngIf="
+          !hasBodyText(item) &&
+          item.title?.trim() &&
+          !showTitleLabel(item)
+        "
+        class="announcement-banner__message"
+      >
+        {{ item.title }}
       </p>
     </div>
 

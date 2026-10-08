@@ -1,6 +1,7 @@
 import { Announcement } from '../../services/dtos/announcement.dto';
 import { StudentClassification } from '../../services/dtos/student.dto';
 import { UserRole } from '../../services/dtos/user.dto';
+import { bannerHasVisual } from './announcement-media.util';
 
 export type AnnouncementSurface = 'modal' | 'banner';
 
@@ -209,6 +210,10 @@ export function getBannerDisplayText(
   const message = announcement.message?.trim();
   if (message) {
     return message;
+  }
+
+  if (bannerHasVisual(announcement.mediaUrl)) {
+    return '';
   }
 
   return announcement.title?.trim() ?? '';

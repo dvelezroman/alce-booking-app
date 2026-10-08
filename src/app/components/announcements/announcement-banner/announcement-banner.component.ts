@@ -15,6 +15,9 @@ import {
   getBannerDisplayText,
   getVisibleBannerAnnouncements,
 } from '../../../shared/utils/announcement-display.util';
+import {
+  getBannerImageSrc,
+} from '../../../shared/utils/announcement-media.util';
 
 @Component({
   selector: 'app-announcement-banner',
@@ -30,6 +33,8 @@ export class AnnouncementBannerComponent implements OnChanges {
   @Output() dismissed = new EventEmitter<Announcement>();
 
   visible: Announcement[] = [];
+
+  private readonly failedImageIds = new Set<string>();
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['announcements'] || changes['user']) {
@@ -51,6 +56,29 @@ export class AnnouncementBannerComponent implements OnChanges {
 
   displayText(announcement: Announcement): string {
     return getBannerDisplayText(announcement);
+  }
+
+  imageSrc(announcement: Announcement): string | null {
+    if (this.failedImageIds.has(announcement.id)) {
+      return null;
+    }
+
+    return getBannerImageSrc(announcement.mediaUrl);
+  }
+
+  hasBodyText(announcement: Announcement): boolean {
+    return !!this.displayText(announcement)?.trim();
+  }
+
+  showTitleLabel(announcement: Announcement): boolean {
+    const title = announcement.title?.trim();
+    const message = announcement.message?.trim();
+
+    return !!title && !!message;
+  }
+
+  onImageError(announcement: Announcement): void {
+    this.failedImageIds.add(announcement.id);
   }
 
   toneClass(announcement: Announcement): string {
