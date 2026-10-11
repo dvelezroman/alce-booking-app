@@ -27,8 +27,10 @@ import { PlatformAssessmentListPaginationComponent } from '../../../components/p
 import { PlatformAssessmentListEmptyStateComponent } from '../../../components/platform-assessment-list/platform-assessment-list-empty-state/platform-assessment-list-empty-state.component';
 import { PlatformAssessmentWritingModalComponent } from "../../../components/platform-assessment-list/platform-assessment-writing-modal/platform-assessment-writing-modal.component";
 import {
-  needsManualPlatformWritingAcceptance,
-  platformWritingPointsMismatch,
+  needsManualPlatformSkillAcceptance,
+  platformSkillAcceptanceLabel,
+  platformSkillPointsMismatch,
+  resolvePlatformSkillType,
 } from '../../../utils/platform-assessment-writing.util';
 
 @Component({
@@ -421,24 +423,26 @@ export class PlatformAssessmentsListComponent implements OnInit {
   canShowWritingAction(
     row: RemotePlatformAssessmentItem,
   ): boolean {
-    return needsManualPlatformWritingAcceptance(row);
+    return needsManualPlatformSkillAcceptance(row);
   }
 
   isWritingLocked(
     row: RemotePlatformAssessmentItem,
   ): boolean {
-    return (
-      row.writingAccepted === true
-    );
+    const skill = resolvePlatformSkillType(row);
+    return skill === 'SPEAKING'
+      ? row.speakingAccepted === true
+      : row.writingAccepted === true;
   }
 
   writingActionLabel(
     row: RemotePlatformAssessmentItem,
   ): string {
+    const skill = resolvePlatformSkillType(row);
     if (this.isWritingLocked(row)) {
       return 'Aceptada';
     }
-    return platformWritingPointsMismatch(row)
+    return platformSkillPointsMismatch(row, skill)
       ? 'Corregir Evaluación'
       : 'Aceptar Evaluación';
   }
@@ -495,12 +499,19 @@ export class PlatformAssessmentsListComponent implements OnInit {
 
     this.modal.show = false;
 
-    this.platformAssessmentService
-      .applyWritingScore(
-        target.mirrorId,
-        target.points ?? undefined,
-      )
-      .subscribe({
+    const skill = resolvePlatformSkillType(target);
+    const apply$ =
+      skill === 'SPEAKING'
+        ? this.platformAssessmentService.applySpeakingScore(
+            target.mirrorId,
+            target.points ?? undefined,
+          )
+        : this.platformAssessmentService.applyWritingScore(
+            target.mirrorId,
+            target.points ?? undefined,
+          );
+
+    apply$.subscribe({
         next: (res) => {
           this.applyTarget = null;
 
@@ -518,7 +529,7 @@ export class PlatformAssessmentsListComponent implements OnInit {
           this.applyTarget = null;
 
           this.showFeedback(
-            'No se pudo registrar Grammar.',
+            `No se pudo registrar ${platformSkillAcceptanceLabel(skill)}.`,
             'error',
           );
         },

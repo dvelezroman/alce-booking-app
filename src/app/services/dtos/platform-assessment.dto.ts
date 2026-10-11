@@ -9,6 +9,8 @@ export type PlatformAssessmentSubmitReason =
   | 'TIMEOUT'
   | 'FOCUS_GUARD';
 
+export type PlatformSkillType = 'WRITING' | 'SPEAKING';
+
 /** Row from GET /platform-assessments (points only for ADMIN; students get resultsUrl). */
 export interface PlatformAssessmentAssignment {
   id: number;
@@ -34,6 +36,11 @@ export interface PlatformAssessmentAssignment {
   writingAccepted?: boolean;
   writingAssessmentId?: number | null;
   writingPoints?: number | null;
+  platformSkillType?: PlatformSkillType;
+  speakingApplied?: boolean;
+  speakingAccepted?: boolean;
+  speakingAssessmentId?: number | null;
+  speakingPoints?: number | null;
 }
 
 export interface ApplyWritingScoreResult {
@@ -44,6 +51,8 @@ export interface ApplyWritingScoreResult {
   updatedStage: boolean;
   created: boolean;
 }
+
+export type ApplySpeakingScoreResult = ApplyWritingScoreResult;
 
 /** Filters for GET /platform-assessments/remote (admin live list). */
 export interface RemotePlatformAssessmentFilters {
@@ -91,6 +100,11 @@ export interface RemotePlatformAssessmentItem {
   writingAccepted: boolean;
   writingAssessmentId: number | null;
   writingPoints: number | null;
+  platformSkillType?: PlatformSkillType;
+  speakingApplied?: boolean;
+  speakingAccepted?: boolean;
+  speakingAssessmentId?: number | null;
+  speakingPoints?: number | null;
 }
 
 export interface RemoteTemplateItem {
@@ -103,6 +117,7 @@ export interface RemoteTemplateItem {
   resultReleasePolicy: string;
   targetStage: number;
   stages: number[];
+  platformSkillType?: PlatformSkillType;
 }
 
 export interface RemoteTemplateListResponse {

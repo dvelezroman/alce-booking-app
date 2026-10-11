@@ -31,7 +31,11 @@ import { StudyContentService } from '../../../services/study-content.service';
 import { StagesService } from '../../../services/stages.service';
 import { AssessmentPointsConfigService } from '../../../services/assessment-points-config.service';
 import { UsersService } from '../../../services/users.service';
-import { needsManualPlatformWritingAcceptance } from '../../../utils/platform-assessment-writing.util';
+import {
+  needsManualPlatformSkillAcceptance,
+  platformSkillAcceptanceLabel,
+  resolvePlatformSkillType,
+} from '../../../utils/platform-assessment-writing.util';
 
 @Component({
   selector: 'app-assessment-reports',
@@ -671,11 +675,14 @@ export class AssessmentReportsComponent {
   }
 
   canShowWritingAction(row: PlatformAssessmentAssignment): boolean {
-    return needsManualPlatformWritingAcceptance(row);
+    return needsManualPlatformSkillAcceptance(row);
   }
 
   isWritingLocked(row: PlatformAssessmentAssignment): boolean {
-    return row.writingAccepted === true;
+    const skill = resolvePlatformSkillType(row);
+    return skill === 'SPEAKING'
+      ? row.speakingAccepted === true
+      : row.writingAccepted === true;
   }
 
   writingActionLabel(row: PlatformAssessmentAssignment): string {
@@ -726,7 +733,7 @@ export class AssessmentReportsComponent {
       show: true,
       isInfo: true,
       title: '¿Aceptar Evaluación?',
-      message: `Se creará Grammar con ${override ?? row.points ?? '—'} puntos desde el resultado S2S.`,
+      message: `Se registrará ${platformSkillAcceptanceLabel(resolvePlatformSkillType(row))} con ${override ?? row.points ?? '—'} puntos desde el resultado S2S.`,
       showButtons: true,
       confirm: () =>
         this.applyPlatformWriting(
@@ -741,7 +748,13 @@ export class AssessmentReportsComponent {
     row: PlatformAssessmentAssignment,
     points?: number,
   ): void {
-    this.platformAssessmentService.applyWritingScore(row.id, points).subscribe({
+    const skill = resolvePlatformSkillType(row);
+    const apply$ =
+      skill === 'SPEAKING'
+        ? this.platformAssessmentService.applySpeakingScore(row.id, points)
+        : this.platformAssessmentService.applyWritingScore(row.id, points);
+
+    apply$.subscribe({
       next: (res) => {
         this.closeModal();
         this.cancelApplyPlatform();
@@ -751,7 +764,7 @@ export class AssessmentReportsComponent {
         this.showModal(
           this.createModalParams(
             false,
-            `Grammar creada con ${res.points} puntos.${promo}`,
+            `${platformSkillAcceptanceLabel(skill)} registrado con ${res.points} puntos.${promo}`,
           ),
         );
         this.refreshStudentData();

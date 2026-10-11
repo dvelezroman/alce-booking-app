@@ -12,8 +12,10 @@ import {
 } from '../../../services/dtos/platform-assessment.dto';
 import { RouterLink } from '@angular/router';
 import {
-  needsManualPlatformWritingAcceptance,
-  platformWritingPointsMismatch,
+  isPlatformSkillAccepted,
+  needsManualPlatformSkillAcceptance,
+  platformSkillPointsMismatch,
+  resolvePlatformSkillType,
 } from '../../../utils/platform-assessment-writing.util';
 
 
@@ -282,26 +284,25 @@ export class PlatformAssessmentListTableComponent {
   canApplyWritingAction(
     row: RemotePlatformAssessmentItem,
   ): boolean {
-    return needsManualPlatformWritingAcceptance(row);
+    return needsManualPlatformSkillAcceptance(row);
   }
 
 
   isWritingLocked(
     row: RemotePlatformAssessmentItem,
   ): boolean {
-    return (
-      row.writingAccepted === true
-    );
+    return isPlatformSkillAccepted(row);
   }
 
 
   getWritingActionLabel(
     row: RemotePlatformAssessmentItem,
   ): string {
+    const skill = resolvePlatformSkillType(row);
     if (this.isWritingLocked(row)) {
       return 'Aceptada';
     }
-    return platformWritingPointsMismatch(row)
+    return platformSkillPointsMismatch(row, skill)
       ? 'Corregir Evaluación'
       : 'Aceptar Evaluación';
   }

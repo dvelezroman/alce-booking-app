@@ -11,7 +11,7 @@ import { FormsModule } from '@angular/forms';
 import {
   PlatformAssessmentAssignment,
 } from '../../../services/dtos/platform-assessment.dto';
-import { needsManualPlatformWritingAcceptance } from '../../../utils/platform-assessment-writing.util';
+import { needsManualPlatformSkillAcceptance } from '../../../utils/platform-assessment-writing.util';
 
 @Component({
   selector: 'app-assessment-reports-platform-table',
@@ -154,7 +154,7 @@ export class AssessmentReportsPlatformTableComponent {
   canShowWritingAction(
     assessment: PlatformAssessmentAssignment,
   ): boolean {
-    return needsManualPlatformWritingAcceptance(assessment);
+    return needsManualPlatformSkillAcceptance(assessment);
   }
 
   onApply(

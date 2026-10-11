@@ -9,7 +9,11 @@ import {
 } from '../../../services/dtos/platform-assessment.dto';
 import { ModalComponent } from '../../../components/modal/modal.component';
 import { ModalDto, modalInitializer } from '../../../components/modal/modal.dto';
-import { needsManualPlatformWritingAcceptance } from '../../../utils/platform-assessment-writing.util';
+import {
+  needsManualPlatformSkillAcceptance,
+  platformSkillAcceptanceLabel,
+  resolvePlatformSkillType,
+} from '../../../utils/platform-assessment-writing.util';
 
 @Component({
   selector: 'app-platform-assessments-template-detail',
@@ -124,11 +128,14 @@ export class PlatformAssessmentsTemplateDetailComponent implements OnInit {
   }
 
   canShowWritingAction(row: RemotePlatformAssessmentItem): boolean {
-    return needsManualPlatformWritingAcceptance(row);
+    return needsManualPlatformSkillAcceptance(row);
   }
 
   isWritingLocked(row: RemotePlatformAssessmentItem): boolean {
-    return row.writingAccepted === true;
+    const skill = resolvePlatformSkillType(row);
+    return skill === 'SPEAKING'
+      ? row.speakingAccepted === true
+      : row.writingAccepted === true;
   }
 
   writingActionLabel(row: RemotePlatformAssessmentItem): string {
@@ -165,18 +172,29 @@ export class PlatformAssessmentsTemplateDetailComponent implements OnInit {
       this.modal.show = false;
       return;
     }
-    this.platformAssessmentService
-      .applyWritingScore(target.mirrorId, target.points ?? undefined)
-      .subscribe({
+    const skill = resolvePlatformSkillType(target);
+    const apply$ =
+      skill === 'SPEAKING'
+        ? this.platformAssessmentService.applySpeakingScore(
+            target.mirrorId,
+            target.points ?? undefined,
+          )
+        : this.platformAssessmentService.applyWritingScore(
+            target.mirrorId,
+            target.points ?? undefined,
+          );
+
+    apply$.subscribe({
         next: (res) => {
           this.applyTarget = null;
+          const label = platformSkillAcceptanceLabel(skill);
           this.modal = {
             ...modalInitializer(),
             show: true,
             isSuccess: true,
             message: res.updatedStage
-              ? 'Grammar registrado. Stage promovido.'
-              : 'Grammar registrado. Stage sin cambio.',
+              ? `${label} registrado. Stage promovido.`
+              : `${label} registrado. Stage sin cambio.`,
             close: () => (this.modal.show = false),
           };
           this.fetchAssignments();

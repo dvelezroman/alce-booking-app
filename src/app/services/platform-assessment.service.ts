@@ -3,6 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import {
+  ApplySpeakingScoreResult,
   ApplyWritingScoreResult,
   AssignPlatformAssessmentsPayload,
   AssignPlatformAssessmentsResult,
@@ -184,6 +185,18 @@ export class PlatformAssessmentService {
       points !== undefined && points !== null ? { points } : {};
     return this.http.post<ApplyWritingScoreResult>(
       `${this.apiUrl}/${platformAssignmentId}/apply-writing-score`,
+      body,
+    );
+  }
+
+  applySpeakingScore(
+    platformAssignmentId: number,
+    points?: number,
+  ): Observable<ApplySpeakingScoreResult> {
+    const body =
+      points !== undefined && points !== null ? { points } : {};
+    return this.http.post<ApplySpeakingScoreResult>(
+      `${this.apiUrl}/${platformAssignmentId}/apply-speaking-score`,
       body,
     );
   }
