@@ -15,7 +15,6 @@ import { StudentLiveClassesComponent } from '../../../components/student-live-cl
 import { PendingAssessmentCardComponent } from '../../../components/home/pending-assessment-card/pending-assessment-card.component';
 import { PendingPlatformAssessmentCardComponent } from '../../../components/home/pending-platform-assessment-card/pending-platform-assessment-card.component';
 import { PlatformAssessmentAssignment } from '../../../services/dtos/platform-assessment.dto';
-import { PlatformAssessmentService } from '../../../services/platform-assessment.service';
 import { StudentCuencaBannerComponent } from '../../../components/home/student-cuenca-banner/student-cuenca-banner.component';
 import { StudentCuencaCommBannerComponent } from '../../../components/home/student-cuenca-comm-banner/student-cuenca-comm-banner.component';
 import { ImageBannerComponent } from '../../../components/home/image-banner/image-banner.component';
@@ -148,7 +147,6 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
     private configService: AssessmentPointsConfigService,
     private announcementService: AnnouncementService,
     private readonly bookingService: BookingService,
-    private readonly platformAssessmentService: PlatformAssessmentService,
     private readonly dailySparkService: DailySparkService,
   ) {}
 
@@ -166,10 +164,6 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
       this.canCloseIntroVideo = hasSeenVideo;
     }
 
-    if (this.isLoggedIn && this.shouldShowAnnouncement()) {
-      this.showAssessmentAnnouncement = true;
-    }
-
     this.loadMinHoursRequired();
     this.loadAnnouncements();
   }
@@ -181,11 +175,6 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
       this.applyUserState();
     }
 
-    if (changes['isLoggedIn']) {
-      if (this.isLoggedIn && this.shouldShowAnnouncement()) {
-        this.showAssessmentAnnouncement = true;
-      }
-    }
   }
 
   ngOnDestroy(): void {
@@ -216,20 +205,6 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
           this.isLoadingMeetings = false;
         },
       });
-  }
-
-  private loadPlatformAssessments(studentId: number): void {
-    this.platformAssessmentService.syncFromRemote(studentId).subscribe({
-      next: (list) => {
-        const pending = (list ?? []).filter((a) => a.status === 'pending');
-        this.platformAssessments = pending;
-        this.pendingPlatformAssessmentsCount = pending.length;
-      },
-      error: () => {
-        this.platformAssessments = [];
-        this.pendingPlatformAssessmentsCount = 0;
-      },
-    });
   }
 
   private loadPendingClassEvaluations(): void {
@@ -299,11 +274,11 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
 
     if (studentId) {
       this.loadMeetings(studentId);
-      this.loadPlatformAssessments(studentId);
     } else {
       this.meetings = [];
       this.platformAssessments = [];
       this.pendingPlatformAssessmentsCount = 0;
+      this.pendingAssessmentsCount = 0;
     }
 
     // ===== BANNER CUENCA =====
@@ -333,11 +308,6 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
 
     // ===== FORM DATOS USUARIO =====
     this.checkUserFormRequirements(user);
-
-    // ===== ANNOUNCEMENT =====
-    if (this.isLoggedIn && this.shouldShowAnnouncement()) {
-      this.showAssessmentAnnouncement = true;
-    }
 
     this.loadAnnouncements();
     this.loadPendingClassEvaluations();
@@ -400,6 +370,14 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
       this.showAssessmentAnnouncement &&
       this.pendingAssessmentsCount > 0
     );
+  }
+
+  get pendingEvaluationsRoute(): string {
+    if (this.pendingPlatformAssessmentsCount > 0) {
+      return '/dashboard/platform-assessments';
+    }
+
+    return '/dashboard/stage-assessment-student';
   }
 
   /**
@@ -520,9 +498,31 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
   /* ============================
      ASSESSMENTS
      ============================ */
-  onAssessmentsLoaded(list: StageAssessment[]) {
+  onPendingAssessmentsCount(count: number): void {
+    this.pendingAssessmentsCount = count;
+
+    if (count > 0 && this.shouldShowAnnouncement()) {
+      this.showAssessmentAnnouncement = true;
+    }
+  }
+
+  onAssessmentsLoaded(list: StageAssessment[]): void {
     this.assessments = list;
-    this.hasUrgentAssessment = this.checkUrgentAssessment(list);
+    this.syncUrgentAssessmentModalState();
+  }
+
+  onPlatformAssessmentsLoaded(
+    list: PlatformAssessmentAssignment[],
+  ): void {
+    this.platformAssessments = list;
+    this.pendingPlatformAssessmentsCount = list.length;
+    this.syncUrgentAssessmentModalState();
+  }
+
+  private syncUrgentAssessmentModalState(): void {
+    this.hasUrgentAssessment =
+      this.checkUrgentStageAssessments(this.assessments) ||
+      this.checkUrgentPlatformAssessments(this.platformAssessments);
 
     const FIVE_MINUTES = 5 * 60 * 1000;
 
@@ -542,24 +542,40 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
       }
 
       this.startUrgentReminder();
-
     } else {
       this.clearUrgentReminder();
       localStorage.removeItem(this.URGENT_MODAL_KEY);
     }
   }
 
-  private checkUrgentAssessment(list: StageAssessment[]): boolean {
+  private checkUrgentStageAssessments(list: StageAssessment[]): boolean {
     const now = Date.now();
-    const LIMIT = 24 * 60 * 60 * 1000; 
+    const LIMIT = 24 * 60 * 60 * 1000;
 
-    return list.some(a => {
+    return list.some((a) => {
       if (!a.dueDate) return false;
       if (a.finished && a.finished.length > 0) return false;
 
       const due = new Date(a.dueDate).getTime();
       const diff = due - now;
 
+      return diff > 0 && diff <= LIMIT;
+    });
+  }
+
+  private checkUrgentPlatformAssessments(
+    list: PlatformAssessmentAssignment[],
+  ): boolean {
+    const now = Date.now();
+    const LIMIT = 24 * 60 * 60 * 1000;
+
+    return list.some((a) => {
+      if (!a.expiresAt) return false;
+
+      const due = new Date(a.expiresAt).getTime();
+      if (!Number.isFinite(due)) return false;
+
+      const diff = due - now;
       return diff > 0 && diff <= LIMIT;
     });
   }

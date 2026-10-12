@@ -13,6 +13,7 @@ export class AssessmentAnnouncementComponent {
 
   @Input() show = false;
   @Input() count: number = 0;
+  @Input() evaluationsRoute = '/dashboard/stage-assessment-student';
 
   @Output() closed = new EventEmitter<void>();
 
@@ -20,7 +21,7 @@ export class AssessmentAnnouncementComponent {
 
   close() {
     localStorage.setItem('assessment_announced', 'true');
-    this.router.navigate(['/dashboard/stage-assessment-student']);
+    this.router.navigate([this.evaluationsRoute]);
     this.closed.emit();
   }
 

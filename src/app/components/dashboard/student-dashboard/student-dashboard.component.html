@@ -3,9 +3,9 @@
   <!-- COUNTDOWN -->
   <div class="banner-wrapper">
     <app-countdown-banner
-      (pendingCount)="pendingAssessmentsCount = $event"
-      (showAnnouncement)="showAssessmentAnnouncement = $event"
-      (assessmentsLoaded)="onAssessmentsLoaded($event)">
+      (pendingCount)="onPendingAssessmentsCount($event)"
+      (assessmentsLoaded)="onAssessmentsLoaded($event)"
+      (platformAssessmentsLoaded)="onPlatformAssessmentsLoaded($event)">
     </app-countdown-banner>
   </div>
 
@@ -471,6 +471,7 @@
     *ngIf="isAssessmentModalVisible"
     [show]="showAssessmentAnnouncement"
     [count]="pendingAssessmentsCount"
+    [evaluationsRoute]="pendingEvaluationsRoute"
     (closed)="onAnnouncementClosed()">
   </app-assessment-announcement>
 

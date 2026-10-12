@@ -139,7 +139,7 @@
 
     <div
       class="countdown-banner__item"
-      *ngFor="let c of countdowns"
+      *ngFor="let c of countdowns; trackBy: trackByKey"
       [class.countdown-banner__item--urgent]="c.isUrgent"
     >
 
@@ -147,7 +147,7 @@
       <button
         type="button"
         class="countdown-banner__assessment"
-        (click)="goToAssessmentPage()"
+        (click)="goToAssessment(c)"
       >
 
         <span class="countdown-banner__assessment-icon">
@@ -205,6 +205,7 @@
       <!-- COUNTDOWN -->
       <div
         class="countdown-banner__timer"
+        *ngIf="c.hasTimer"
         [class.countdown-banner__timer--urgent]="c.isUrgent"
       >
 
