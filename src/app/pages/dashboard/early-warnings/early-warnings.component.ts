@@ -242,10 +242,6 @@ export class EarlyWarningsComponent implements OnInit {
     return `${row.firstName ?? ''} ${row.lastName ?? ''}`.trim() || '—';
   }
 
-  email(row: EarlyWarningRowDto): string {
-    return row.emailAddress || row.email || '—';
-  }
-
   classificationLabel(value: string | null | undefined): string {
     switch (value) {
       case 'KIDS':
@@ -270,17 +266,6 @@ export class EarlyWarningsComponent implements OnInit {
       default:
         return '—';
     }
-  }
-
-  formatStageEntry(iso: string | null | undefined): string {
-    if (!iso) return '—';
-    const date = new Date(iso);
-    if (Number.isNaN(date.getTime())) return '—';
-    return date.toLocaleDateString('es-EC', {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric',
-    });
   }
 
   trackByStudentId(_index: number, row: EarlyWarningRowDto): number {

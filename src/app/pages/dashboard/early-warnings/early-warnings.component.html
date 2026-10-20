@@ -214,13 +214,7 @@
             />
           </th>
           <th>Estudiante</th>
-          <th>Email</th>
-          <th>Ciudad</th>
-          <th>Clasif. / Modalidad</th>
-          <th>Etapa</th>
-          <th>Clases (ventana)</th>
           <th>Días en etapa</th>
-          <th>Ingreso etapa</th>
           <th>Alertas</th>
           <th>Seguimiento</th>
           <th></th>
@@ -249,25 +243,10 @@
               Nuevo
             </span>
           </td>
-          <td>{{ email(row) }}</td>
-          <td>{{ row.city || '—' }}</td>
-          <td>
-            {{ classificationLabel(row.studentClassification) }}
-            <small>{{ modeLabel(row.mode) }}</small>
-          </td>
-          <td>
-            {{ row.stageNumber || '—' }}
-            <small *ngIf="row.stageDescription">{{ row.stageDescription }}</small>
-          </td>
-          <td>
-            {{ row.meetingsInWindow }} / {{ row.minHoursScheduled }}
-            <small>({{ row.windowDays }} días)</small>
-          </td>
           <td>
             {{ row.daysInStage }}
-            <small>/ {{ row.maxDaysInCurrentStage }}</small>
+            <small>/ {{ row.maxDaysInCurrentStage }} máx.</small>
           </td>
-          <td>{{ formatStageEntry(row.stageEntryDate) }}</td>
           <td>
             <span
               *ngIf="row.lowScheduling"
