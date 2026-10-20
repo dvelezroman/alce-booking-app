@@ -111,6 +111,8 @@ export class PlatformAssessmentsListComponent implements OnInit {
     RemotePlatformAssessmentItem |
     null = null;
 
+  grantExtensionHours = 24;
+
   actionBusyId:
     string |
     null = null;
@@ -549,6 +551,16 @@ export class PlatformAssessmentsListComponent implements OnInit {
     );
   }
 
+  private isAssignmentPastDue(
+    expiresAt: string | null | undefined,
+  ): boolean {
+    if (!expiresAt) {
+      return false;
+    }
+    const t = Date.parse(expiresAt);
+    return Number.isFinite(t) && t < Date.now();
+  }
+
   startGrantAttempt(
     row: RemotePlatformAssessmentItem,
   ): void {
@@ -558,7 +570,39 @@ export class PlatformAssessmentsListComponent implements OnInit {
       return;
     }
 
+    let extensionHours = 24;
+    if (this.isAssignmentPastDue(row.expiresAt)) {
+      const draft = window.prompt(
+        `Horas de plazo desde ahora para ${this.displayStudent(row)} (1–720, default 24):`,
+        '24',
+      );
+      if (draft === null) {
+        return;
+      }
+      const trimmed = draft.trim();
+      if (trimmed.length > 0) {
+        const parsed = Number.parseInt(trimmed, 10);
+        if (
+          !Number.isFinite(parsed) ||
+          parsed < 1 ||
+          parsed > 720
+        ) {
+          this.showFeedback(
+            'Horas inválidas. Usa un entero entre 1 y 720.',
+            'error',
+          );
+          return;
+        }
+        extensionHours = parsed;
+      }
+    }
+
     this.grantTarget = row;
+    this.grantExtensionHours = extensionHours;
+
+    const extensionNote = this.isAssignmentPastDue(row.expiresAt)
+      ? ` Nueva fecha límite: ahora + ${extensionHours} h.`
+      : '';
 
     this.modal = {
       ...modalInitializer(),
@@ -568,7 +612,7 @@ export class PlatformAssessmentsListComponent implements OnInit {
       message:
         `¿Otorgar otro intento a ${this.displayStudent(row)}? ` +
         `(maxAttempts ${row.maxAttempts} → al menos ${row.attemptCount + 1}). ` +
-        `El estado en booking vuelve a pending.`,
+        `El estado en booking vuelve a pending.${extensionNote}`,
 
       isInfo: true,
 
@@ -601,6 +645,9 @@ export class PlatformAssessmentsListComponent implements OnInit {
     this.platformAssessmentService
       .grantAttempt(
         target.assignmentId,
+        {
+          extensionHours: this.grantExtensionHours,
+        },
       )
       .subscribe({
         next: (res) => {

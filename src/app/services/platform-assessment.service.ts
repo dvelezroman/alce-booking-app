@@ -169,10 +169,15 @@ export class PlatformAssessmentService {
   /** Admin: grant another attempt; mirror returns to pending. */
   grantAttempt(
     assignmentId: string,
+    options: { extensionHours?: number } = {},
   ): Observable<PlatformAssignmentMutationResult> {
+    const body =
+      options.extensionHours != null
+        ? { extensionHours: options.extensionHours }
+        : {};
     return this.http.post<PlatformAssignmentMutationResult>(
       `${this.apiUrl}/remote/${encodeURIComponent(assignmentId)}/grant-attempt`,
-      {},
+      body,
     );
   }
 
