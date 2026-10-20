@@ -6,6 +6,7 @@ import { EarlyWarningsService } from '../../../services/early-warnings.service';
 import { StagesService } from '../../../services/stages.service';
 import {
   EarlyWarningAlertTypeFilter,
+  EarlyWarningAttentionChannel,
   EarlyWarningClassification,
   EarlyWarningFilterOptionsDto,
   EarlyWarningFollowUpChannel,
@@ -61,6 +62,18 @@ export class EarlyWarningsComponent implements OnInit {
   followUpNotes = '';
   followUpContactDate = '';
   savingFollowUpStudentIds = new Set<number>();
+
+  selectedStudentIds = new Set<number>();
+  attentionModalOpen = false;
+  attentionSending = false;
+  attentionTargetIds: number[] = [];
+  attentionChannelInApp = true;
+  attentionChannelEmail = true;
+  attentionChannelWhatsapp = false;
+  attentionTitle = 'Llamada de atención — seguimiento académico';
+  attentionMessage =
+    'Hemos detectado señales de seguimiento académico (poca programación de clases y/o mucho tiempo en la misma etapa). Te pedimos agendar tus clases y mantener contacto con la academia. Si necesitas apoyo, responde a este mensaje o escríbenos.';
+  attentionMarkFollowUpDone = true;
 
   readonly followUpChannels: {
     value: EarlyWarningFollowUpChannel;
@@ -206,6 +219,7 @@ export class EarlyWarningsComponent implements OnInit {
     const totalPages = this.totalPages;
     if (page > totalPages) return;
     this.page = page;
+    this.selectedStudentIds.clear();
     this.loadList();
   }
 
@@ -375,4 +389,133 @@ export class EarlyWarningsComponent implements OnInit {
       this.followUpChannels.find((c) => c.value === value)?.label ?? '—'
     );
   }
+
+  get selectedCount(): number {
+    return this.selectedStudentIds.size;
+  }
+
+  get allPageSelected(): boolean {
+    if (!this.list?.items.length) return false;
+    return this.list.items.every((r) =>
+      this.selectedStudentIds.has(r.studentId),
+    );
+  }
+
+  isRowSelected(row: EarlyWarningRowDto): boolean {
+    return this.selectedStudentIds.has(row.studentId);
+  }
+
+  toggleRowSelection(row: EarlyWarningRowDto, event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.checked) {
+      this.selectedStudentIds.add(row.studentId);
+    } else {
+      this.selectedStudentIds.delete(row.studentId);
+    }
+  }
+
+  toggleSelectAllPage(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (!this.list?.items) return;
+    if (input.checked) {
+      for (const row of this.list.items) {
+        this.selectedStudentIds.add(row.studentId);
+      }
+    } else {
+      for (const row of this.list.items) {
+        this.selectedStudentIds.delete(row.studentId);
+      }
+    }
+  }
+
+  openAttentionForSelection(): void {
+    if (this.selectedStudentIds.size === 0) return;
+    this.openAttentionModal([...this.selectedStudentIds]);
+  }
+
+  openAttentionForRow(row: EarlyWarningRowDto): void {
+    this.openAttentionModal([row.studentId]);
+  }
+
+  get attentionWhatsappAllowed(): boolean {
+    return this.attentionTargetIds.length === 1;
+  }
+
+  private openAttentionModal(studentIds: number[]): void {
+    this.attentionTargetIds = studentIds;
+    if (studentIds.length > 1) {
+      this.attentionChannelWhatsapp = false;
+    }
+    this.attentionModalOpen = true;
+  }
+
+  closeAttentionModal(): void {
+    this.attentionModalOpen = false;
+    this.attentionTargetIds = [];
+    this.attentionSending = false;
+  }
+
+  submitAttentionCall(): void {
+    const channels: EarlyWarningAttentionChannel[] = [];
+    if (this.attentionChannelInApp) channels.push('IN_APP');
+    if (this.attentionChannelEmail) channels.push('EMAIL');
+    if (this.attentionChannelWhatsapp) {
+      if (!this.attentionWhatsappAllowed) {
+        this.error =
+          'WhatsApp solo está disponible para un estudiante a la vez.';
+        return;
+      }
+      channels.push('WHATSAPP');
+    }
+    if (channels.length === 0) {
+      this.error = 'Selecciona al menos un canal de envío.';
+      return;
+    }
+    const message = this.attentionMessage.trim();
+    if (!message) {
+      this.error = 'Escribe el mensaje de la llamada de atención.';
+      return;
+    }
+    this.attentionSending = true;
+    this.error = null;
+    this.earlyWarnings
+      .sendAttentionCall({
+        studentIds: this.attentionTargetIds,
+        channels,
+        title: this.attentionTitle.trim() || undefined,
+        message,
+        markFollowUpDone: this.attentionMarkFollowUpDone,
+      })
+      .subscribe({
+        next: (res) => {
+          this.attentionSending = false;
+          this.closeAttentionModal();
+          this.selectedStudentIds.clear();
+          this.loadList();
+          this.loadSummary();
+          const parts = [
+            `Procesados: ${res.requested}`,
+            res.inApp.sent ? `In-app: ${res.inApp.sent}` : null,
+            res.email.sent || res.email.skipped
+              ? `Email: ${res.email.sent} enviados, ${res.email.skipped} sin correo`
+              : null,
+            res.whatsapp.enqueued || res.whatsapp.skipped
+              ? `WhatsApp: ${res.whatsapp.enqueued} encolados, ${res.whatsapp.skipped} sin teléfono`
+              : null,
+          ].filter(Boolean);
+          this.attentionResultMessage = parts.join(' · ');
+          if (res.errors.length) {
+            this.error = res.errors.slice(0, 2).join(' ');
+          }
+        },
+        error: (err) => {
+          this.attentionSending = false;
+          this.error =
+            err?.error?.message ||
+            'No se pudo enviar la llamada de atención.';
+        },
+      });
+  }
+
+  attentionResultMessage: string | null = null;
 }

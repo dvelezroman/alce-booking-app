@@ -30,6 +30,30 @@ export interface EarlyWarningFollowUpDto {
   } | null;
 }
 
+export type EarlyWarningAttentionChannel = 'EMAIL' | 'WHATSAPP' | 'IN_APP';
+
+export interface SendEarlyWarningAttentionCallDto {
+  studentIds: number[];
+  channels: EarlyWarningAttentionChannel[];
+  title?: string;
+  message: string;
+  markFollowUpDone?: boolean;
+}
+
+export interface SendEarlyWarningAttentionCallResultDto {
+  requested: number;
+  inApp: { sent: number; failed: number; notificationId?: number };
+  email: { sent: number; skipped: number; failed: number };
+  whatsapp: {
+    enqueued: number;
+    skipped: number;
+    failed: number;
+    jobIds: string[];
+  };
+  followUpUpdated: number;
+  errors: string[];
+}
+
 export interface UpsertEarlyWarningFollowUpDto {
   status: EarlyWarningFollowUpStatus;
   channel?: EarlyWarningFollowUpChannel | null;

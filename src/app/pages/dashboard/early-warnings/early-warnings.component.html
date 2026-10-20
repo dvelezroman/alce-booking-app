@@ -181,6 +181,23 @@
     </div>
   </form>
 
+  <div class="early-warnings__bulk-bar" *ngIf="!loading && list?.items?.length">
+    <button
+      type="button"
+      class="early-warnings__attention-btn"
+      [disabled]="selectedCount === 0 || attentionSending"
+      (click)="openAttentionForSelection()"
+    >
+      Llamada de atención ({{ selectedCount }})
+    </button>
+    <span class="early-warnings__bulk-hint">
+      Envío grupal: email e in-app. WhatsApp solo desde Atención (un estudiante).
+    </span>
+  </div>
+
+  <p *ngIf="attentionResultMessage" class="early-warnings__success">
+    {{ attentionResultMessage }}
+  </p>
   <p *ngIf="error" class="early-warnings__error">{{ error }}</p>
   <p *ngIf="loading" class="early-warnings__loading">Cargando…</p>
 
@@ -188,6 +205,14 @@
     <table class="early-warnings__table">
       <thead>
         <tr>
+          <th class="early-warnings__col-select">
+            <input
+              type="checkbox"
+              [checked]="allPageSelected"
+              (change)="toggleSelectAllPage($event)"
+              aria-label="Seleccionar página"
+            />
+          </th>
           <th>Estudiante</th>
           <th>Email</th>
           <th>Ciudad</th>
@@ -206,6 +231,14 @@
           *ngFor="let row of list.items; trackBy: trackByStudentId"
           [class.early-warnings__row--new]="row.isNewAlert"
         >
+          <td class="early-warnings__col-select">
+            <input
+              type="checkbox"
+              [checked]="isRowSelected(row)"
+              (change)="toggleRowSelection(row, $event)"
+              [attr.aria-label]="'Seleccionar ' + fullName(row)"
+            />
+          </td>
           <td>
             <strong>{{ fullName(row) }}</strong>
             <small>ID {{ row.studentId }}</small>
@@ -271,7 +304,14 @@
               {{ channelLabel(row.followUp?.channel) }}
             </small>
           </td>
-          <td>
+          <td class="early-warnings__actions">
+            <button
+              type="button"
+              class="early-warnings__attention-link"
+              (click)="openAttentionForRow(row)"
+            >
+              Atención
+            </button>
             <a
               [routerLink]="['/dashboard/searching-user']"
               [queryParams]="{ userId: row.userId }"
@@ -300,6 +340,98 @@
         Siguiente
       </button>
     </footer>
+  </div>
+
+  <div
+    *ngIf="attentionModalOpen"
+    class="early-warnings__modal-backdrop"
+    (click)="closeAttentionModal()"
+  >
+    <div
+      class="early-warnings__modal early-warnings__modal--wide"
+      role="dialog"
+      aria-labelledby="attention-title"
+      (click)="$event.stopPropagation()"
+    >
+      <h2 id="attention-title">
+        Llamada de atención
+        <small>({{ attentionTargetIds.length }} estudiante{{
+          attentionTargetIds.length === 1 ? '' : 's'
+        }})</small>
+      </h2>
+      <p class="early-warnings__modal-hint">
+        El mismo mensaje se envía por los canales marcados. WhatsApp (solo
+        individual) usa la plantilla del notificador.
+      </p>
+
+      <fieldset class="early-warnings__channels">
+        <legend>Canales</legend>
+        <label>
+          <input type="checkbox" [(ngModel)]="attentionChannelInApp" name="chInApp" />
+          In-app (notificación en la app)
+        </label>
+        <label>
+          <input type="checkbox" [(ngModel)]="attentionChannelEmail" name="chEmail" />
+          Correo electrónico
+        </label>
+        <label
+          class="early-warnings__channel-option"
+          [class.early-warnings__channel-option--disabled]="!attentionWhatsappAllowed"
+        >
+          <input
+            type="checkbox"
+            [(ngModel)]="attentionChannelWhatsapp"
+            name="chWhatsapp"
+            [disabled]="!attentionWhatsappAllowed"
+          />
+          WhatsApp
+        </label>
+        <p *ngIf="!attentionWhatsappAllowed" class="early-warnings__channel-note">
+          WhatsApp solo para un estudiante. Usa el botón Atención en la fila o
+          selecciona uno solo.
+        </p>
+      </fieldset>
+
+      <label>
+        Asunto / título
+        <input type="text" [(ngModel)]="attentionTitle" name="attentionTitle" />
+      </label>
+
+      <label>
+        Mensaje
+        <textarea
+          rows="5"
+          [(ngModel)]="attentionMessage"
+          name="attentionMessage"
+        ></textarea>
+      </label>
+
+      <label class="early-warnings__follow-up-check">
+        <input
+          type="checkbox"
+          [(ngModel)]="attentionMarkFollowUpDone"
+          name="attentionMarkDone"
+        />
+        Marcar seguimiento como realizado al enviar
+      </label>
+
+      <div class="early-warnings__modal-actions">
+        <button
+          type="button"
+          class="early-warnings__ghost"
+          (click)="closeAttentionModal()"
+        >
+          Cancelar
+        </button>
+        <button
+          type="button"
+          [disabled]="attentionSending"
+          (click)="submitAttentionCall()"
+        >
+          {{ attentionSending ? 'Enviando…' : 'Enviar llamada de atención' }}
+        </button>
+      </div>
+    </div>
   </div>
 
   <div

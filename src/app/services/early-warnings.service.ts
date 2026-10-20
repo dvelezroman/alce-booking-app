@@ -8,6 +8,8 @@ import {
   EarlyWarningListResponseDto,
   EarlyWarningFollowUpDto,
   EarlyWarningSummaryDto,
+  SendEarlyWarningAttentionCallDto,
+  SendEarlyWarningAttentionCallResultDto,
   UpsertEarlyWarningFollowUpDto,
 } from './dtos/early-warnings.dto';
 
@@ -71,6 +73,15 @@ export class EarlyWarningsService {
       params: this.buildParams(params),
       responseType: 'blob',
     });
+  }
+
+  sendAttentionCall(
+    body: SendEarlyWarningAttentionCallDto,
+  ): Observable<SendEarlyWarningAttentionCallResultDto> {
+    return this.http.post<SendEarlyWarningAttentionCallResultDto>(
+      `${this.apiUrl}/early-warnings/attention-call`,
+      body,
+    );
   }
 
   upsertFollowUp(
