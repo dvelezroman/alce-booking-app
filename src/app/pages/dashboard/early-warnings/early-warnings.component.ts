@@ -8,6 +8,8 @@ import {
   EarlyWarningAlertTypeFilter,
   EarlyWarningClassification,
   EarlyWarningFilterOptionsDto,
+  EarlyWarningFollowUpChannel,
+  EarlyWarningFollowUpFilter,
   EarlyWarningListParams,
   EarlyWarningListResponseDto,
   EarlyWarningMode,
@@ -50,6 +52,25 @@ export class EarlyWarningsComponent implements OnInit {
   maxDaysInStage: number | null = null;
   minMeetingsInWindow: number | null = null;
   maxMeetingsInWindow: number | null = null;
+  followUpFilter: EarlyWarningFollowUpFilter = 'all';
+
+  followUpModalOpen = false;
+  followUpSaving = false;
+  followUpEditorRow: EarlyWarningRowDto | null = null;
+  followUpChannel: EarlyWarningFollowUpChannel | null = null;
+  followUpNotes = '';
+  followUpContactDate = '';
+  savingFollowUpStudentIds = new Set<number>();
+
+  readonly followUpChannels: {
+    value: EarlyWarningFollowUpChannel;
+    label: string;
+  }[] = [
+    { value: 'PHONE', label: 'Llamada telefónica' },
+    { value: 'EMAIL', label: 'Correo' },
+    { value: 'MESSAGE', label: 'Mensaje' },
+    { value: 'WARNING_CALL', label: 'Llamada de atención' },
+  ];
 
   constructor(
     private readonly earlyWarnings: EarlyWarningsService,
@@ -77,6 +98,7 @@ export class EarlyWarningsComponent implements OnInit {
       maxDaysInStage: this.maxDaysInStage,
       minMeetingsInWindow: this.minMeetingsInWindow,
       maxMeetingsInWindow: this.maxMeetingsInWindow,
+      followUp: this.followUpFilter === 'all' ? undefined : this.followUpFilter,
     };
     if (includePagination) {
       params.page = this.page;
@@ -152,6 +174,7 @@ export class EarlyWarningsComponent implements OnInit {
     this.maxDaysInStage = null;
     this.minMeetingsInWindow = null;
     this.maxMeetingsInWindow = null;
+    this.followUpFilter = 'all';
     this.page = 1;
     this.loadList();
     this.loadSummary();
@@ -248,5 +271,108 @@ export class EarlyWarningsComponent implements OnInit {
 
   trackByStudentId(_index: number, row: EarlyWarningRowDto): number {
     return row.studentId;
+  }
+
+  followUpDone(row: EarlyWarningRowDto): boolean {
+    return !row.followUpPending;
+  }
+
+  isSavingFollowUp(row: EarlyWarningRowDto): boolean {
+    return this.savingFollowUpStudentIds.has(row.studentId);
+  }
+
+  onFollowUpToggle(row: EarlyWarningRowDto, event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.checked) {
+      this.openFollowUpEditor(row);
+      input.checked = this.followUpDone(row);
+      return;
+    }
+    this.saveFollowUp(row, {
+      status: 'PENDING',
+    });
+  }
+
+  openFollowUpEditor(row: EarlyWarningRowDto): void {
+    this.followUpEditorRow = row;
+    this.followUpChannel = row.followUp?.channel ?? null;
+    this.followUpNotes = row.followUp?.notes ?? '';
+    this.followUpContactDate = row.followUp?.contactedAt
+      ? row.followUp.contactedAt.slice(0, 10)
+      : new Date().toISOString().slice(0, 10);
+    this.followUpModalOpen = true;
+  }
+
+  closeFollowUpEditor(): void {
+    this.followUpModalOpen = false;
+    this.followUpEditorRow = null;
+    this.followUpSaving = false;
+  }
+
+  submitFollowUpEditor(): void {
+    if (!this.followUpEditorRow) return;
+    this.saveFollowUp(this.followUpEditorRow, {
+      status: 'DONE',
+      channel: this.followUpChannel,
+      notes: this.followUpNotes.trim() || null,
+      contactedAt: this.followUpContactDate
+        ? new Date(`${this.followUpContactDate}T12:00:00`).toISOString()
+        : null,
+    });
+  }
+
+  private saveFollowUp(
+    row: EarlyWarningRowDto,
+    body: {
+      status: 'PENDING' | 'DONE';
+      channel?: EarlyWarningFollowUpChannel | null;
+      notes?: string | null;
+      contactedAt?: string | null;
+    },
+  ): void {
+    if (this.savingFollowUpStudentIds.has(row.studentId)) return;
+    this.savingFollowUpStudentIds.add(row.studentId);
+    this.followUpSaving = true;
+    this.earlyWarnings.upsertFollowUp(row.studentId, body).subscribe({
+      next: (res) => {
+        this.patchRowFollowUp(row.studentId, res);
+        this.savingFollowUpStudentIds.delete(row.studentId);
+        this.followUpSaving = false;
+        if (body.status === 'DONE') {
+          this.closeFollowUpEditor();
+        }
+        this.loadSummary();
+      },
+      error: () => {
+        this.error = 'No se pudo guardar el seguimiento.';
+        this.savingFollowUpStudentIds.delete(row.studentId);
+        this.followUpSaving = false;
+      },
+    });
+  }
+
+  private patchRowFollowUp(
+    studentId: number,
+    res: {
+      followUp: EarlyWarningRowDto['followUp'];
+      followUpPending: boolean;
+      isNewAlert: boolean;
+    },
+  ): void {
+    if (!this.list?.items) return;
+    const idx = this.list.items.findIndex((r) => r.studentId === studentId);
+    if (idx < 0) return;
+    this.list.items[idx] = {
+      ...this.list.items[idx],
+      followUp: res.followUp,
+      followUpPending: res.followUpPending,
+      isNewAlert: res.isNewAlert,
+    };
+  }
+
+  channelLabel(value: string | null | undefined): string {
+    return (
+      this.followUpChannels.find((c) => c.value === value)?.label ?? '—'
+    );
   }
 }

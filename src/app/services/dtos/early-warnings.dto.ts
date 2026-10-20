@@ -7,6 +7,36 @@ export type EarlyWarningAlertTypeFilter =
 export type EarlyWarningClassification = 'KIDS' | 'TEENS' | 'ADULTS';
 export type EarlyWarningMode = 'ONLINE' | 'PRESENCIAL' | 'SEMIPRESENCIAL';
 
+export type EarlyWarningFollowUpStatus = 'PENDING' | 'DONE';
+
+export type EarlyWarningFollowUpChannel =
+  | 'PHONE'
+  | 'EMAIL'
+  | 'MESSAGE'
+  | 'WARNING_CALL';
+
+export type EarlyWarningFollowUpFilter = 'all' | 'pending' | 'done';
+
+export interface EarlyWarningFollowUpDto {
+  status: EarlyWarningFollowUpStatus;
+  channel: EarlyWarningFollowUpChannel | null;
+  notes: string | null;
+  contactedAt: string | null;
+  updatedAt: string;
+  updatedBy: {
+    id: number;
+    firstName: string | null;
+    lastName: string | null;
+  } | null;
+}
+
+export interface UpsertEarlyWarningFollowUpDto {
+  status: EarlyWarningFollowUpStatus;
+  channel?: EarlyWarningFollowUpChannel | null;
+  notes?: string | null;
+  contactedAt?: string | null;
+}
+
 export interface EarlyWarningConfigDto {
   numberDaysNewStudent: number;
   minHoursScheduled: number;
@@ -35,6 +65,9 @@ export interface EarlyWarningRowDto {
   lowScheduling: boolean;
   longTimeInStage: boolean;
   windowDays: number;
+  followUp: EarlyWarningFollowUpDto | null;
+  followUpPending: boolean;
+  isNewAlert: boolean;
 }
 
 export interface EarlyWarningFilteredSummaryDto {
@@ -42,6 +75,7 @@ export interface EarlyWarningFilteredSummaryDto {
   longStageCount: number;
   bothCount: number;
   totalAtRisk: number;
+  pendingFollowUpCount?: number;
 }
 
 export interface EarlyWarningListResponseDto {
@@ -58,6 +92,7 @@ export interface EarlyWarningSummaryDto {
   longStageCount: number;
   bothCount: number;
   totalAtRisk: number;
+  pendingFollowUpCount?: number;
   config: EarlyWarningConfigDto;
   top: EarlyWarningRowDto[];
 }
@@ -81,4 +116,5 @@ export interface EarlyWarningListParams {
   maxDaysInStage?: number | null;
   minMeetingsInWindow?: number | null;
   maxMeetingsInWindow?: number | null;
+  followUp?: EarlyWarningFollowUpFilter;
 }

@@ -36,6 +36,10 @@
       <span>Ambas alertas</span>
       <strong>{{ s.bothCount }}</strong>
     </article>
+    <article class="early-warnings__kpi early-warnings__kpi--pending">
+      <span>Seguimiento pendiente</span>
+      <strong>{{ s.pendingFollowUpCount ?? '—' }}</strong>
+    </article>
   </div>
 
   <p class="early-warnings__config" *ngIf="summary?.config as c">
@@ -45,6 +49,15 @@
   </p>
 
   <form class="early-warnings__filters" (ngSubmit)="applyFilters()">
+    <label>
+      Seguimiento
+      <select [(ngModel)]="followUpFilter" name="followUpFilter">
+        <option value="all">Todos</option>
+        <option value="pending">Pendiente</option>
+        <option value="done">Realizado</option>
+      </select>
+    </label>
+
     <label>
       Tipo de alerta
       <select [(ngModel)]="alertType" name="alertType">
@@ -184,14 +197,24 @@
           <th>Días en etapa</th>
           <th>Ingreso etapa</th>
           <th>Alertas</th>
+          <th>Seguimiento</th>
           <th></th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let row of list.items; trackBy: trackByStudentId">
+        <tr
+          *ngFor="let row of list.items; trackBy: trackByStudentId"
+          [class.early-warnings__row--new]="row.isNewAlert"
+        >
           <td>
             <strong>{{ fullName(row) }}</strong>
             <small>ID {{ row.studentId }}</small>
+            <span
+              *ngIf="row.isNewAlert"
+              class="early-warnings__badge early-warnings__badge--new"
+            >
+              Nuevo
+            </span>
           </td>
           <td>{{ email(row) }}</td>
           <td>{{ row.city || '—' }}</td>
@@ -226,6 +249,28 @@
               Etapa larga
             </span>
           </td>
+          <td class="early-warnings__follow-up">
+            <label class="early-warnings__follow-up-check">
+              <input
+                type="checkbox"
+                [checked]="followUpDone(row)"
+                [disabled]="isSavingFollowUp(row)"
+                (change)="onFollowUpToggle(row, $event)"
+              />
+              <span>Hecho</span>
+            </label>
+            <button
+              type="button"
+              class="early-warnings__note-btn"
+              (click)="openFollowUpEditor(row)"
+              [attr.title]="row.followUp?.notes || 'Nota de seguimiento'"
+            >
+              {{ row.followUp?.notes ? 'Editar nota' : 'Nota' }}
+            </button>
+            <small *ngIf="row.followUp?.channel">
+              {{ channelLabel(row.followUp?.channel) }}
+            </small>
+          </td>
           <td>
             <a
               [routerLink]="['/dashboard/searching-user']"
@@ -255,5 +300,62 @@
         Siguiente
       </button>
     </footer>
+  </div>
+
+  <div
+    *ngIf="followUpModalOpen && followUpEditorRow as editRow"
+    class="early-warnings__modal-backdrop"
+    (click)="closeFollowUpEditor()"
+  >
+    <div
+      class="early-warnings__modal"
+      role="dialog"
+      aria-labelledby="follow-up-title"
+      (click)="$event.stopPropagation()"
+    >
+      <h2 id="follow-up-title">Seguimiento — {{ fullName(editRow) }}</h2>
+      <p class="early-warnings__modal-hint">
+        Registra cómo contactaste al estudiante. Al guardar, se marcará el
+        seguimiento como realizado para las alertas actuales.
+      </p>
+
+      <label>
+        Canal
+        <select [(ngModel)]="followUpChannel" name="followUpChannel">
+          <option [ngValue]="null">Seleccionar…</option>
+          <option *ngFor="let ch of followUpChannels" [ngValue]="ch.value">
+            {{ ch.label }}
+          </option>
+        </select>
+      </label>
+
+      <label>
+        Fecha de contacto
+        <input type="date" [(ngModel)]="followUpContactDate" name="followUpContactDate" />
+      </label>
+
+      <label>
+        Nota / informe
+        <textarea
+          rows="4"
+          [(ngModel)]="followUpNotes"
+          name="followUpNotes"
+          placeholder="Resumen de la conversación, acuerdos, etc."
+        ></textarea>
+      </label>
+
+      <div class="early-warnings__modal-actions">
+        <button type="button" class="early-warnings__ghost" (click)="closeFollowUpEditor()">
+          Cancelar
+        </button>
+        <button
+          type="button"
+          [disabled]="followUpSaving"
+          (click)="submitFollowUpEditor()"
+        >
+          {{ followUpSaving ? 'Guardando…' : 'Guardar seguimiento' }}
+        </button>
+      </div>
+    </div>
   </div>
 </section>

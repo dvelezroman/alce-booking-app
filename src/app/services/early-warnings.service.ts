@@ -6,7 +6,9 @@ import {
   EarlyWarningFilterOptionsDto,
   EarlyWarningListParams,
   EarlyWarningListResponseDto,
+  EarlyWarningFollowUpDto,
   EarlyWarningSummaryDto,
+  UpsertEarlyWarningFollowUpDto,
 } from './dtos/early-warnings.dto';
 
 @Injectable({
@@ -36,6 +38,7 @@ export class EarlyWarningsService {
     setIf('maxDaysInStage', params.maxDaysInStage);
     setIf('minMeetingsInWindow', params.minMeetingsInWindow);
     setIf('maxMeetingsInWindow', params.maxMeetingsInWindow);
+    setIf('followUp', params.followUp);
     return httpParams;
   }
 
@@ -68,5 +71,20 @@ export class EarlyWarningsService {
       params: this.buildParams(params),
       responseType: 'blob',
     });
+  }
+
+  upsertFollowUp(
+    studentId: number,
+    body: UpsertEarlyWarningFollowUpDto,
+  ): Observable<{
+    followUp: EarlyWarningFollowUpDto;
+    followUpPending: boolean;
+    isNewAlert: boolean;
+  }> {
+    return this.http.put<{
+      followUp: EarlyWarningFollowUpDto;
+      followUpPending: boolean;
+      isNewAlert: boolean;
+    }>(`${this.apiUrl}/early-warnings/${studentId}/follow-up`, body);
   }
 }
