@@ -69,7 +69,7 @@ export class StageAssessmentComponent implements OnInit {
     if (!stageId) return;
     this.fetchProgressForStage(stageId);
 
-    this.stageAssessmentResourcesService.getAll({ stageId }).subscribe({
+    this.stageAssessmentResourcesService.getAll({ stageId, active: true }).subscribe({
        next: (data) => {
         this.resourcesList = data;
         this.fetchProgressForStage(stageId);

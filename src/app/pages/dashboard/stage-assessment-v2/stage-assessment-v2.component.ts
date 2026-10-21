@@ -134,7 +134,7 @@ export class StageAssessmentV2Component implements OnInit {
     this.isLoadingStudents = true;
 
     this.stageAssessmentResourcesService
-      .getAll({ stageId })
+      .getAll({ stageId, active: true })
       .subscribe({
         next: (data) => {
           this.resourcesList = data || [];
