@@ -39,7 +39,8 @@ import { StudentClassification } from '../../../services/dtos/student.dto';
 import { AnnouncementService } from '../../../services/announcement.service';
 import { MeetingDTO, MeetingStatusEnum } from '../../../services/dtos/booking.dto';
 import { BookingService } from '../../../services/booking.service';
-import { takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { StudentProgressCardComponent } from './student-progress-card/student-progress-card.component';
 import { StudentImportantNoticesComponent } from "./student-important-notices/student-important-notices.component";
 import { StudentDailyQuoteComponent } from "./student-daily-quote/student-daily-quote.component";
@@ -48,6 +49,13 @@ import { StudentStudyStreakComponent } from "./student-study-streak/student-stud
 import { MeetingDetailModalComponent } from '../../scheduled-meetings/meeting-detail-modal/meeting-detail-modal.component';
 import { DailySparkService } from '../../../services/daily-spark.service';
 import { DailySpark } from '../../../services/dtos/daily-spark.dto';
+import { NotificationService } from '../../../services/notification.service';
+import { Notification } from '../../../services/dtos/notification.dto';
+import {
+  hasSeenRetakeModal,
+  markRetakeModalSeen,
+} from '../../../shared/utils/assessment-retake-announcement.util';
+import { AssessmentAnnouncementVariant } from '../../../components/home/assessment-announcement/assessment-announcement.component';
 
 type AnnouncementViewerUser = {
   role?: UserRole;
@@ -105,6 +113,10 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
   showBannerCuencaComm = false;
   showImageBanner = true;
   showAssessmentAnnouncement = false;
+  assessmentAnnouncementVariant: AssessmentAnnouncementVariant = 'pending';
+  retakeAnnouncementTitle = '';
+  private activeRetakeDismissKey: string | null = null;
+  private readonly destroy$ = new Subject<void>();
   showSuspensionModal = false;
   showPortoviejoNotice = false;
   /** True while admin announcement modal still in queue (not just list length). */
@@ -148,6 +160,7 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
     private announcementService: AnnouncementService,
     private readonly bookingService: BookingService,
     private readonly dailySparkService: DailySparkService,
+    private readonly notificationService: NotificationService,
   ) {}
 
   ngOnInit(): void {
@@ -166,6 +179,16 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
 
     this.loadMinHoursRequired();
     this.loadAnnouncements();
+
+    this.notificationService.unreadCount$
+      .pipe(
+        debounceTime(400),
+        distinctUntilChanged(),
+        takeUntil(this.destroy$),
+      )
+      .subscribe(() => {
+        this.checkForRetakeAnnouncement();
+      });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -179,6 +202,8 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnDestroy(): void {
     this.clearUrgentReminder();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   private loadMeetings(studentId: number): void {
@@ -297,6 +322,9 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
       sessionStorage.setItem(this.PORTOVIEJO_NOTICE_SESSION_KEY, 'true');
     }
 
+    this.notificationService.loadUnreadCount().subscribe();
+    this.checkForRetakeAnnouncement();
+
     // ===== SUSPENSIÓN =====
     if (user.suspensionInfo?.isSuspended) {
       this.suspensionInfo = user.suspensionInfo;
@@ -364,12 +392,15 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
     );
   }
 
-  /** Assessment modal only mounts when there are pending assessments. */
+  /** Assessment modal mounts for pending list or platform retake alert. */
   get isAssessmentModalVisible(): boolean {
-    return (
-      this.showAssessmentAnnouncement &&
-      this.pendingAssessmentsCount > 0
-    );
+    if (!this.showAssessmentAnnouncement) {
+      return false;
+    }
+    if (this.assessmentAnnouncementVariant === 'retake') {
+      return true;
+    }
+    return this.pendingAssessmentsCount > 0;
   }
 
   get pendingEvaluationsRoute(): string {
@@ -501,7 +532,12 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
   onPendingAssessmentsCount(count: number): void {
     this.pendingAssessmentsCount = count;
 
-    if (count > 0 && this.shouldShowAnnouncement()) {
+    if (
+      count > 0 &&
+      this.shouldShowAnnouncement() &&
+      this.assessmentAnnouncementVariant !== 'retake'
+    ) {
+      this.assessmentAnnouncementVariant = 'pending';
       this.showAssessmentAnnouncement = true;
     }
   }
@@ -517,6 +553,109 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
     this.platformAssessments = list;
     this.pendingPlatformAssessmentsCount = list.length;
     this.syncUrgentAssessmentModalState();
+    this.checkForRetakeAnnouncement();
+  }
+
+  private checkForRetakeAnnouncement(): void {
+    if (!this.userData?.id || this.userData.role !== UserRole.STUDENT) {
+      return;
+    }
+
+    this.notificationService
+      .getUserNotifications({ page: 1, limit: 40 })
+      .subscribe({
+        next: (res) => {
+          const pendingAssignmentIds = new Set(
+            this.platformAssessments
+              .filter((a) => a.status === 'pending')
+              .map((a) => a.assignmentId),
+          );
+
+          const retake = this.pickLatestUnreadRetakeNotification(
+            res.notifications ?? [],
+            pendingAssignmentIds,
+          );
+          if (!retake) {
+            return;
+          }
+
+          const dismissKey =
+            retake.message?.eventId?.trim() || String(retake.id);
+          if (hasSeenRetakeModal(dismissKey)) {
+            return;
+          }
+
+          this.assessmentAnnouncementVariant = 'retake';
+          this.retakeAnnouncementTitle =
+            retake.message?.templateTitle?.trim() ||
+            retake.title.replace(/^Puedes volver a intentar:\s*/i, '').trim();
+          this.activeRetakeDismissKey = dismissKey;
+          this.showAssessmentAnnouncement = true;
+        },
+        error: () => {
+          /* non-blocking */
+        },
+      });
+  }
+
+  private pickLatestUnreadRetakeNotification(
+    notifications: Notification[],
+    pendingAssignmentIds: Set<string>,
+  ): Notification | null {
+    const candidates = notifications.filter((n) => {
+      if (this.isNotificationRead(n)) {
+        return false;
+      }
+      const msg = n.message;
+      if (msg?.kind !== 'assessment-assigned' || msg.reason !== 'RETAKE') {
+        return false;
+      }
+      if (
+        pendingAssignmentIds.size > 0 &&
+        msg.assignmentId &&
+        !pendingAssignmentIds.has(msg.assignmentId)
+      ) {
+        return false;
+      }
+      const key = msg.eventId?.trim() || String(n.id);
+      return !hasSeenRetakeModal(key);
+    });
+
+    if (candidates.length === 0) {
+      return null;
+    }
+
+    candidates.sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    );
+    return candidates[0];
+  }
+
+  private isNotificationRead(notification: Notification): boolean {
+    if (notification.isRead === true) {
+      return true;
+    }
+    if (notification.readAt) {
+      return true;
+    }
+    if (notification.status === 'READ') {
+      return true;
+    }
+    const userId = this.userData?.id;
+    if (userId && notification.readBy?.includes(userId)) {
+      return true;
+    }
+    return false;
+  }
+
+  private finishRetakeAnnouncementDismissal(): void {
+    if (this.activeRetakeDismissKey) {
+      markRetakeModalSeen(this.activeRetakeDismissKey);
+    }
+    this.activeRetakeDismissKey = null;
+    this.assessmentAnnouncementVariant = 'pending';
+    this.retakeAnnouncementTitle = '';
   }
 
   private syncUrgentAssessmentModalState(): void {
@@ -581,6 +720,9 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   onAnnouncementClosed() {
+    if (this.assessmentAnnouncementVariant === 'retake') {
+      this.finishRetakeAnnouncementDismissal();
+    }
     this.showAssessmentAnnouncement = false;
 
     if (this.hasUrgentAssessment) {

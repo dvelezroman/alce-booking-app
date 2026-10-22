@@ -89,20 +89,33 @@
     <div class="announcement-content">
 
       <span class="announcement-eyebrow">
-        Evaluación pendiente
+        {{ isRetake ? 'Nuevo intento asignado' : 'Evaluación pendiente' }}
       </span>
 
-      <h2 class="announcement-title">
-        Tienes
-        <strong>{{ count }}</strong>
-        evaluación{{ count > 1 ? 'es' : '' }}
-        pendiente{{ count > 1 ? 's' : '' }}
+      <h2 class="announcement-title" *ngIf="isRetake; else pendingTitle">
+        Tienes un assessment pendiente por completar
       </h2>
+      <ng-template #pendingTitle>
+        <h2 class="announcement-title">
+          Tienes
+          <strong>{{ count }}</strong>
+          evaluación{{ count > 1 ? 'es' : '' }}
+          pendiente{{ count > 1 ? 's' : '' }}
+        </h2>
+      </ng-template>
 
-      <p class="announcement-subtitle">
-        Tienes evaluaciones activas que todavía debes completar.
-        Revisa la fecha límite para no quedarte sin tiempo.
+      <p class="announcement-subtitle" *ngIf="isRetake; else pendingSubtitle">
+        Se te asignó un nuevo intento
+        <strong *ngIf="retakeTemplateTitle">{{ retakeTemplateTitle }}</strong
+        ><span *ngIf="!retakeTemplateTitle">en tu evaluación</span>.
+        Revisa la fecha límite en Mis evaluaciones de plataforma.
       </p>
+      <ng-template #pendingSubtitle>
+        <p class="announcement-subtitle">
+          Tienes evaluaciones activas que todavía debes completar.
+          Revisa la fecha límite para no quedarte sin tiempo.
+        </p>
+      </ng-template>
 
     </div>
 
@@ -134,9 +147,14 @@
         </svg>
       </span>
 
-      <span>
-        Recuerda que el tiempo para completar cada evaluación es limitado.
+      <span *ngIf="isRetake; else pendingInfo">
+        También recibirás esta información en tu bandeja de notificaciones.
       </span>
+      <ng-template #pendingInfo>
+        <span>
+          Recuerda que el tiempo para completar cada evaluación es limitado.
+        </span>
+      </ng-template>
 
     </div>
 

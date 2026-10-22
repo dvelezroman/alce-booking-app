@@ -111,7 +111,9 @@ export class PlatformAssessmentsListComponent implements OnInit {
     RemotePlatformAssessmentItem |
     null = null;
 
-  grantExtensionHours = 24;
+  grantExtensionDays = 7;
+
+  private readonly maxRetakeExtensionDays = 30;
 
   actionBusyId:
     string |
@@ -551,16 +553,6 @@ export class PlatformAssessmentsListComponent implements OnInit {
     );
   }
 
-  private isAssignmentPastDue(
-    expiresAt: string | null | undefined,
-  ): boolean {
-    if (!expiresAt) {
-      return false;
-    }
-    const t = Date.parse(expiresAt);
-    return Number.isFinite(t) && t < Date.now();
-  }
-
   startGrantAttempt(
     row: RemotePlatformAssessmentItem,
   ): void {
@@ -570,39 +562,35 @@ export class PlatformAssessmentsListComponent implements OnInit {
       return;
     }
 
-    let extensionHours = 24;
-    if (this.isAssignmentPastDue(row.expiresAt)) {
-      const draft = window.prompt(
-        `Horas de plazo desde ahora para ${this.displayStudent(row)} (1–720, default 24):`,
-        '24',
-      );
-      if (draft === null) {
+    const draft = window.prompt(
+      `Días de plazo desde ahora para ${this.displayStudent(row)} (1–${this.maxRetakeExtensionDays}, default 7):`,
+      '7',
+    );
+    if (draft === null) {
+      return;
+    }
+    let extensionDays = 7;
+    const trimmed = draft.trim();
+    if (trimmed.length > 0) {
+      const parsed = Number.parseInt(trimmed, 10);
+      if (
+        !Number.isFinite(parsed) ||
+        parsed < 1 ||
+        parsed > this.maxRetakeExtensionDays
+      ) {
+        this.showFeedback(
+          `Días inválidos. Usa un entero entre 1 y ${this.maxRetakeExtensionDays}.`,
+          'error',
+        );
         return;
       }
-      const trimmed = draft.trim();
-      if (trimmed.length > 0) {
-        const parsed = Number.parseInt(trimmed, 10);
-        if (
-          !Number.isFinite(parsed) ||
-          parsed < 1 ||
-          parsed > 720
-        ) {
-          this.showFeedback(
-            'Horas inválidas. Usa un entero entre 1 y 720.',
-            'error',
-          );
-          return;
-        }
-        extensionHours = parsed;
-      }
+      extensionDays = parsed;
     }
 
     this.grantTarget = row;
-    this.grantExtensionHours = extensionHours;
+    this.grantExtensionDays = extensionDays;
 
-    const extensionNote = this.isAssignmentPastDue(row.expiresAt)
-      ? ` Nueva fecha límite: ahora + ${extensionHours} h.`
-      : '';
+    const extensionNote = ` Nueva fecha límite: ahora + ${extensionDays} día(s).`;
 
     this.modal = {
       ...modalInitializer(),
@@ -646,7 +634,7 @@ export class PlatformAssessmentsListComponent implements OnInit {
       .grantAttempt(
         target.assignmentId,
         {
-          extensionHours: this.grantExtensionHours,
+          extensionHours: this.grantExtensionDays * 24,
         },
       )
       .subscribe({
