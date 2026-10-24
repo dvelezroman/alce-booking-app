@@ -3,6 +3,7 @@ import {
   Component,
   Input,
   OnChanges,
+  OnInit,
   SimpleChanges,
 } from '@angular/core';
 
@@ -54,7 +55,7 @@ type AnnouncementMediaType =
     ChangeDetectionStrategy.OnPush,
 })
 export class AnnouncementV2PreviewComponent
-  implements OnChanges {
+  implements OnInit, OnChanges {
 
   /* =========================================================
      INPUTS
@@ -127,19 +128,14 @@ export class AnnouncementV2PreviewComponent
      CHANGES
   ========================================================= */
 
+  ngOnInit(): void {
+    this.prepareMedia();
+  }
+
   ngOnChanges(
     changes: SimpleChanges,
   ): void {
-
-    if (
-      changes['media']
-    ) {
-
-      console.log(
-        '[PREVIEW CHILD] media recibida:',
-        this.media,
-      );
-
+    if (changes['media']) {
       this.prepareMedia();
     }
   }
@@ -174,6 +170,31 @@ export class AnnouncementV2PreviewComponent
     return (
       this.mediaType === 'image'
     );
+  }
+
+  get showMediaEmpty(): boolean {
+    const mediaUrl = this.media?.trim();
+
+    if (!mediaUrl) {
+      return true;
+    }
+
+    if (this.isImageMedia) {
+      return false;
+    }
+
+    if (this.isDirectVideoMedia) {
+      return false;
+    }
+
+    if (
+      (this.isYoutubeMedia || this.isGoogleDriveMedia) &&
+      this.safeEmbedUrl
+    ) {
+      return false;
+    }
+
+    return this.mediaType === 'none';
   }
 
 

@@ -274,16 +274,12 @@ export class AnnouncementV2MediaComponent {
     }
 
     /*
-     * IMPORTANTE:
-     *
-     * Igual al flujo anterior,
-     * aquí NO se emite el blob al padre.
-     *
-     * El padre recibe la URL cuando:
-     *
-     * 1. se sube a S3
-     * 2. se aplica una URL externa
+     * Vista previa (relación horizontal / modal): el padre
+     * necesita la URL local hasta que se suba a S3.
      */
+    if (this.media && !this.uploadError) {
+      this.mediaChange.emit(this.media);
+    }
   }
 
   /* =========================================================

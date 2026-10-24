@@ -368,6 +368,23 @@
 
         <div class="announcements-v2__preview-content">
 
+          <div
+            *ngIf="
+              showsBannerPreview &&
+              bannerPreviewAnnouncements.length > 0
+            "
+            class="announcements-v2__banner-preview"
+          >
+            <p class="announcements-v2__banner-preview-label">
+              Vista previa del banner en dashboard
+            </p>
+
+            <app-announcement-banner
+              [announcements]="bannerPreviewAnnouncements"
+              [user]="bannerPreviewUser"
+            ></app-announcement-banner>
+          </div>
+
           <app-announcement-v2-preview
             [title]="formTitle"
             [type]="formType || ''"

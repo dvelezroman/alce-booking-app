@@ -78,6 +78,8 @@ import {
 import { AnnouncementV2ActionsComponent } from '../../../components/announcements-v2/announcement-v2-actions/announcement-v2-actions.component';
 import { AnnouncementV2FormComponent } from '../../../components/announcements-v2/announcement-v2-form/announcement-v2-form.component';
 import { ActionButton } from '../../../components/announcements/actions-builder/actions-builder.component';
+import { AnnouncementBannerComponent } from '../../../components/announcements/announcement-banner/announcement-banner.component';
+import { AnnouncementViewerUser } from '../../../shared/utils/announcement-display.util';
 
 
 @Component({
@@ -91,6 +93,7 @@ import { ActionButton } from '../../../components/announcements/actions-builder/
     AnnouncementV2ActionsComponent,
     AnnouncementV2PreviewComponent,
     AnnouncementV2ListComponent,
+    AnnouncementBannerComponent,
 
     ModalComponent,
   ],
@@ -240,6 +243,58 @@ export class AnnouncementsComponent
   ngOnInit(): void {
 
     this.loadAnnouncements();
+  }
+
+  get showsBannerPreview(): boolean {
+    return (
+      this.formDisplayMode === 'banner' ||
+      this.formDisplayMode === 'both'
+    );
+  }
+
+  get bannerPreviewAnnouncements(): Announcement[] {
+    if (!this.showsBannerPreview) {
+      return [];
+    }
+
+    const mediaUrl =
+      this.formMedia?.trim() ||
+      this.originalMedia?.trim() ||
+      '';
+
+    if (
+      !this.formTitle?.trim() &&
+      !this.formMessage?.trim() &&
+      !mediaUrl
+    ) {
+      return [];
+    }
+
+    return [
+      {
+        id: '__announcement_preview__',
+        title: this.formTitle,
+        message: this.formMessage,
+        mediaUrl,
+        type: this.formType || 'notice',
+        displayMode: this.formDisplayMode,
+        bannerTone: this.formBannerTone,
+        targetRole: this.formRole,
+        targetStudentType: this.formClassification,
+        city: this.formCity,
+        isActive: this.formIsActive,
+        actions: [],
+        showMode: 'always',
+      },
+    ];
+  }
+
+  get bannerPreviewUser(): AnnouncementViewerUser {
+    return {
+      role: this.formRole ?? UserRole.ADMIN,
+      classification: this.formClassification ?? null,
+      city: this.formCity ?? null,
+    };
   }
 
 
@@ -944,6 +999,18 @@ export class AnnouncementsComponent
     ) {
       this.showError(
         'El banner necesita texto o una imagen (URL S3/Drive o archivo subido)',
+      );
+      return false;
+    }
+
+    const pendingMedia =
+      this.formMedia?.trim() || '';
+
+    if (
+      pendingMedia.startsWith('blob:')
+    ) {
+      this.showError(
+        'Debes pulsar Subir en el medio del anuncio antes de guardar',
       );
       return false;
     }
