@@ -21,6 +21,8 @@ export interface PlatformAssessmentAssignment {
   shareUrl: string | null;
   expiresAt: string | null;
   maxAttempts: number | null;
+  /** Admin: attempts consumed on Assessments assignment. */
+  attemptCount?: number | null;
   assignedAt: string | null;
   sessionId: string | null;
   resultsUrl: string | null;

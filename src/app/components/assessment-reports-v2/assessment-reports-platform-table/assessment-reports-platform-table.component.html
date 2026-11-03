@@ -12,6 +12,7 @@
             <th>Evaluación</th>
             <th>Stage</th>
             <th>Tipo</th>
+            <th>Intentos</th>
             <th>Puntuación S2S</th>
             <th>Writing aplicado</th>
             <th>Estado</th>
@@ -94,6 +95,13 @@
                 </span>
               </td>
 
+              <!-- ATTEMPTS -->
+              <td>
+                <span class="platform-table__attempts">
+                  {{ getAttemptsLabel(assessment) }}
+                </span>
+              </td>
+
               <!-- POINTS -->
               <td>
                 <div class="platform-table__score">
@@ -110,6 +118,12 @@
                     <span class="platform-table__empty-value">
                       —
                     </span>
+                  }
+
+                  @if (hasPointsMismatch(assessment)) {
+                    <small class="platform-table__mismatch">
+                      ≠ Grammar {{ getWritingPoints(assessment) }}
+                    </small>
                   }
 
                 </div>

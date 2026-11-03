@@ -307,6 +307,17 @@ export class AssessmentReportsPlatformTableComponent {
       : '—';
   }
 
+  getAttemptsLabel(
+    assessment: PlatformAssessmentAssignment,
+  ): string {
+    const used = assessment.attemptCount;
+    const max = assessment.maxAttempts;
+    if (used == null && max == null) {
+      return '—';
+    }
+    return `${used ?? '—'} / ${max ?? '—'}`;
+  }
+
   getPoints(
     assessment: PlatformAssessmentAssignment,
   ): number | null {
@@ -322,6 +333,17 @@ export class AssessmentReportsPlatformTableComponent {
     return (
       assessment.writingPoints ??
       null
+    );
+  }
+
+  hasPointsMismatch(
+    assessment: PlatformAssessmentAssignment,
+  ): boolean {
+    return (
+      assessment.writingApplied === true &&
+      assessment.points != null &&
+      assessment.writingPoints != null &&
+      assessment.points !== assessment.writingPoints
     );
   }
 
