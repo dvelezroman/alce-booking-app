@@ -325,6 +325,12 @@ export interface NotificationGroupListResponse {
   totalPages: number;
 }
 
+export type InboxSegment =
+  | 'all'
+  | 'direct'
+  | 'operational'
+  | 'broadcast';
+
 export interface NotificationListResponse {
   notifications: Notification[];
   total: number;
@@ -332,6 +338,9 @@ export interface NotificationListResponse {
   limit: number;
   totalPages: number;
   unreadCount?: number;
+  unreadDirectCount?: number;
+  unreadOperationalCount?: number;
+  unreadBroadcastCount?: number;
 }
 
 // bandeja de entrada
@@ -344,6 +353,10 @@ export interface InboxFilters {
   toDate?: string;
   priority?: 0 | 1 | 2 | 3 | '';
   readState?: 'all' | 'unread' | 'read';
-  /** Instructor inbox tabs: all | communications | action-required. */
-  inboxCategory?: 'all' | 'communications' | 'action';
+  /**
+   * Inbox tabs mapped to API `segment`:
+   * all | direct (Para mí) | operational (Acción) | broadcast (Avisos).
+   * Legacy aliases: communications → broadcast, action → operational.
+   */
+  inboxCategory?: InboxSegment | 'communications' | 'action';
 }

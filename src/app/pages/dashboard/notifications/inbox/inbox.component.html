@@ -5,6 +5,7 @@
   <app-inbox-header
     id="notifications-page-title"
     [unreadCount]="unreadNotificationsCount"
+    [unreadBreakdownLabel]="unreadBreakdownLabel"
   />
 
   <!-- ACCIONES MOBILE -->
@@ -93,7 +94,27 @@
       </a>
 
       <div
-        *ngIf="isInstructor"
+        *ngIf="showStaleArchiveBanner"
+        class="notifications-page__stale-banner"
+        role="status"
+      >
+        <div class="notifications-page__stale-banner-text">
+          <strong>Avisos masivos antiguos se archivan solos.</strong>
+          Los anuncios generales sin leer de más de 60 días salen de tu
+          bandeja automáticamente. Los mensajes directos y las
+          solicitudes que requieren acción no se archivan.
+        </div>
+        <button
+          type="button"
+          class="notifications-page__stale-banner-dismiss"
+          (click)="dismissStaleArchiveBanner()"
+        >
+          Entendido
+        </button>
+      </div>
+
+      <div
+        *ngIf="showSegmentTabs"
         class="notifications-page__categories"
         role="tablist"
         aria-label="Categoría de notificaciones"
@@ -103,14 +124,18 @@
           role="tab"
           class="notifications-page__category"
           [class.notifications-page__category--active]="
-            (filters.inboxCategory || 'all') === 'all'
+            activeInboxSegment === 'all'
           "
-          [attr.aria-selected]="
-            (filters.inboxCategory || 'all') === 'all'
-          "
+          [attr.aria-selected]="activeInboxSegment === 'all'"
           (click)="setInboxCategory('all')"
         >
           Todas
+          <span
+            *ngIf="inboxUnreadCount > 0"
+            class="notifications-page__category-count"
+          >
+            {{ inboxUnreadCount }}
+          </span>
         </button>
 
         <button
@@ -118,14 +143,18 @@
           role="tab"
           class="notifications-page__category"
           [class.notifications-page__category--active]="
-            filters.inboxCategory === 'communications'
+            activeInboxSegment === 'direct'
           "
-          [attr.aria-selected]="
-            filters.inboxCategory === 'communications'
-          "
-          (click)="setInboxCategory('communications')"
+          [attr.aria-selected]="activeInboxSegment === 'direct'"
+          (click)="setInboxCategory('direct')"
         >
-          Comunicaciones
+          Para mí
+          <span
+            *ngIf="unreadDirectCount > 0"
+            class="notifications-page__category-count"
+          >
+            {{ unreadDirectCount }}
+          </span>
         </button>
 
         <button
@@ -133,14 +162,37 @@
           role="tab"
           class="notifications-page__category"
           [class.notifications-page__category--active]="
-            filters.inboxCategory === 'action'
+            activeInboxSegment === 'operational'
           "
-          [attr.aria-selected]="
-            filters.inboxCategory === 'action'
-          "
-          (click)="setInboxCategory('action')"
+          [attr.aria-selected]="activeInboxSegment === 'operational'"
+          (click)="setInboxCategory('operational')"
         >
-          Requiere acción
+          Acción
+          <span
+            *ngIf="unreadOperationalCount > 0"
+            class="notifications-page__category-count"
+          >
+            {{ unreadOperationalCount }}
+          </span>
+        </button>
+
+        <button
+          type="button"
+          role="tab"
+          class="notifications-page__category"
+          [class.notifications-page__category--active]="
+            activeInboxSegment === 'broadcast'
+          "
+          [attr.aria-selected]="activeInboxSegment === 'broadcast'"
+          (click)="setInboxCategory('broadcast')"
+        >
+          Avisos
+          <span
+            *ngIf="unreadBroadcastCount > 0"
+            class="notifications-page__category-count"
+          >
+            {{ unreadBroadcastCount }}
+          </span>
         </button>
       </div>
 

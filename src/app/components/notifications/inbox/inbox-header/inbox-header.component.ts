@@ -15,17 +15,24 @@ import {
 })
 export class InboxHeaderComponent {
   @Input() unreadCount = 0;
+  /** Optional segment breakdown, e.g. "3 para mí · 2 acción · 10 avisos". */
+  @Input() unreadBreakdownLabel = '';
 
   get unreadLabel(): string {
     if (this.unreadCount === 0) {
       return 'No tienes notificaciones nuevas';
     }
 
-    if (this.unreadCount === 1) {
-      return 'Tienes 1 notificación sin leer';
+    const base =
+      this.unreadCount === 1
+        ? 'Tienes 1 notificación sin leer'
+        : `Tienes ${this.unreadCount} notificaciones sin leer`;
+
+    if (this.unreadBreakdownLabel) {
+      return `${base} (${this.unreadBreakdownLabel})`;
     }
 
-    return `Tienes ${this.unreadCount} notificaciones sin leer`;
+    return base;
   }
 
   get hasUnreadNotifications(): boolean {

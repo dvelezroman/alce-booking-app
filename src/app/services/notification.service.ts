@@ -59,6 +59,7 @@ export class NotificationService {
     page?: number;
     limit?: number;
     readDays?: number;
+    segment?: 'all' | 'direct' | 'operational' | 'broadcast';
   }): Observable<NotificationListResponse> {
     let params = new HttpParams();
 
@@ -72,6 +73,10 @@ export class NotificationService {
 
     if (opts?.readDays != null) {
       params = params.set('readDays', String(opts.readDays));
+    }
+
+    if (opts?.segment && opts.segment !== 'all') {
+      params = params.set('segment', opts.segment);
     }
 
     return this.http

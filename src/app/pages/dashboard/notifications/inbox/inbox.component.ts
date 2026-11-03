@@ -7,6 +7,7 @@ import { Subscription, take } from 'rxjs';
 
 import {
   InboxFilters,
+  InboxSegment,
   Notification,
   NotificationTypeEnum,
 } from '../../../../services/dtos/notification.dto';
@@ -25,6 +26,9 @@ import {
   isInstructorOperationalNotification,
   resolveInstructorNotificationTarget,
 } from '../../../../shared/utils/notification-routing.util';
+
+const STALE_ARCHIVE_BANNER_STORAGE_KEY =
+  'alce.inbox.staleBroadcastBannerDismissed';
 
 import {
   InboxHeaderComponent,
@@ -104,6 +108,7 @@ export class InboxComponent implements OnInit, OnDestroy {
   private readonly subs = new Subscription();
 
   isInstructor = false;
+  isAdmin = false;
   pendingAssignmentCount = 0;
   scheduledReportPendingCount = 0;
 
@@ -114,6 +119,9 @@ export class InboxComponent implements OnInit, OnDestroy {
   limit = 20;
   total = 0;
   inboxUnreadCount = 0;
+  unreadDirectCount = 0;
+  unreadOperationalCount = 0;
+  unreadBroadcastCount = 0;
 
   readDays = 30;
 
@@ -123,6 +131,7 @@ export class InboxComponent implements OnInit, OnDestroy {
   bulkActionLoading = false;
   showDeleteConfirmModal = false;
   deleteConfirmLoading = false;
+  showStaleArchiveBanner = false;
   modal: ModalDto = modalInitializer();
 
   filters: InboxFilters = {
@@ -164,15 +173,17 @@ export class InboxComponent implements OnInit, OnDestroy {
     this.subs.add(
       this.route.queryParamMap.subscribe((params) => {
         const category = params.get('category');
-        if (
-          category === 'action' ||
-          category === 'communications' ||
-          category === 'all'
-        ) {
+        const normalized = this.normalizeInboxCategory(category);
+        if (normalized) {
+          const previous = this.filters.inboxCategory || 'all';
           this.filters = {
             ...this.filters,
-            inboxCategory: category,
+            inboxCategory: normalized,
           };
+          if (previous !== normalized) {
+            this.page = 1;
+            this.fetchNotifications();
+          }
         }
       }),
     );
@@ -183,6 +194,8 @@ export class InboxComponent implements OnInit, OnDestroy {
       .subscribe((user: UserDto | null) => {
         this.currentUserId = user?.id ?? null;
         this.isInstructor = user?.role === UserRole.INSTRUCTOR;
+        this.isAdmin = user?.role === UserRole.ADMIN;
+        this.showStaleArchiveBanner = this.shouldShowStaleArchiveBanner();
 
         if (this.isInstructor) {
           this.leadSchedulingPending
@@ -213,9 +226,10 @@ export class InboxComponent implements OnInit, OnDestroy {
   setInboxCategory(
     category: NonNullable<InboxFilters['inboxCategory']>,
   ): void {
+    const normalized = this.normalizeInboxCategory(category) || 'all';
     this.filters = {
       ...this.filters,
-      inboxCategory: category,
+      inboxCategory: normalized,
     };
     this.page = 1;
     this.selectedNotificationIds.clear();
@@ -223,10 +237,77 @@ export class InboxComponent implements OnInit, OnDestroy {
     void this.router.navigate([], {
       relativeTo: this.route,
       queryParams: {
-        category: category === 'all' ? null : category,
+        category: normalized === 'all' ? null : normalized,
       },
       queryParamsHandling: 'merge',
     });
+
+    this.fetchNotifications();
+  }
+
+  get activeInboxSegment(): InboxSegment {
+    return this.toApiSegment(this.filters.inboxCategory);
+  }
+
+  get unreadBreakdownLabel(): string {
+    if (this.inboxUnreadCount === 0) {
+      return '';
+    }
+
+    return `${this.unreadDirectCount} para mí · ${this.unreadOperationalCount} acción · ${this.unreadBroadcastCount} avisos`;
+  }
+
+  get showSegmentTabs(): boolean {
+    return this.isInstructor || this.isAdmin;
+  }
+
+  dismissStaleArchiveBanner(): void {
+    this.showStaleArchiveBanner = false;
+    try {
+      localStorage.setItem(STALE_ARCHIVE_BANNER_STORAGE_KEY, '1');
+    } catch {
+      // ignore storage errors
+    }
+  }
+
+  private shouldShowStaleArchiveBanner(): boolean {
+    if (!(this.isInstructor || this.isAdmin)) {
+      return false;
+    }
+    try {
+      return localStorage.getItem(STALE_ARCHIVE_BANNER_STORAGE_KEY) !== '1';
+    } catch {
+      return true;
+    }
+  }
+
+  private normalizeInboxCategory(
+    category: string | null | undefined,
+  ): InboxSegment | null {
+    if (!category) {
+      return null;
+    }
+    if (category === 'communications') {
+      return 'broadcast';
+    }
+    if (category === 'action') {
+      return 'operational';
+    }
+    if (
+      category === 'all' ||
+      category === 'direct' ||
+      category === 'operational' ||
+      category === 'broadcast'
+    ) {
+      return category;
+    }
+    return null;
+  }
+
+  private toApiSegment(
+    category: InboxFilters['inboxCategory'] | undefined,
+  ): InboxSegment {
+    return this.normalizeInboxCategory(category || 'all') || 'all';
   }
 
   toggleMobileFilters(): void {
@@ -243,23 +324,12 @@ export class InboxComponent implements OnInit, OnDestroy {
         page: this.page,
         limit: this.limit,
         readDays: this.readDays,
+        segment: this.activeInboxSegment,
       })
       .subscribe({
         next: (response) => {
-          this.notifications = (
-            response.notifications || []
-          ).sort(
-            (
-              notificationA: Notification,
-              notificationB: Notification
-            ) =>
-              new Date(
-                notificationB.createdAt
-              ).getTime() -
-              new Date(
-                notificationA.createdAt
-              ).getTime()
-          );
+          // Keep API order: priority DESC, createdAt DESC
+          this.notifications = response.notifications || [];
 
           this.total =
             response.total ||
@@ -268,6 +338,15 @@ export class InboxComponent implements OnInit, OnDestroy {
 
           if (typeof response.unreadCount === 'number') {
             this.inboxUnreadCount = response.unreadCount;
+          }
+          if (typeof response.unreadDirectCount === 'number') {
+            this.unreadDirectCount = response.unreadDirectCount;
+          }
+          if (typeof response.unreadOperationalCount === 'number') {
+            this.unreadOperationalCount = response.unreadOperationalCount;
+          }
+          if (typeof response.unreadBroadcastCount === 'number') {
+            this.unreadBroadcastCount = response.unreadBroadcastCount;
           }
 
           this.selectedNotificationIds.clear();
@@ -493,6 +572,8 @@ export class InboxComponent implements OnInit, OnDestroy {
   }
 
   onClearFilters(): void {
+    const previousSegment = this.activeInboxSegment;
+
     this.filters = {
       search: '',
       status: '',
@@ -512,6 +593,10 @@ export class InboxComponent implements OnInit, OnDestroy {
       queryParams: { category: null },
       queryParamsHandling: 'merge',
     });
+
+    if (previousSegment !== 'all') {
+      this.fetchNotifications();
+    }
   }
 
   onPrev(): void {
@@ -715,10 +800,7 @@ export class InboxComponent implements OnInit, OnDestroy {
             notification
           );
 
-        const matchesCategory =
-          this.matchesInboxCategory(
-            notification
-          );
+        // Segment is filtered server-side via `segment` query; do not re-filter here.
 
         return (
           matchesSearch &&
@@ -728,37 +810,10 @@ export class InboxComponent implements OnInit, OnDestroy {
           matchesPriority &&
           matchesReadState &&
           matchesFromDate &&
-          matchesToDate &&
-          matchesCategory
+          matchesToDate
         );
       }
     );
-  }
-
-  private matchesInboxCategory(
-    notification: Notification,
-  ): boolean {
-    if (!this.isInstructor) {
-      return true;
-    }
-
-    const category =
-      this.filters.inboxCategory || 'all';
-
-    if (category === 'all') {
-      return true;
-    }
-
-    const isAction =
-      isInstructorOperationalNotification(
-        notification,
-      );
-
-    if (category === 'action') {
-      return isAction;
-    }
-
-    return !isAction;
   }
 
   get startIndex(): number {
