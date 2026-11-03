@@ -6,20 +6,25 @@
   <article
     *ngFor="let item of visible; trackBy: trackById"
     class="announcement-banner__item"
-    [class.announcement-banner__item--with-media]="!!imageSrc(item)"
+    [class.announcement-banner__item--with-media]="!!imageSrc(item) && !isHorizontalHero(item)"
+    [class.announcement-banner__item--horizontal-hero]="isHorizontalHero(item)"
     [ngClass]="toneClass(item)"
     role="status"
   >
     <img
       *ngIf="imageSrc(item) as src"
       class="announcement-banner__media"
+      [class.announcement-banner__media--horizontal]="isHorizontalHero(item)"
       [src]="src"
       [alt]="item.title || 'Imagen del aviso'"
       loading="lazy"
       (error)="onImageError(item)"
     />
 
-    <div class="announcement-banner__content">
+    <div
+      class="announcement-banner__content"
+      [class.announcement-banner__content--horizontal]="isHorizontalHero(item)"
+    >
       <p
         *ngIf="showTitleLabel(item)"
         class="announcement-banner__title"

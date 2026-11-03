@@ -86,6 +86,11 @@ export class AnnouncementBannerComponent implements OnChanges {
     return `announcement-banner__item--${tone}`;
   }
 
+  isHorizontalHero(announcement: Announcement): boolean {
+    const ratio = announcement.aspectRatio ?? 'horizontal';
+    return ratio === 'horizontal' && !!this.imageSrc(announcement);
+  }
+
   dismiss(announcement: Announcement): void {
     dismissBannerAnnouncement(announcement, this.user);
     this.dismissed.emit(announcement);

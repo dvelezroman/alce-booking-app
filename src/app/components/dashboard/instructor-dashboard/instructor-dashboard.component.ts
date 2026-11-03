@@ -157,6 +157,9 @@ export class InstructorDashboardComponent implements OnInit, OnChanges {
   onCustomAnnouncementClosed(
     announcement: Announcement
   ): void {
-    markModalAnnouncementSeen(announcement);
+    const user = this.announcementUser;
+    if (user) {
+      markModalAnnouncementSeen(announcement, user);
+    }
   }
 }

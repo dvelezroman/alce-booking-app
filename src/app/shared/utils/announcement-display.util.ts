@@ -30,6 +30,29 @@ export function isAnnouncementForSurface(
   return mode === 'banner' || mode === 'both';
 }
 
+/** End date is inclusive through the full local calendar day. */
+export function isAnnouncementExpired(
+  endDate: string | null | undefined,
+  now: Date,
+): boolean {
+  if (!endDate) {
+    return false;
+  }
+
+  const parsed = new Date(endDate);
+  const inclusiveEnd = new Date(
+    parsed.getFullYear(),
+    parsed.getMonth(),
+    parsed.getDate(),
+    23,
+    59,
+    59,
+    999,
+  );
+
+  return now > inclusiveEnd;
+}
+
 export function filterAnnouncementsForUser(
   list: Announcement[],
   user: AnnouncementViewerUser,
@@ -48,10 +71,7 @@ export function filterAnnouncementsForUser(
       return false;
     }
 
-    if (
-      announcement.endDate &&
-      new Date(announcement.endDate) < now
-    ) {
+    if (isAnnouncementExpired(announcement.endDate, now)) {
       return false;
     }
 
@@ -80,20 +100,20 @@ export function filterAnnouncementsForUser(
       }
     }
 
-    if (announcement.showMode === 'once_user') {
-      const sessionKey = `announcement_session_${announcement.id}`;
-
-      if (sessionStorage.getItem(sessionKey)) {
-        return false;
-      }
-    }
-
     return true;
   });
 }
 
 function modalSessionKey(announcementId: string): string {
   return `announcement_seen_${announcementId}`;
+}
+
+function modalOnceUserKey(
+  user: AnnouncementViewerUser,
+  announcementId: string,
+): string {
+  const userKey = user?.role ?? 'anon';
+  return `announcement_seen_${userKey}_${announcementId}`;
 }
 
 function bannerDismissSessionKey(announcementId: string): string {
@@ -110,6 +130,7 @@ function bannerDismissUserKey(
 
 export function filterModalAnnouncementsByShowMode(
   list: Announcement[],
+  user: AnnouncementViewerUser,
 ): Announcement[] {
   return list.filter((announcement) => {
     if (
@@ -121,6 +142,12 @@ export function filterModalAnnouncementsByShowMode(
 
     if (announcement.showMode === 'once_session') {
       return !sessionStorage.getItem(modalSessionKey(announcement.id));
+    }
+
+    if (announcement.showMode === 'once_user') {
+      return !localStorage.getItem(
+        modalOnceUserKey(user, announcement.id),
+      );
     }
 
     return true;
@@ -154,10 +181,19 @@ export function filterBannerAnnouncementsByShowMode(
 
 export function markModalAnnouncementSeen(
   announcement: Announcement,
+  user?: AnnouncementViewerUser,
 ): void {
   if (announcement.showMode === 'once_session') {
     sessionStorage.setItem(
       modalSessionKey(announcement.id),
+      'true',
+    );
+    return;
+  }
+
+  if (announcement.showMode === 'once_user' && user) {
+    localStorage.setItem(
+      modalOnceUserKey(user, announcement.id),
       'true',
     );
   }
@@ -189,7 +225,22 @@ export function getVisibleModalAnnouncements(
     filterAnnouncementsForUser(list, user).filter((a) =>
       isAnnouncementForSurface(a, 'modal'),
     ),
+    user,
   );
+}
+
+export function hasBannerRenderableContent(
+  announcement: Announcement,
+): boolean {
+  if (announcement.message?.trim()) {
+    return true;
+  }
+
+  if (announcement.title?.trim()) {
+    return true;
+  }
+
+  return bannerHasVisual(announcement.mediaUrl);
 }
 
 export function getVisibleBannerAnnouncements(
@@ -197,9 +248,9 @@ export function getVisibleBannerAnnouncements(
   user: AnnouncementViewerUser,
 ): Announcement[] {
   return filterBannerAnnouncementsByShowMode(
-    filterAnnouncementsForUser(list, user).filter((a) =>
-      isAnnouncementForSurface(a, 'banner'),
-    ),
+    filterAnnouncementsForUser(list, user)
+      .filter((a) => isAnnouncementForSurface(a, 'banner'))
+      .filter(hasBannerRenderableContent),
     user,
   );
 }

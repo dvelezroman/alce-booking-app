@@ -505,9 +505,10 @@ export class AdminDashboardComponent
     announcement: Announcement,
   ): void {
 
-    markModalAnnouncementSeen(
-      announcement,
-    );
+    const user = this.announcementUser;
+    if (user) {
+      markModalAnnouncementSeen(announcement, user);
+    }
   }
 
   private getTodayDate(): string {

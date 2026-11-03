@@ -279,6 +279,7 @@ export class AnnouncementsComponent
         type: this.formType || 'notice',
         displayMode: this.formDisplayMode,
         bannerTone: this.formBannerTone,
+        aspectRatio: this.formAspectRatio,
         targetRole: this.formRole,
         targetStudentType: this.formClassification,
         city: this.formCity,
@@ -440,6 +441,19 @@ export class AnnouncementsComponent
     ).toISOString();
   }
 
+  /** Inclusive end date through end of local day. */
+  toISOEndDate(
+    date?: string,
+  ): string | null {
+    if (!date) {
+      return null;
+    }
+
+    return new Date(
+      date + 'T23:59:59.999',
+    ).toISOString();
+  }
+
 
   buildWhatsappUrl(
     value?: string,
@@ -541,7 +555,7 @@ export class AnnouncementsComponent
         ),
 
       endDate:
-        this.toISODate(
+        this.toISOEndDate(
           this.formEndDate,
         ),
 
@@ -672,7 +686,7 @@ export class AnnouncementsComponent
         ),
 
       endDate:
-        this.toISODate(
+        this.toISOEndDate(
           this.formEndDate,
         ),
 

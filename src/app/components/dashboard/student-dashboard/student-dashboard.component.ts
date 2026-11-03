@@ -871,7 +871,10 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   onCustomAnnouncementClosed(a: Announcement) {
-    markModalAnnouncementSeen(a);
+    const user = this.announcementUser;
+    if (user) {
+      markModalAnnouncementSeen(a, user);
+    }
   }
 
   onAnnouncementQueueFinished(): void {

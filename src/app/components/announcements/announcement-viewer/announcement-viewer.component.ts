@@ -15,7 +15,10 @@ import {
   Action,
   Announcement,
 } from '../../../services/dtos/announcement.dto';
-import { isAnnouncementForSurface } from '../../../shared/utils/announcement-display.util';
+import {
+  filterAnnouncementsForUser,
+  isAnnouncementForSurface,
+} from '../../../shared/utils/announcement-display.util';
 import { UserRole } from '../../../services/dtos/user.dto';
 import { StudentClassification } from '../../../services/dtos/student.dto';
 
@@ -73,9 +76,9 @@ export class AnnouncementViewerComponent
   // INIT
   // =========================
   ngOnInit(): void {
-    this.filtered = this
-      .filterAnnouncementsForUser(
+    this.filtered = filterAnnouncementsForUser(
         this.announcements,
+        this.user,
       )
       .filter((announcement) =>
         isAnnouncementForSurface(announcement, 'modal'),
@@ -585,92 +588,6 @@ export class AnnouncementViewerComponent
     console.error(
       'No se pudo reproducir el video:',
       this.currentAnnouncement?.mediaUrl
-    );
-  }
-
-  // =========================
-  // FILTRO
-  // =========================
-  filterAnnouncementsForUser(
-    list: Announcement[]
-  ): Announcement[] {
-    const now = new Date();
-
-    return list.filter(
-      (announcement) => {
-        if (!announcement.isActive) {
-          return false;
-        }
-
-        if (
-          announcement.startDate &&
-          new Date(
-            announcement.startDate
-          ) > now
-        ) {
-          return false;
-        }
-
-        if (
-          announcement.endDate &&
-          new Date(
-            announcement.endDate
-          ) < now
-        ) {
-          return false;
-        }
-
-        if (
-          announcement.targetRole &&
-          this.user?.role &&
-          announcement.targetRole !==
-            this.user.role
-        ) {
-          return false;
-        }
-
-        if (
-          announcement.targetStudentType &&
-          this.user?.classification &&
-          announcement.targetStudentType !==
-            this.user.classification
-        ) {
-          return false;
-        }
-
-        if (
-          announcement.city &&
-          this.user?.city
-        ) {
-          const userCity =
-            this.user.city.toLowerCase();
-
-          const targetCity =
-            announcement.city.toLowerCase();
-
-          if (userCity !== targetCity) {
-            return false;
-          }
-        }
-
-        if (
-          announcement.showMode ===
-          'once_user'
-        ) {
-          const sessionKey =
-            `announcement_session_${announcement.id}`;
-
-          if (
-            sessionStorage.getItem(
-              sessionKey
-            )
-          ) {
-            return false;
-          }
-        }
-
-        return true;
-      }
     );
   }
 
