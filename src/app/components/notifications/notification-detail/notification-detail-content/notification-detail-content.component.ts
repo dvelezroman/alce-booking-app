@@ -187,7 +187,25 @@ export class NotificationDetailContentComponent {
     const metadataKind = (
       this.notification?.metadata as { kind?: string } | null
     )?.kind;
-    return messageKind === 'early-warning' || metadataKind === 'early-warning';
+    const kinds = new Set([
+      'early-warning',
+      'early-warning-weekly-digest',
+    ]);
+    return (
+      (typeof messageKind === 'string' && kinds.has(messageKind)) ||
+      (typeof metadataKind === 'string' && kinds.has(metadataKind))
+    );
+  }
+
+  get isEarlyWarningWeeklyDigest(): boolean {
+    const messageKind = this.notification?.message?.kind;
+    const metadataKind = (
+      this.notification?.metadata as { kind?: string } | null
+    )?.kind;
+    return (
+      messageKind === 'early-warning-weekly-digest' ||
+      metadataKind === 'early-warning-weekly-digest'
+    );
   }
 
   onToggleStudentMenu(

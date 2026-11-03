@@ -27,6 +27,7 @@ export class EditUserModalComponent {
 
   form!: FormGroup;
   isMinor = false;
+  private initialStageId: string | number | null = null;
   protected readonly UserRole = UserRole;
 
   constructor(private fb: FormBuilder) {}
@@ -129,6 +130,8 @@ export class EditUserModalComponent {
       updatedAt: user.updatedAt ? this.formatLocalDate(user.updatedAt) : '',
     });
 
+    this.initialStageId = student?.stageId ?? student?.stage?.id ?? null;
+
     if (user.birthday) {
       this.checkIfMinor(user.birthday);
     }
@@ -174,7 +177,17 @@ export class EditUserModalComponent {
 
     if (!updated.linkId) delete updated.linkId;
 
-    // console.log('Payload enviado desde edit-user-modal:', updated);
+    const currentStage =
+      updated.stageId === '' || updated.stageId == null
+        ? null
+        : Number(updated.stageId);
+    const initial =
+      this.initialStageId === '' || this.initialStageId == null
+        ? null
+        : Number(this.initialStageId);
+    if (currentStage === initial) {
+      delete updated.stageId;
+    }
 
     this.save.emit(updated);
   }

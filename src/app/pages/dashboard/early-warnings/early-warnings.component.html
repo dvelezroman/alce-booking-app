@@ -50,11 +50,30 @@
 
   <form class="early-warnings__filters" (ngSubmit)="applyFilters()">
     <label>
+      ID estudiante
+      <input
+        type="number"
+        min="1"
+        name="studentIdInput"
+        [(ngModel)]="studentIdInput"
+        placeholder="Ej. 123"
+      />
+    </label>
+
+    <label>
       Seguimiento
       <select [(ngModel)]="followUpFilter" name="followUpFilter">
         <option value="all">Todos</option>
         <option value="pending">Pendiente</option>
         <option value="done">Realizado</option>
+      </select>
+    </label>
+
+    <label>
+      Novedades
+      <select [(ngModel)]="noveltyFilter" name="noveltyFilter">
+        <option value="all">Todas</option>
+        <option value="new">Solo nuevas (vs snapshot)</option>
       </select>
     </label>
 
@@ -181,6 +200,115 @@
     </div>
   </form>
 
+  <p *ngIf="studentReportLoading" class="early-warnings__loading">
+    Cargando ficha del estudiante…
+  </p>
+
+  <article class="early-warnings__student-card" *ngIf="studentReport as report">
+    <header class="early-warnings__student-card-header">
+      <div>
+        <h2>{{ reportFullName(report) }}</h2>
+        <p>
+          ID estudiante {{ report.studentId }} · Usuario {{ report.userId }} ·
+          Etapa {{ report.stageNumber || '—' }}
+        </p>
+      </div>
+      <div class="early-warnings__student-card-badges">
+        <span
+          class="early-warnings__badge"
+          [class.early-warnings__badge--danger]="report.atRisk"
+          [class.early-warnings__badge--ok]="!report.atRisk"
+        >
+          {{ report.atRisk ? 'En riesgo' : 'Sin alertas activas' }}
+        </span>
+        <span
+          *ngIf="report.isNewAlert"
+          class="early-warnings__badge early-warnings__badge--new"
+        >
+          Nuevo
+        </span>
+        <span
+          *ngIf="report.ineligibleReason"
+          class="early-warnings__badge early-warnings__badge--muted"
+        >
+          {{ ineligibleLabel(report.ineligibleReason) }}
+        </span>
+      </div>
+    </header>
+
+    <div class="early-warnings__student-card-metrics">
+      <div>
+        <span>Clases en ventana</span>
+        <strong
+          >{{ report.meetingsInWindow }} / {{ report.minHoursScheduled }}</strong
+        >
+      </div>
+      <div>
+        <span>Días en etapa</span>
+        <strong
+          >{{ report.daysInStage }} /
+          {{ report.maxDaysInCurrentStage }}</strong
+        >
+      </div>
+      <div *ngIf="report.daysUntilStageThreshold != null">
+        <span>Días hasta umbral etapa</span>
+        <strong>{{ report.daysUntilStageThreshold }}</strong>
+      </div>
+      <div>
+        <span>Seguimiento</span>
+        <strong>{{
+          report.followUpPending ? 'Pendiente' : 'Realizado / N/A'
+        }}</strong>
+      </div>
+    </div>
+
+    <section class="early-warnings__tenure" *ngIf="report.stageTenureHistory?.length">
+      <h3>Historial de etapas</h3>
+      <table class="early-warnings__tenure-table">
+        <thead>
+          <tr>
+            <th>Etapa</th>
+            <th>Días</th>
+            <th>Desde</th>
+            <th>Hasta</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let stint of report.stageTenureHistory">
+            <td>{{ stageLabel(stint) }}</td>
+            <td>{{ stint.days }}</td>
+            <td>{{ formatTenureDate(stint.enteredAt) }}</td>
+            <td>{{ formatTenureDate(stint.leftAt) }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <p
+        class="early-warnings__tenure-totals"
+        *ngIf="report.stageTenureTotals?.length"
+      >
+        Acumulado:
+        <span *ngFor="let total of report.stageTenureTotals; let last = last">
+          {{ total.stageNumber || '#' + total.stageId }}:
+          {{ total.totalDays }}d<span *ngIf="!last"> · </span>
+        </span>
+      </p>
+    </section>
+
+    <section
+      class="early-warnings__novelties"
+      *ngIf="report.alertNovelties?.length"
+    >
+      <h3>Novedades (últimos snapshots)</h3>
+      <ul>
+        <li *ngFor="let novelty of report.alertNovelties">
+          {{ alertTypeLabel(novelty.alertType) }} —
+          {{ formatTenureDate(novelty.snapshotAt) }}
+          <span *ngIf="novelty.firstSeen">(primera detección)</span>
+        </li>
+      </ul>
+    </section>
+  </article>
+
   <div class="early-warnings__bulk-bar" *ngIf="!loading && list?.items?.length">
     <button
       type="button"
@@ -215,6 +343,7 @@
           </th>
           <th>Estudiante</th>
           <th>Días en etapa</th>
+          <th>Historial etapas</th>
           <th>Alertas</th>
           <th>Seguimiento</th>
           <th></th>
@@ -246,6 +375,31 @@
           <td>
             {{ row.daysInStage }}
             <small>/ {{ row.maxDaysInCurrentStage }} máx.</small>
+          </td>
+          <td class="early-warnings__tenure-cell">
+            <button
+              type="button"
+              class="early-warnings__note-btn"
+              *ngIf="row.stageTenureHistory?.length"
+              (click)="toggleTenure(row.studentId)"
+            >
+              {{
+                isTenureExpanded(row.studentId)
+                  ? 'Ocultar'
+                  : 'Ver ' + (row.stageTenureHistory?.length || 0)
+              }}
+            </button>
+            <ul
+              class="early-warnings__tenure-mini"
+              *ngIf="isTenureExpanded(row.studentId)"
+            >
+              <li *ngFor="let stint of row.stageTenureHistory">
+                {{ stageLabel(stint) }}: {{ stint.days }}d
+                ({{ formatTenureDate(stint.enteredAt) }}–
+                {{ formatTenureDate(stint.leftAt) }})
+              </li>
+            </ul>
+            <span *ngIf="!row.stageTenureHistory?.length">—</span>
           </td>
           <td>
             <span

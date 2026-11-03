@@ -16,6 +16,35 @@ export type EarlyWarningFollowUpChannel =
   | 'WARNING_CALL';
 
 export type EarlyWarningFollowUpFilter = 'all' | 'pending' | 'done';
+export type EarlyWarningNoveltyFilter = 'all' | 'new';
+
+export interface StageTenureStintDto {
+  stageId: number;
+  stageNumber: string | null;
+  stageDescription: string | null;
+  enteredAt: string;
+  leftAt: string | null;
+  days: number;
+}
+
+export interface StageTenureTotalDto {
+  stageId: number;
+  stageNumber: string | null;
+  stageDescription: string | null;
+  totalDays: number;
+}
+
+export interface EarlyWarningAlertNoveltyDto {
+  alertType: 'low_scheduling' | 'long_stage';
+  snapshotAt: string;
+  firstSeen: boolean;
+}
+
+export type EarlyWarningIneligibleReason =
+  | 'new_student'
+  | 'suspended'
+  | 'inactive'
+  | null;
 
 export interface EarlyWarningFollowUpDto {
   status: EarlyWarningFollowUpStatus;
@@ -92,6 +121,43 @@ export interface EarlyWarningRowDto {
   followUp: EarlyWarningFollowUpDto | null;
   followUpPending: boolean;
   isNewAlert: boolean;
+  stageTenureHistory?: StageTenureStintDto[];
+  stageTenureTotals?: StageTenureTotalDto[];
+}
+
+export interface EarlyWarningStudentReportDto {
+  studentId: number;
+  userId: number;
+  firstName: string | null;
+  lastName: string | null;
+  email: string | null;
+  emailAddress: string | null;
+  contact: string | null;
+  city: string | null;
+  mode: EarlyWarningMode | null;
+  studentClassification: EarlyWarningClassification | null;
+  stageId: number | null;
+  stageNumber: string | null;
+  stageDescription: string | null;
+  userStatus: string;
+  atRisk: boolean;
+  ineligibleReason: EarlyWarningIneligibleReason;
+  meetingsInWindow: number;
+  minHoursScheduled: number;
+  daysInStage: number;
+  maxDaysInCurrentStage: number;
+  stageEntryDate: string;
+  lowScheduling: boolean;
+  longTimeInStage: boolean;
+  windowDays: number;
+  stageTenureHistory: StageTenureStintDto[];
+  stageTenureTotals: StageTenureTotalDto[];
+  followUp: EarlyWarningFollowUpDto | null;
+  followUpPending: boolean;
+  isNewAlert: boolean;
+  alertNovelties: EarlyWarningAlertNoveltyDto[];
+  config: EarlyWarningConfigDto;
+  daysUntilStageThreshold: number | null;
 }
 
 export interface EarlyWarningFilteredSummaryDto {
@@ -132,6 +198,7 @@ export interface EarlyWarningListParams {
   limit?: number;
   alertType?: EarlyWarningAlertTypeFilter;
   stageId?: number;
+  studentId?: number | null;
   search?: string;
   classification?: EarlyWarningClassification;
   mode?: EarlyWarningMode;
@@ -141,4 +208,5 @@ export interface EarlyWarningListParams {
   minMeetingsInWindow?: number | null;
   maxMeetingsInWindow?: number | null;
   followUp?: EarlyWarningFollowUpFilter;
+  novelty?: EarlyWarningNoveltyFilter;
 }

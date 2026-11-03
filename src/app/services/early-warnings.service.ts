@@ -7,6 +7,7 @@ import {
   EarlyWarningListParams,
   EarlyWarningListResponseDto,
   EarlyWarningFollowUpDto,
+  EarlyWarningStudentReportDto,
   EarlyWarningSummaryDto,
   SendEarlyWarningAttentionCallDto,
   SendEarlyWarningAttentionCallResultDto,
@@ -32,6 +33,7 @@ export class EarlyWarningsService {
     setIf('limit', params.limit);
     setIf('alertType', params.alertType);
     setIf('stageId', params.stageId);
+    setIf('studentId', params.studentId);
     setIf('search', params.search?.trim());
     setIf('classification', params.classification);
     setIf('mode', params.mode);
@@ -41,7 +43,16 @@ export class EarlyWarningsService {
     setIf('minMeetingsInWindow', params.minMeetingsInWindow);
     setIf('maxMeetingsInWindow', params.maxMeetingsInWindow);
     setIf('followUp', params.followUp);
+    setIf('novelty', params.novelty);
     return httpParams;
+  }
+
+  getStudentReport(
+    studentId: number,
+  ): Observable<EarlyWarningStudentReportDto> {
+    return this.http.get<EarlyWarningStudentReportDto>(
+      `${this.apiUrl}/early-warnings/students/${studentId}`,
+    );
   }
 
   getSummary(

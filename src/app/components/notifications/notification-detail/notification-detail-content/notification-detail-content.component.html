@@ -603,14 +603,22 @@
   >
 
     <span class="notification-detail-content__label">
-      Alertas tempranas
+      {{
+        isEarlyWarningWeeklyDigest
+          ? 'Resumen semanal — alertas tempranas'
+          : 'Alertas tempranas'
+      }}
     </span>
 
     <div class="notification-detail-content__notice">
       <i class="pi pi-exclamation-triangle"></i>
 
       <span>
-        Hay nuevas alertas de poca programación o mucho tiempo en etapa.
+        {{
+          isEarlyWarningWeeklyDigest
+            ? 'Resumen semanal de estudiantes en riesgo por poca programación o mucho tiempo en etapa.'
+            : 'Hay nuevas alertas de poca programación o mucho tiempo en etapa.'
+        }}
       </span>
     </div>
 

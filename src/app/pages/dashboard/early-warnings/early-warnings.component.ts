@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { EarlyWarningsService } from '../../../services/early-warnings.service';
 import { StagesService } from '../../../services/stages.service';
 import {
@@ -14,8 +14,11 @@ import {
   EarlyWarningListParams,
   EarlyWarningListResponseDto,
   EarlyWarningMode,
+  EarlyWarningNoveltyFilter,
   EarlyWarningRowDto,
+  EarlyWarningStudentReportDto,
   EarlyWarningSummaryDto,
+  StageTenureStintDto,
 } from '../../../services/dtos/early-warnings.dto';
 import { Stage } from '../../../services/dtos/student.dto';
 
@@ -30,10 +33,12 @@ export class EarlyWarningsComponent implements OnInit {
   loading = false;
   summaryLoading = false;
   exporting = false;
+  studentReportLoading = false;
   error: string | null = null;
 
   summary: EarlyWarningSummaryDto | null = null;
   list: EarlyWarningListResponseDto | null = null;
+  studentReport: EarlyWarningStudentReportDto | null = null;
   stages: Stage[] = [];
   filterOptions: EarlyWarningFilterOptionsDto = {
     cities: [],
@@ -45,6 +50,8 @@ export class EarlyWarningsComponent implements OnInit {
   limit = 20;
   alertType: EarlyWarningAlertTypeFilter = 'any';
   stageId: number | null = null;
+  studentIdFilter: number | null = null;
+  studentIdInput = '';
   search = '';
   classification: EarlyWarningClassification | null = null;
   mode: EarlyWarningMode | null = null;
@@ -54,6 +61,8 @@ export class EarlyWarningsComponent implements OnInit {
   minMeetingsInWindow: number | null = null;
   maxMeetingsInWindow: number | null = null;
   followUpFilter: EarlyWarningFollowUpFilter = 'all';
+  noveltyFilter: EarlyWarningNoveltyFilter = 'all';
+  expandedTenureStudentIds = new Set<number>();
 
   followUpModalOpen = false;
   followUpSaving = false;
@@ -88,13 +97,28 @@ export class EarlyWarningsComponent implements OnInit {
   constructor(
     private readonly earlyWarnings: EarlyWarningsService,
     private readonly stagesService: StagesService,
+    private readonly route: ActivatedRoute,
+    private readonly router: Router,
   ) {}
 
   ngOnInit(): void {
     this.loadStages();
     this.loadFilterOptions();
+
+    const qpStudentId = this.route.snapshot.queryParamMap.get('studentId');
+    if (qpStudentId) {
+      const parsed = Number(qpStudentId);
+      if (!Number.isNaN(parsed) && parsed > 0) {
+        this.studentIdFilter = parsed;
+        this.studentIdInput = String(parsed);
+      }
+    }
+
     this.loadSummary();
     this.loadList();
+    if (this.studentIdFilter != null) {
+      this.loadStudentReport(this.studentIdFilter);
+    }
   }
 
   private currentFilterParams(
@@ -103,6 +127,7 @@ export class EarlyWarningsComponent implements OnInit {
     const params: EarlyWarningListParams = {
       alertType: this.alertType,
       stageId: this.stageId ?? undefined,
+      studentId: this.studentIdFilter ?? undefined,
       search: this.search || undefined,
       classification: this.classification ?? undefined,
       mode: this.mode ?? undefined,
@@ -112,6 +137,7 @@ export class EarlyWarningsComponent implements OnInit {
       minMeetingsInWindow: this.minMeetingsInWindow,
       maxMeetingsInWindow: this.maxMeetingsInWindow,
       followUp: this.followUpFilter === 'all' ? undefined : this.followUpFilter,
+      novelty: this.noveltyFilter === 'all' ? undefined : this.noveltyFilter,
     };
     if (includePagination) {
       params.page = this.page;
@@ -172,13 +198,34 @@ export class EarlyWarningsComponent implements OnInit {
 
   applyFilters(): void {
     this.page = 1;
+    const parsed = Number(this.studentIdInput.trim());
+    this.studentIdFilter =
+      this.studentIdInput.trim() && !Number.isNaN(parsed) && parsed > 0
+        ? parsed
+        : null;
+
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        studentId: this.studentIdFilter ?? null,
+      },
+      queryParamsHandling: 'merge',
+    });
+
     this.loadList();
     this.loadSummary();
+    if (this.studentIdFilter != null) {
+      this.loadStudentReport(this.studentIdFilter);
+    } else {
+      this.studentReport = null;
+    }
   }
 
   clearFilters(): void {
     this.alertType = 'any';
     this.stageId = null;
+    this.studentIdFilter = null;
+    this.studentIdInput = '';
     this.search = '';
     this.classification = null;
     this.mode = null;
@@ -188,9 +235,78 @@ export class EarlyWarningsComponent implements OnInit {
     this.minMeetingsInWindow = null;
     this.maxMeetingsInWindow = null;
     this.followUpFilter = 'all';
+    this.noveltyFilter = 'all';
+    this.studentReport = null;
     this.page = 1;
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { studentId: null },
+      queryParamsHandling: 'merge',
+    });
     this.loadList();
     this.loadSummary();
+  }
+
+  loadStudentReport(studentId: number): void {
+    this.studentReportLoading = true;
+    this.earlyWarnings.getStudentReport(studentId).subscribe({
+      next: (report) => {
+        this.studentReport = report;
+        this.studentReportLoading = false;
+      },
+      error: () => {
+        this.studentReport = null;
+        this.studentReportLoading = false;
+        this.error =
+          'No se pudo cargar la ficha del estudiante para alertas tempranas.';
+      },
+    });
+  }
+
+  toggleTenure(studentId: number): void {
+    if (this.expandedTenureStudentIds.has(studentId)) {
+      this.expandedTenureStudentIds.delete(studentId);
+    } else {
+      this.expandedTenureStudentIds.add(studentId);
+    }
+  }
+
+  isTenureExpanded(studentId: number): boolean {
+    return this.expandedTenureStudentIds.has(studentId);
+  }
+
+  reportFullName(report: EarlyWarningStudentReportDto): string {
+    return (
+      `${report.firstName ?? ''} ${report.lastName ?? ''}`.trim() || '—'
+    );
+  }
+
+  ineligibleLabel(reason: string | null): string {
+    switch (reason) {
+      case 'new_student':
+        return 'Estudiante nuevo (fuera de evaluación)';
+      case 'suspended':
+        return 'Suspensión activa';
+      case 'inactive':
+        return 'Usuario inactivo';
+      default:
+        return '';
+    }
+  }
+
+  alertTypeLabel(type: string): string {
+    return type === 'long_stage' ? 'Mucho tiempo en etapa' : 'Poca programación';
+  }
+
+  formatTenureDate(iso: string | null | undefined): string {
+    if (!iso) return 'actual';
+    return new Date(iso).toLocaleDateString('es-EC');
+  }
+
+  stageLabel(stint: StageTenureStintDto): string {
+    return stint.stageNumber
+      ? `Etapa ${stint.stageNumber}`
+      : `Etapa #${stint.stageId}`;
   }
 
   downloadExcel(): void {
