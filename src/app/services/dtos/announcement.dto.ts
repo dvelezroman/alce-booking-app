@@ -4,6 +4,18 @@ import { UserRole } from "./user.dto"
 export type AnnouncementDisplayMode = 'modal' | 'banner' | 'both'
 export type AnnouncementBannerTone = 'brand' | 'accent' | 'info' | 'warning'
 
+/** Luxon weekday: 1 = Monday … 7 = Sunday. */
+export type AnnouncementShowSchedule =
+  | { kind: 'none' }
+  | { kind: 'daily' }
+  | { kind: 'every_n_days'; intervalDays: number }
+  | { kind: 'weekly'; weekday: number }
+  | {
+      kind: 'monthly'
+      daysOfMonth: number[]
+      maxOccurrencesPerMonth?: number
+    }
+
 export interface Announcement {
   id: string
   mediaUrl: string
@@ -20,6 +32,7 @@ export interface Announcement {
   endDate?: string | null
   actions: Action[]
   showMode?: 'always' | 'once_session' | 'once_user'
+  showSchedule?: AnnouncementShowSchedule | null
   aspectRatio?: 'horizontal' | 'vertical' | 'square' | 'auto'
 }
 

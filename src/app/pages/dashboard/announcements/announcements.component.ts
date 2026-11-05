@@ -20,6 +20,7 @@ import {
   Announcement,
   AnnouncementBannerTone,
   AnnouncementDisplayMode,
+  AnnouncementShowSchedule,
 } from '../../../services/dtos/announcement.dto';
 
 import {
@@ -80,6 +81,8 @@ import { AnnouncementV2FormComponent } from '../../../components/announcements-v
 import { ActionButton } from '../../../components/announcements/actions-builder/actions-builder.component';
 import { AnnouncementBannerComponent } from '../../../components/announcements/announcement-banner/announcement-banner.component';
 import { AnnouncementViewerUser } from '../../../shared/utils/announcement-display.util';
+import { isAnnouncementScheduledForDate } from '../../../shared/utils/announcement-show-schedule.util';
+import { DateTime } from 'luxon';
 
 
 @Component({
@@ -179,6 +182,9 @@ export class AnnouncementsComponent
     | 'once_session'
     | 'once_user' = 'always';
 
+  formShowSchedule:
+    AnnouncementShowSchedule | null = null;
+
   formAspectRatio:
     | 'horizontal'
     | 'vertical'
@@ -243,6 +249,22 @@ export class AnnouncementsComponent
   ngOnInit(): void {
 
     this.loadAnnouncements();
+  }
+
+  get modalNotScheduledToday(): boolean {
+    if (this.formDisplayMode === 'banner') {
+      return false;
+    }
+
+    return !isAnnouncementScheduledForDate(
+      {
+        showSchedule: this.formShowSchedule,
+        startDate: this.formStartDate ?? null,
+        endDate: this.formEndDate ?? null,
+        displayMode: this.formDisplayMode,
+      },
+      DateTime.local(),
+    );
   }
 
   get showsBannerPreview(): boolean {
@@ -562,6 +584,9 @@ export class AnnouncementsComponent
       showMode:
         this.formShowMode,
 
+      showSchedule:
+        this.formShowSchedule,
+
       aspectRatio:
         this.formAspectRatio,
 
@@ -692,6 +717,9 @@ export class AnnouncementsComponent
 
       showMode:
         this.formShowMode,
+
+      showSchedule:
+        this.formShowSchedule,
 
       aspectRatio:
         this.formAspectRatio,
@@ -836,6 +864,9 @@ export class AnnouncementsComponent
       a.showMode ||
       'always';
 
+    this.formShowSchedule =
+      a.showSchedule ?? null;
+
 
     this.formAspectRatio =
       a.aspectRatio ===
@@ -947,6 +978,9 @@ export class AnnouncementsComponent
     this.formShowMode =
       'always';
 
+    this.formShowSchedule =
+      null;
+
     this.formAspectRatio =
       'horizontal';
 
@@ -1025,6 +1059,38 @@ export class AnnouncementsComponent
     ) {
       this.showError(
         'Debes pulsar Subir en el medio del anuncio antes de guardar',
+      );
+      return false;
+    }
+
+    const schedule = this.formShowSchedule;
+
+    if (
+      schedule?.kind === 'every_n_days' &&
+      !this.formStartDate
+    ) {
+      this.showError(
+        'La repetición cada N días requiere una fecha de inicio',
+      );
+      return false;
+    }
+
+    if (
+      schedule?.kind === 'every_n_days' &&
+      schedule.intervalDays < 1
+    ) {
+      this.showError(
+        'El intervalo de días debe ser al menos 1',
+      );
+      return false;
+    }
+
+    if (
+      schedule?.kind === 'monthly' &&
+      schedule.daysOfMonth.length === 0
+    ) {
+      this.showError(
+        'Selecciona al menos un día del mes',
       );
       return false;
     }

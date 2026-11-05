@@ -175,6 +175,7 @@
           [startDate]="formStartDate"
           [endDate]="formEndDate"
           [showMode]="formShowMode"
+          [showSchedule]="formShowSchedule"
           [aspectRatio]="formAspectRatio"
 
           (titleChange)="formTitle = $event"
@@ -189,6 +190,7 @@
           (startDateChange)="formStartDate = $event"
           (endDateChange)="formEndDate = $event"
           (showModeChange)="formShowMode = $event"
+          (showScheduleChange)="formShowSchedule = $event"
           (aspectRatioChange)="formAspectRatio = $event"
         >
         </app-announcement-v2-form>
@@ -400,6 +402,14 @@
             >
             </app-announcement-v2-preview>
 
+
+          <p
+            *ngIf="modalNotScheduledToday"
+            class="announcements-v2__preview-note announcements-v2__preview-note--warn"
+          >
+            Hoy no es un día de repetición. El modal no se mostrará
+            hasta el próximo día programado.
+          </p>
 
           <p class="announcements-v2__preview-note">
             La vista previa es referencial. El resultado puede variar

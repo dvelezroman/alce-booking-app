@@ -21,6 +21,10 @@ import {
   StudentClassification,
 } from '../../../services/dtos/student.dto';
 
+import {
+  AnnouncementShowSchedule,
+} from '../../../services/dtos/announcement.dto';
+
 
 type AnnouncementType =
   | 'promotion'
@@ -120,6 +124,10 @@ export class AnnouncementV2FormComponent {
       'always';
 
   @Input()
+  showSchedule:
+    AnnouncementShowSchedule | null = null;
+
+  @Input()
   aspectRatio:
     AnnouncementAspectRatio =
       'horizontal';
@@ -191,6 +199,12 @@ export class AnnouncementV2FormComponent {
   showModeChange =
     new EventEmitter<
       AnnouncementShowMode
+    >();
+
+  @Output()
+  showScheduleChange =
+    new EventEmitter<
+      AnnouncementShowSchedule | null
     >();
 
   @Output()
@@ -318,6 +332,53 @@ export class AnnouncementV2FormComponent {
     },
   ];
 
+  readonly repeatKindOptions: {
+    value:
+      | 'none'
+      | 'daily'
+      | 'every_n_days'
+      | 'weekly'
+      | 'monthly';
+    label: string;
+  }[] = [
+    {
+      value: 'none',
+      label: 'No se repite',
+    },
+    {
+      value: 'daily',
+      label: 'Cada día',
+    },
+    {
+      value: 'every_n_days',
+      label: 'Cada N días',
+    },
+    {
+      value: 'weekly',
+      label: 'Semanal',
+    },
+    {
+      value: 'monthly',
+      label: 'Mensual',
+    },
+  ];
+
+  readonly weekdayOptions: {
+    value: number;
+    label: string;
+  }[] = [
+    { value: 1, label: 'Lunes' },
+    { value: 2, label: 'Martes' },
+    { value: 3, label: 'Miércoles' },
+    { value: 4, label: 'Jueves' },
+    { value: 5, label: 'Viernes' },
+    { value: 6, label: 'Sábado' },
+    { value: 7, label: 'Domingo' },
+  ];
+
+  readonly monthDays: number[] =
+    Array.from({ length: 31 }, (_, index) => index + 1);
+
   readonly showModeOptions: {
     value: AnnouncementShowMode;
     label: string;
@@ -382,6 +443,50 @@ export class AnnouncementV2FormComponent {
       this.displayMode === 'modal' ||
       this.displayMode === 'both'
     );
+  }
+
+  get repeatKind():
+    | 'none'
+    | 'daily'
+    | 'every_n_days'
+    | 'weekly'
+    | 'monthly' {
+    return this.showSchedule?.kind ?? 'none';
+  }
+
+  get intervalDays(): number {
+    return this.showSchedule?.kind === 'every_n_days'
+      ? this.showSchedule.intervalDays
+      : 2;
+  }
+
+  get weekday(): number {
+    return this.showSchedule?.kind === 'weekly'
+      ? this.showSchedule.weekday
+      : 1;
+  }
+
+  get selectedMonthDays(): number[] {
+    return this.showSchedule?.kind === 'monthly'
+      ? this.showSchedule.daysOfMonth
+      : [];
+  }
+
+  get limitMonthlyOccurrences(): boolean {
+    return (
+      this.showSchedule?.kind === 'monthly' &&
+      this.showSchedule.maxOccurrencesPerMonth != null
+    );
+  }
+
+  get maxOccurrencesPerMonth(): number {
+    if (
+      this.showSchedule?.kind === 'monthly' &&
+      this.showSchedule.maxOccurrencesPerMonth
+    ) {
+      return this.showSchedule.maxOccurrencesPerMonth;
+    }
+    return 1;
   }
 
 
@@ -530,6 +635,124 @@ export class AnnouncementV2FormComponent {
     this.showModeChange.emit(
       value as AnnouncementShowMode,
     );
+  }
+
+  onRepeatKindChange(value: string): void {
+    switch (value) {
+      case 'daily':
+        this.showScheduleChange.emit({ kind: 'daily' });
+        return;
+      case 'every_n_days':
+        this.showScheduleChange.emit({
+          kind: 'every_n_days',
+          intervalDays: Math.max(1, this.intervalDays || 1),
+        });
+        return;
+      case 'weekly':
+        this.showScheduleChange.emit({
+          kind: 'weekly',
+          weekday: this.weekday || 1,
+        });
+        return;
+      case 'monthly':
+        this.showScheduleChange.emit({
+          kind: 'monthly',
+          daysOfMonth: this.selectedMonthDays.length
+            ? [...this.selectedMonthDays]
+            : [1],
+        });
+        return;
+      default:
+        this.showScheduleChange.emit(null);
+    }
+  }
+
+  onIntervalDaysChange(value: string): void {
+    const parsed = Number(value);
+    const intervalDays =
+      Number.isFinite(parsed) && parsed >= 1
+        ? Math.floor(parsed)
+        : 1;
+
+    this.showScheduleChange.emit({
+      kind: 'every_n_days',
+      intervalDays,
+    });
+  }
+
+  onWeekdayChange(value: string): void {
+    const weekday = Number(value);
+    this.showScheduleChange.emit({
+      kind: 'weekly',
+      weekday: weekday >= 1 && weekday <= 7 ? weekday : 1,
+    });
+  }
+
+  onToggleMonthDay(day: number): void {
+    if (this.showSchedule?.kind !== 'monthly') {
+      return;
+    }
+
+    const current = this.showSchedule.daysOfMonth;
+    const next = current.includes(day)
+      ? current.filter((item) => item !== day)
+      : [...current, day].sort((a, b) => a - b);
+
+    if (next.length === 0) {
+      return;
+    }
+
+    this.showScheduleChange.emit({
+      kind: 'monthly',
+      daysOfMonth: next,
+      ...(this.showSchedule.maxOccurrencesPerMonth != null
+        ? {
+            maxOccurrencesPerMonth:
+              this.showSchedule.maxOccurrencesPerMonth,
+          }
+        : {}),
+    });
+  }
+
+  onLimitOccurrencesChange(checked: boolean): void {
+    if (this.showSchedule?.kind !== 'monthly') {
+      return;
+    }
+
+    this.showScheduleChange.emit(
+      checked
+        ? {
+            kind: 'monthly',
+            daysOfMonth: [...this.showSchedule.daysOfMonth],
+            maxOccurrencesPerMonth: this.maxOccurrencesPerMonth || 1,
+          }
+        : {
+            kind: 'monthly',
+            daysOfMonth: [...this.showSchedule.daysOfMonth],
+          },
+    );
+  }
+
+  onMaxOccurrencesChange(value: string): void {
+    if (this.showSchedule?.kind !== 'monthly') {
+      return;
+    }
+
+    const parsed = Number(value);
+    const maxOccurrencesPerMonth =
+      Number.isFinite(parsed) && parsed >= 1
+        ? Math.floor(parsed)
+        : 1;
+
+    this.showScheduleChange.emit({
+      kind: 'monthly',
+      daysOfMonth: [...this.showSchedule.daysOfMonth],
+      maxOccurrencesPerMonth,
+    });
+  }
+
+  isMonthDaySelected(day: number): boolean {
+    return this.selectedMonthDays.includes(day);
   }
 
 

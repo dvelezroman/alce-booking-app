@@ -1,7 +1,9 @@
+import { DateTime } from 'luxon';
 import { Announcement } from '../../services/dtos/announcement.dto';
 import { StudentClassification } from '../../services/dtos/student.dto';
 import { UserRole } from '../../services/dtos/user.dto';
 import { bannerHasVisual } from './announcement-media.util';
+import { isAnnouncementScheduledForDate } from './announcement-show-schedule.util';
 
 export type AnnouncementSurface = 'modal' | 'banner';
 
@@ -220,11 +222,12 @@ export function dismissBannerAnnouncement(
 export function getVisibleModalAnnouncements(
   list: Announcement[],
   user: AnnouncementViewerUser,
+  now: DateTime = DateTime.local(),
 ): Announcement[] {
   return filterModalAnnouncementsByShowMode(
-    filterAnnouncementsForUser(list, user).filter((a) =>
-      isAnnouncementForSurface(a, 'modal'),
-    ),
+    filterAnnouncementsForUser(list, user)
+      .filter((a) => isAnnouncementForSurface(a, 'modal'))
+      .filter((a) => isAnnouncementScheduledForDate(a, now)),
     user,
   );
 }

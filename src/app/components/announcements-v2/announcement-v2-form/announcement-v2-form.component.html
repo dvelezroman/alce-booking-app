@@ -729,6 +729,228 @@
       </div>
 
 
+      <!-- REPEAT -->
+
+      <div
+        *ngIf="showsModalFields"
+        class="announcement-v2-form__field announcement-v2-form__field--full"
+      >
+
+        <div class="announcement-v2-form__label-row">
+
+          <label
+            class="announcement-v2-form__label"
+            for="announcement-v2-repeat"
+          >
+            Repetir
+          </label>
+
+
+          <span
+            class="announcement-v2-form__help"
+            title="Días en los que el modal puede aparecer, dentro de la vigencia. El horario es el del navegador. Lunes = 1 … domingo = 7."
+          >
+            i
+          </span>
+
+        </div>
+
+
+        <div class="announcement-v2-form__select-wrapper">
+
+          <select
+            #repeatSelect
+            id="announcement-v2-repeat"
+            class="announcement-v2-form__control"
+            [value]="repeatKind"
+            (change)="onRepeatKindChange(repeatSelect.value)"
+          >
+
+            <option
+              *ngFor="let option of repeatKindOptions"
+              [value]="option.value"
+            >
+              {{ option.label }}
+            </option>
+
+          </select>
+
+
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="m7 9 5 5 5-5"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+
+        </div>
+
+
+        <div
+          *ngIf="repeatKind === 'every_n_days'"
+          class="announcement-v2-form__repeat-extra"
+        >
+
+          <label
+            class="announcement-v2-form__label"
+            for="announcement-v2-interval-days"
+          >
+            Cada cuántos días
+          </label>
+
+          <input
+            #intervalDaysInput
+            id="announcement-v2-interval-days"
+            type="number"
+            min="1"
+            step="1"
+            class="announcement-v2-form__control"
+            [value]="intervalDays"
+            (change)="onIntervalDaysChange(intervalDaysInput.value)"
+          />
+
+          <small class="announcement-v2-form__hint">
+            Cuenta desde la fecha de inicio. El día de inicio es el primero.
+            <span *ngIf="!startDate">
+              Requiere fecha de inicio.
+            </span>
+          </small>
+
+        </div>
+
+
+        <div
+          *ngIf="repeatKind === 'weekly'"
+          class="announcement-v2-form__repeat-extra"
+        >
+
+          <label
+            class="announcement-v2-form__label"
+            for="announcement-v2-weekday"
+          >
+            Día de la semana
+          </label>
+
+          <div class="announcement-v2-form__select-wrapper">
+
+            <select
+              #weekdaySelect
+              id="announcement-v2-weekday"
+              class="announcement-v2-form__control"
+              [value]="weekday"
+              (change)="onWeekdayChange(weekdaySelect.value)"
+            >
+
+              <option
+                *ngFor="let option of weekdayOptions"
+                [value]="option.value"
+              >
+                {{ option.label }}
+              </option>
+
+            </select>
+
+
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="m7 9 5 5 5-5"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+
+          </div>
+
+        </div>
+
+
+        <div
+          *ngIf="repeatKind === 'monthly'"
+          class="announcement-v2-form__repeat-extra"
+        >
+
+          <span class="announcement-v2-form__label">
+            Días del mes
+          </span>
+
+          <div
+            class="announcement-v2-form__day-grid"
+            role="group"
+            aria-label="Días del mes"
+          >
+
+            <button
+              *ngFor="let day of monthDays"
+              type="button"
+              class="announcement-v2-form__day-chip"
+              [class.announcement-v2-form__day-chip--selected]="
+                isMonthDaySelected(day)
+              "
+              [attr.aria-pressed]="isMonthDaySelected(day)"
+              (click)="onToggleMonthDay(day)"
+            >
+              {{ day }}
+            </button>
+
+          </div>
+
+          <label class="announcement-v2-form__limit">
+
+            <input
+              type="checkbox"
+              [checked]="limitMonthlyOccurrences"
+              (change)="onLimitOccurrencesChange($any($event.target).checked)"
+            />
+
+            Limitar ocurrencias del mes
+
+          </label>
+
+          <div *ngIf="limitMonthlyOccurrences">
+
+            <label
+              class="announcement-v2-form__label"
+              for="announcement-v2-max-occurrences"
+            >
+              Máximo por mes
+            </label>
+
+            <input
+              #maxOccurrencesInput
+              id="announcement-v2-max-occurrences"
+              type="number"
+              min="1"
+              step="1"
+              class="announcement-v2-form__control"
+              [value]="maxOccurrencesPerMonth"
+              (change)="onMaxOccurrencesChange(maxOccurrencesInput.value)"
+            />
+
+            <small class="announcement-v2-form__hint">
+              Se usan las primeras fechas elegidas del mes que caigan en la vigencia.
+              Un día que no existe (por ejemplo el 31 en febrero) no se muestra.
+            </small>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
       <!-- SHOW MODE -->
 
       <div class="announcement-v2-form__field">
