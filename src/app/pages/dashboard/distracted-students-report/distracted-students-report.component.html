@@ -1,0 +1,184 @@
+<section class="distracted-report">
+  <header class="distracted-report__header">
+    <div>
+      <span class="distracted-report__eyebrow">Seguimiento académico</span>
+      <h1>Distraídos en clase</h1>
+      <p>
+        Clases en las que el tutor marcó distracción clara. La tasa por estudiante
+        usa las asistencias del mismo rango.
+      </p>
+    </div>
+    <button
+      type="button"
+      class="distracted-report__export"
+      [disabled]="exporting || loading"
+      (click)="downloadExcel()"
+    >
+      {{ exporting ? 'Generando…' : 'Exportar Excel' }}
+    </button>
+  </header>
+
+  <div class="distracted-report__presets">
+    <button type="button" [class.is-active]="preset === 'today'" (click)="applyPreset('today')">Hoy</button>
+    <button type="button" [class.is-active]="preset === '7'" (click)="applyPreset('7')">7 días</button>
+    <button type="button" [class.is-active]="preset === '30'" (click)="applyPreset('30')">30 días</button>
+    <button type="button" [class.is-active]="preset === 'custom'" (click)="applyPreset('custom')">Personalizado</button>
+  </div>
+
+  <form class="distracted-report__filters" (ngSubmit)="search()">
+    <label>
+      Desde
+      <input type="date" name="from" [(ngModel)]="from" [readonly]="preset !== 'custom'" required />
+    </label>
+    <label>
+      Hasta
+      <input type="date" name="to" [(ngModel)]="to" [readonly]="preset !== 'custom'" required />
+    </label>
+    <label>
+      Estudiante
+      <input type="search" name="searchText" [(ngModel)]="searchText" placeholder="Nombre o email" />
+    </label>
+    <label>
+      Stage
+      <select name="stageId" [(ngModel)]="stageId">
+        <option [ngValue]="null">Todos</option>
+        <option *ngFor="let stage of stages" [ngValue]="stage.id">{{ stage.number }}</option>
+      </select>
+    </label>
+    <label>
+      Instructor
+      <select name="instructorId" [(ngModel)]="instructorId">
+        <option [ngValue]="null">Todos</option>
+        <option *ngFor="let instructor of instructors" [ngValue]="instructor.id">
+          {{ personName(instructor.user) }}
+        </option>
+      </select>
+    </label>
+    <label>
+      Categoría
+      <select name="category" [(ngModel)]="category">
+        <option [ngValue]="null">Todas</option>
+        <option value="KIDS">Kids</option>
+        <option value="TEENS">Teens</option>
+        <option value="ADULTS">Adults</option>
+      </select>
+    </label>
+    <ng-container *ngIf="groupBy === 'meeting'">
+      <label>
+        Fecha de clase
+        <input type="date" name="classDate" [(ngModel)]="classDate" />
+      </label>
+      <label>
+        Hora
+        <select name="classHour" [(ngModel)]="classHour">
+          <option [ngValue]="null">Todas</option>
+          <option *ngFor="let hour of hours" [ngValue]="hour">{{ hourLabel(hour) }}</option>
+        </select>
+      </label>
+    </ng-container>
+    <label class="distracted-report__check">
+      <input type="checkbox" name="hasBehaviorComment" [(ngModel)]="hasBehaviorComment" />
+      Solo con nota del tutor
+    </label>
+    <button type="submit" [disabled]="loading">Buscar</button>
+  </form>
+
+  <div class="distracted-report__chips" *ngIf="studentId || meetingId">
+    <button type="button" *ngIf="studentId" (click)="clearStudent()">Estudiante #{{ studentId }} ×</button>
+    <button type="button" *ngIf="meetingId" (click)="clearMeeting()">Clase #{{ meetingId }} ×</button>
+  </div>
+
+  <div class="distracted-report__views">
+    <button type="button" [class.is-active]="groupBy === 'meeting'" (click)="setGroupBy('meeting')">Por clase</button>
+    <button type="button" [class.is-active]="groupBy === 'student'" (click)="setGroupBy('student')">Por estudiante</button>
+  </div>
+
+  <div class="distracted-report__kpis" *ngIf="report?.summary as summary">
+    <article>
+      <span>Eventos</span>
+      <strong>{{ summary.totalEvents }}</strong>
+    </article>
+    <article>
+      <span>Estudiantes</span>
+      <strong>{{ summary.uniqueStudents }}</strong>
+    </article>
+    <article>
+      <span>Rango</span>
+      <strong>{{ summary.dateRange.from }} → {{ summary.dateRange.to }}</strong>
+    </article>
+  </div>
+
+  <p class="distracted-report__error" *ngIf="error">{{ error }}</p>
+  <p class="distracted-report__state" *ngIf="loading">Cargando…</p>
+
+  <div class="distracted-report__table" *ngIf="!loading && groupBy === 'meeting'">
+    <table>
+      <thead>
+        <tr>
+          <th>Estudiante</th>
+          <th>Categoría</th>
+          <th>Stage</th>
+          <th>Fecha</th>
+          <th>Hora</th>
+          <th>Instructor</th>
+          <th>Nota</th>
+          <th>Marcado por</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of meetingRows">
+          <td>{{ personName(row.student) }}</td>
+          <td>{{ row.student.category || '—' }}</td>
+          <td>{{ row.stage?.number || '—' }}</td>
+          <td>{{ row.localdate || '—' }}</td>
+          <td>{{ hourLabel(row.localhour) }}</td>
+          <td>{{ personName(row.instructor) }}</td>
+          <td [title]="row.studentBehaviorComment || ''">{{ row.studentBehaviorComment || '—' }}</td>
+          <td>
+            {{ personName(row.markedBy) }}
+            <small *ngIf="row.distractedMarkedAt">{{ row.distractedMarkedAt | date:'short' }}</small>
+          </td>
+        </tr>
+        <tr *ngIf="meetingRows.length === 0">
+          <td colspan="8">No hay clases distraídas con estos filtros.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="distracted-report__table" *ngIf="!loading && groupBy === 'student'">
+    <table>
+      <thead>
+        <tr>
+          <th>Estudiante</th>
+          <th>Categoría</th>
+          <th>Stage</th>
+          <th>Distraídos</th>
+          <th>Asistencias</th>
+          <th>%</th>
+          <th>Última fecha</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let row of studentRows" (click)="openStudentClasses(row.student.id)">
+          <td>{{ personName(row.student) }}</td>
+          <td>{{ row.student.category || '—' }}</td>
+          <td>{{ row.stage?.number || '—' }}</td>
+          <td>{{ row.distractedCount }}</td>
+          <td>{{ row.attendedCount }}</td>
+          <td>{{ row.distractionRate == null ? '—' : row.distractionRate + '%' }}</td>
+          <td>{{ row.lastDistractedAt || '—' }} {{ hourLabel(row.lastDistractedHour) }}</td>
+        </tr>
+        <tr *ngIf="studentRows.length === 0">
+          <td colspan="7">No hay estudiantes con estos filtros.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <footer class="distracted-report__pager" *ngIf="report && report.total > 0">
+    <button type="button" (click)="previousPage()" [disabled]="page <= 1">Anterior</button>
+    <span>Página {{ page }} de {{ totalPages }} · {{ report.total }} filas</span>
+    <button type="button" (click)="nextPage()" [disabled]="page >= totalPages">Siguiente</button>
+  </footer>
+</section>

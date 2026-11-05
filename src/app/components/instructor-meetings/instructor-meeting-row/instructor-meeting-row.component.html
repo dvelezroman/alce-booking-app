@@ -414,50 +414,25 @@
 
 
   <!-- =====================================================
-       CONTENIDO
+       DISTRAÍDO
   ====================================================== -->
 
   <div
     class="meeting-row__cell meeting-row__cell--content"
-    data-label="Contenido"
+    data-label="Distraído"
   >
-
-    <ng-container
-      *ngIf="
-        hasStudyContent;
-        else noContent
-      "
+    <label
+      class="meeting-row__distract"
+      [class.meeting-row__distract--disabled]="!canMarkDistracted"
+      title="Marcar solo si el estudiante estuvo claramente distraído (celular, amigos u otra interrupción) durante la clase."
     >
-
-      <span
-        class="meeting-row__content-preview"
-        [title]="firstStudyContentTitle"
-      >
-        {{ firstStudyContentTitle }}
-      </span>
-
-      <button
-        type="button"
-        class="meeting-row__text-action"
-        (click)="onContentView()"
-      >
-        Ver
-        <span *ngIf="remainingStudyContentCount > 0">
-          +{{ remainingStudyContentCount }}
-        </span>
-      </button>
-
-    </ng-container>
-
-
-    <ng-template #noContent>
-
-      <span class="meeting-row__empty-value">
-        Sin contenido
-      </span>
-
-    </ng-template>
-
+      <input
+        type="checkbox"
+        [checked]="!!meeting.distractedInClass"
+        [disabled]="!canMarkDistracted"
+        (click)="onDistractedClick($event)"
+      />
+    </label>
   </div>
 
 

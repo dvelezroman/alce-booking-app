@@ -182,6 +182,8 @@ export class SearchingMeetingInstructorV2Component implements OnInit {
   ========================= */
   showAssistanceNoteModal = false;
   selectedMeetingForAssistance?: MeetingDTO;
+  showDistractedNoteModal = false;
+  selectedMeetingForDistraction?: MeetingDTO;
 
   /* =========================
      STEPS CONTENIDO
@@ -688,6 +690,69 @@ export class SearchingMeetingInstructorV2Component implements OnInit {
     );
   }
 
+  onDistractedChange(event: {
+    meeting: MeetingDTO;
+    distracted: boolean;
+  }): void {
+    if (!event.meeting.id) {
+      return;
+    }
+
+    if (event.distracted) {
+      this.selectedMeetingForDistraction = event.meeting;
+      this.showDistractedNoteModal = true;
+      return;
+    }
+
+    this.bookingService
+      .updateMeetingDistracted(event.meeting.id, false)
+      .subscribe({
+        next: () => {
+          this.fetchMeetings(this.filter);
+        },
+        error: () => {
+          this.showModal(
+            this.createModalParams(
+              true,
+              'Error al actualizar la marca de distracción',
+            ),
+          );
+        },
+      });
+  }
+
+  handleDistractedNoteCancel(): void {
+    this.showDistractedNoteModal = false;
+    this.selectedMeetingForDistraction = undefined;
+  }
+
+  onDistractedNoteSaved(note: string): void {
+    const meeting = this.selectedMeetingForDistraction;
+    if (!meeting?.id) {
+      return;
+    }
+
+    this.bookingService
+      .updateMeetingDistracted(meeting.id, true, note || undefined)
+      .subscribe({
+        next: () => {
+          this.fetchMeetings(this.filter);
+          this.showDistractedNoteModal = false;
+          this.selectedMeetingForDistraction = undefined;
+        },
+        error: () => {
+          this.showModal(
+            this.createModalParams(
+              true,
+              'Error al guardar la distracción',
+            ),
+          );
+          this.showDistractedNoteModal = false;
+          this.selectedMeetingForDistraction = undefined;
+        },
+      });
+  }
+
   confirmAssistanceWithContentCheck(
     meeting: MeetingDTO,
   ): void {
@@ -1092,25 +1157,6 @@ export class SearchingMeetingInstructorV2Component implements OnInit {
           );
         },
       });
-  }
-
-  /* =========================
-     FORMAT CONTENT
-  ========================= */
-
-  formatStudyContent(
-    meeting: MeetingDTO,
-  ): string {
-    if (
-      !meeting.studyContent ||
-      meeting.studyContent.length === 0
-    ) {
-      return 'Sin contenido';
-    }
-
-    return meeting.studyContent
-      .map(c => `${c.title}`)
-      .join('\n');
   }
 
   /* =========================
@@ -1735,34 +1781,6 @@ export class SearchingMeetingInstructorV2Component implements OnInit {
       message,
 
       isContentViewer: true,
-
-      close:
-        this.closeModal,
-    };
-  }
-
-  /* =========================
-     CONTENT VIEWER
-  ========================= */
-
-  showContentViewer(
-    content: string,
-    title:
-      string =
-        'Contenido de la Clase',
-  ): void {
-    this.modal = {
-      ...modalInitializer(),
-
-      show: true,
-
-      message:
-        content,
-
-      isContentViewer:
-        true,
-
-      title,
 
       close:
         this.closeModal,

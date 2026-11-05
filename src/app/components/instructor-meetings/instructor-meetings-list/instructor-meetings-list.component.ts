@@ -73,13 +73,6 @@ export class InstructorMeetingsListComponent {
     ) => boolean;
 
 
-  @Input()
-  formatStudyContent!:
-    (
-      meeting: MeetingDTO,
-    ) => string;
-
-
   /* =====================================================
      OUTPUTS
   ===================================================== */
@@ -87,14 +80,6 @@ export class InstructorMeetingsListComponent {
   @Output()
   refreshRequested =
     new EventEmitter<void>();
-
-
-  @Output()
-  contentViewRequested =
-    new EventEmitter<{
-      content: string;
-      title: string;
-    }>();
 
 
   @Output()
@@ -127,6 +112,14 @@ export class InstructorMeetingsListComponent {
 
 
   @Output()
+  distractedChangeRequested =
+    new EventEmitter<{
+      meeting: MeetingDTO;
+      distracted: boolean;
+    }>();
+
+
+  @Output()
   evaluationRequested =
     new EventEmitter<number>();
 
@@ -150,23 +143,6 @@ export class InstructorMeetingsListComponent {
     }
 
     this.refreshRequested.emit();
-  }
-
-
-  /* =====================================================
-     CONTENT
-  ===================================================== */
-
-  onContentViewRequested(
-    event: {
-      content: string;
-      title: string;
-    },
-  ): void {
-
-    this.contentViewRequested.emit(
-      event,
-    );
   }
 
 
@@ -232,6 +208,16 @@ export class InstructorMeetingsListComponent {
     this.assistanceCheckboxClicked.emit(
       event,
     );
+  }
+
+
+  onDistractedChangeRequested(
+    event: {
+      meeting: MeetingDTO;
+      distracted: boolean;
+    },
+  ): void {
+    this.distractedChangeRequested.emit(event);
   }
 
 

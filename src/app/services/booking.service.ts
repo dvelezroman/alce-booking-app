@@ -112,6 +112,23 @@ export class BookingService {
     return this.http.patch(`${this.apiUrl}/assistance/${id}`, body);
   }
 
+  updateMeetingDistracted(
+    id: number,
+    distractedInClass: boolean,
+    studentBehaviorComment?: string,
+  ): Observable<any> {
+    const body: {
+      distractedInClass: boolean;
+      studentBehaviorComment?: string;
+    } = { distractedInClass };
+
+    if (studentBehaviorComment) {
+      body.studentBehaviorComment = studentBehaviorComment;
+    }
+
+    return this.http.patch(`${this.apiUrl}/distracted/${id}`, body);
+  }
+
   clickAssistanceByStudent(meetingId: number): Observable<any> {
     return this.http.patch(`${this.apiUrl}/click-link/${meetingId}`, {});
   }

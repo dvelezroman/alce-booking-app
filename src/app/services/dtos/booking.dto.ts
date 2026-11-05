@@ -44,6 +44,9 @@ export interface MeetingDTO {
   user?: UserDto;
   instructorNote?: string;
   studentBehaviorComment?: string;
+  distractedInClass?: boolean;
+  distractedMarkedAt?: string | null;
+  distractedMarkedById?: number | null;
 }
 
 export interface AssignedByDTO {

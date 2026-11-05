@@ -68,24 +68,9 @@ export class InstructorMeetingRowComponent {
     ) => boolean;
 
 
-  @Input()
-  formatStudyContent!:
-    (
-      meeting: MeetingDTO,
-    ) => string;
-
-
   /* =====================================================
      OUTPUTS
   ===================================================== */
-
-  @Output()
-  contentViewRequested =
-    new EventEmitter<{
-      content: string;
-      title: string;
-    }>();
-
 
   @Output()
   temporaryCommentRequested =
@@ -117,6 +102,14 @@ export class InstructorMeetingRowComponent {
 
 
   @Output()
+  distractedChangeRequested =
+    new EventEmitter<{
+      meeting: MeetingDTO;
+      distracted: boolean;
+    }>();
+
+
+  @Output()
   evaluationRequested =
     new EventEmitter<number>();
 
@@ -133,16 +126,18 @@ export class InstructorMeetingRowComponent {
      ACTIONS
   ===================================================== */
 
-  onContentView(): void {
+  onDistractedClick(
+    event: Event,
+  ): void {
+    event.preventDefault();
 
-    this.contentViewRequested.emit({
-      content:
-        this.formatStudyContent(
-          this.meeting,
-        ),
+    if (!this.canMarkDistracted) {
+      return;
+    }
 
-      title:
-        'Contenido de la Clase',
+    this.distractedChangeRequested.emit({
+      meeting: this.meeting,
+      distracted: !this.meeting.distractedInClass,
     });
   }
 
@@ -273,61 +268,6 @@ export class InstructorMeetingRowComponent {
     return this.hasMeetingPassed(
       this.meetingDate,
       this.meetingHour,
-    );
-  }
-
-
-  /* =====================================================
-     STUDY CONTENT
-  ===================================================== */
-
-  get hasStudyContent(): boolean {
-
-    return !!this.meeting
-      .studyContent
-      ?.length;
-  }
-
-
-  get visibleStudyContent(): any[] {
-
-    return (
-      this.meeting
-        .studyContent
-        ?.slice(
-          0,
-          2,
-        ) ??
-      []
-    );
-  }
-
-
-  get firstStudyContentTitle(): string {
-    const first =
-      this.meeting
-        .studyContent
-        ?.[0];
-
-    return (
-      first?.title ??
-      first?.description ??
-      'Contenido'
-    );
-  }
-
-
-  get remainingStudyContentCount(): number {
-
-    const total =
-      this.meeting
-        .studyContent
-        ?.length ??
-      0;
-
-    return Math.max(
-      total - 1,
-      0,
     );
   }
 
@@ -713,6 +653,14 @@ export class InstructorMeetingRowComponent {
   get canMarkAssistance(): boolean {
 
     return this.isMeetingToday;
+  }
+
+
+  get canMarkDistracted(): boolean {
+    return (
+      this.meeting.present === true &&
+      (this.isMeetingToday || this.isMeetingPassed)
+    );
   }
 
 

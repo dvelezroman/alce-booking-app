@@ -12,6 +12,10 @@ import { FormsModule } from '@angular/forms';
 export class AssistanceNoteModalComponent {
 
   @Input() show: boolean = false;
+  @Input() title = 'Agregar nota de comportamiento';
+  @Input() optionalLabel = 'Opcional';
+  @Input() placeholder = 'Ej: El estudiante participó activamente...';
+  @Input() allowEmpty = false;
 
   @Output() save = new EventEmitter<string>();
   @Output() cancel = new EventEmitter<void>();

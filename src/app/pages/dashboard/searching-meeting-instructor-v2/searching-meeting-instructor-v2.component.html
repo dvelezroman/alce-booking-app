@@ -45,14 +45,13 @@
           [isLoading]="isLoadingMeetings"
           [isToday]="isToday.bind(this)"
           [hasMeetingPassed]="hasMeetingPassed.bind(this)"
-          [formatStudyContent]="formatStudyContent.bind(this)"
           [isNewUser]="isNewUser.bind(this)"
           (refreshRequested)="refreshMeetings()"
-          (contentViewRequested)="showContentViewer($event.content, $event.title)"
           (temporaryCommentRequested)="onTemporaryCommentViewRequested($event)"
           (commentViewRequested)="onCommentViewRequested($event)"
           (studentContentHistoryRequested)="loadStudentContentHistory($event)"
           (assistanceCheckboxClicked)="onAssistanceCheckboxClick($event.event, $event.meeting)"
+          (distractedChangeRequested)="onDistractedChange($event)"
           (evaluationRequested)="onEvaluationRequested($event)"
           (noteSaved)="onNoteSaved($event)">
         </app-instructor-meetings-list>
@@ -113,6 +112,15 @@
   [show]="showAssistanceNoteModal"
   (save)="onAssistanceNoteSaved($event)"
   (cancel)="handleAssistanceNoteCancel()">
+</app-assistance-note-modal>
+
+<app-assistance-note-modal
+  [show]="showDistractedNoteModal"
+  title="Nota de distracción"
+  placeholder="Opcional: celular, conversación con amigos u otra interrupción"
+  [allowEmpty]="true"
+  (save)="onDistractedNoteSaved($event)"
+  (cancel)="handleDistractedNoteCancel()">
 </app-assistance-note-modal>
 
 <!-- =========================

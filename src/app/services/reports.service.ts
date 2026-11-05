@@ -11,6 +11,8 @@ import {
   ActiveStudentsReportFiltersDto,
   ActiveStudentsReportJobCreatedDto,
   ActiveStudentsReportJobStatusDto,
+  DistractedStudentsFilterDto,
+  DistractedStudentsListResponseDto,
   UsersExcelFilterDto,
 } from "./dtos/reports.dto";
 
@@ -226,6 +228,44 @@ export class ReportsService {
 
     const url = `${this.apiUrl}/absent-students/excel`;
     return this.http.get(url, { params, responseType: 'blob' });
+  }
+
+  private distractedParams(filters: DistractedStudentsFilterDto, includePage: boolean): HttpParams {
+    let params = new HttpParams()
+      .set('from', filters.from)
+      .set('to', filters.to)
+      .set('groupBy', filters.groupBy);
+
+    if (includePage) {
+      params = params
+        .set('page', String(filters.page ?? 1))
+        .set('limit', String(filters.limit ?? 20));
+    }
+    if (filters.studentId) params = params.set('studentId', String(filters.studentId));
+    if (filters.meetingId) params = params.set('meetingId', String(filters.meetingId));
+    if (filters.classDate) params = params.set('classDate', filters.classDate);
+    if (filters.classHour != null) params = params.set('classHour', String(filters.classHour));
+    if (filters.stageId) params = params.set('stageId', String(filters.stageId));
+    if (filters.instructorId) params = params.set('instructorId', String(filters.instructorId));
+    if (filters.category) params = params.set('category', filters.category);
+    if (filters.search?.trim()) params = params.set('search', filters.search.trim());
+    if (filters.hasBehaviorComment) params = params.set('hasBehaviorComment', 'true');
+
+    return params;
+  }
+
+  getDistractedStudents(filters: DistractedStudentsFilterDto) {
+    return this.http.get<DistractedStudentsListResponseDto>(
+      `${this.apiUrl}/distracted-students`,
+      { params: this.distractedParams(filters, true) },
+    );
+  }
+
+  downloadDistractedStudentsExcel(filters: DistractedStudentsFilterDto) {
+    return this.http.get(`${this.apiUrl}/distracted-students/excel`, {
+      params: this.distractedParams(filters, false),
+      responseType: 'blob',
+    });
   }
 
   downloadUsersExcel(filters: UsersExcelFilterDto) {

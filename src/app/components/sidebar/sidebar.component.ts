@@ -104,6 +104,7 @@ navItems: SidebarNavItem[] = [
   { icon: 'reportes', text: 'Historial Completo', route: '/dashboard/student-history-report', roles: [UserRole.ADMIN] },
   { icon: 'excel', text: 'Estudiantes activos', route: '/dashboard/active-students-report', roles: [UserRole.ADMIN] },
   { icon: 'reportes', text: 'Alertas tempranas', route: '/dashboard/early-warnings', roles: [UserRole.ADMIN] },
+  { icon: 'reportes', text: 'Distraídos en clase', route: '/dashboard/distracted-students-report', roles: [UserRole.ADMIN] },
   { icon: 'reportes', text: 'Licencias', route: '/dashboard/suspension-history', roles: [UserRole.ADMIN] },
   { icon: 'reportes', text: 'Usuario', route: '/dashboard/report-user', roles: [UserRole.ADMIN] },
   { icon: 'excel', text: 'Inasistencias / info. de Usuarios', route: '/dashboard/report-excel', roles: [UserRole.ADMIN] },
@@ -308,6 +309,7 @@ navItems: SidebarNavItem[] = [
             this.findNavItemByRoute('/dashboard/student-history-report'),
             this.findNavItemByRoute('/dashboard/active-students-report'),
             this.findNavItemByRoute('/dashboard/early-warnings'),
+            this.findNavItemByRoute('/dashboard/distracted-students-report'),
           ].filter(item => item.roles.includes(role)),
         },
 
