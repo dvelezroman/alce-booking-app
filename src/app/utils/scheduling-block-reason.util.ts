@@ -1,6 +1,12 @@
 const INVALID_EMAIL_BLOCK_REASON = 'invalid_email';
 const INVALID_EMAIL_BLOCK_DETAIL_SEPARATOR = '::';
 
+/**
+ * Keep in sync with alce-api kids-scheduling-block.policy:
+ * KIDS are NOT blocked for overdue assessments or pending class evaluations.
+ * Email bans and other BLOCK reasons still apply.
+ */
+
 export function isInvalidEmailBlockReason(
   reason?: string | null
 ): boolean {
@@ -14,6 +20,56 @@ export function isInvalidEmailBlockReason(
       `${INVALID_EMAIL_BLOCK_REASON}${INVALID_EMAIL_BLOCK_DETAIL_SEPARATOR}`
     )
   );
+}
+
+function isKidsClassification(
+  classification?: string | null
+): boolean {
+  return classification?.toString().trim().toUpperCase() === 'KIDS';
+}
+
+/** Assessment/evaluation reasons KIDS may ignore for booking. */
+export function isKidsExemptSchedulingBlockReason(
+  reason?: string | null
+): boolean {
+  return (
+    reason === 'incomplete_assessment' ||
+    reason === 'pending_evaluations' ||
+    reason === 'both'
+  );
+}
+
+export type SchedulingBlockAgendaUser = {
+  status?: string | null;
+  schedulingBlockReason?: string | null;
+  student?: {
+    studentClassification?: string | null;
+  } | null;
+};
+
+/**
+ * Whether booking UI should treat the student as blocked from scheduling.
+ * Mirrors alce-api `shouldBlockUserForScheduling`.
+ */
+export function isStudentSchedulingBlockedForAgenda(
+  user?: SchedulingBlockAgendaUser | null
+): boolean {
+  if (!user || user.status !== 'BLOCK') {
+    return false;
+  }
+
+  if (isInvalidEmailBlockReason(user.schedulingBlockReason)) {
+    return true;
+  }
+
+  if (
+    isKidsClassification(user.student?.studentClassification) &&
+    isKidsExemptSchedulingBlockReason(user.schedulingBlockReason)
+  ) {
+    return false;
+  }
+
+  return true;
 }
 
 export function getInvalidEmailBlockDetail(

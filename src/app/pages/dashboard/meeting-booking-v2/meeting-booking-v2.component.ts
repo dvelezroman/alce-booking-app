@@ -52,7 +52,10 @@ import { CreateMeetingDto } from '../../../services/dtos/booking.dto';
 import { convertEcuadorDateToLocal, convertEcuadorHourToLocal, getTimezoneOffsetHours } from '../../../shared/utils/dates.util';
 import { getHttpErrorMessage } from '../../../shared/utils/http-error-message.util';
 import { BookingHelpBannerComponent } from "../../../components/meeting-booking-v2/booking-help-banner/booking-help-banner.component";
-import { getBlockedSchedulingUserMessage } from '../../../utils/scheduling-block-reason.util';
+import {
+  getBlockedSchedulingUserMessage,
+  isStudentSchedulingBlockedForAgenda,
+} from '../../../utils/scheduling-block-reason.util';
 
 @Component({
   selector: 'app-meeting-booking-v2',
@@ -252,7 +255,7 @@ export class MeetingBookingV2Component
         this.userData = userData;
 
         this.isBlocked =
-          userData?.status === 'BLOCK';
+          isStudentSchedulingBlockedForAgenda(userData);
 
         this.isSuspended =
           !!userData?.suspensionInfo

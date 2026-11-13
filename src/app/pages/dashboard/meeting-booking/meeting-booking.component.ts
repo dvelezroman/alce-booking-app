@@ -28,7 +28,10 @@ import { UserDto } from '../../../services/dtos/user.dto';
 import { FeatureFlagService } from '../../../services/feature-flag.service';
 import { HandleDatesService } from '../../../services/handle-dates.service';
 import { convertEcuadorHourToLocal, getTimezoneOffsetHours, convertEcuadorDateToLocal } from '../../../shared/utils/dates.util';
-import { getBlockedSchedulingUserMessage } from '../../../utils/scheduling-block-reason.util';
+import {
+  getBlockedSchedulingUserMessage,
+  isStudentSchedulingBlockedForAgenda,
+} from '../../../utils/scheduling-block-reason.util';
 import { getHttpErrorMessage } from '../../../shared/utils/http-error-message.util';
 import { selectUserData } from '../../../store/user.selector';
 import { NotificationService } from '../../../services/notification.service';
@@ -157,7 +160,7 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
       .subscribe(state => {
         this.userData = state;
 
-        this.isBlocked = state?.status === 'BLOCK';
+        this.isBlocked = isStudentSchedulingBlockedForAgenda(state);
 
         this.isSuspended = !!state?.suspensionInfo?.isSuspended;
         if (this.isSuspended) {

@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { ModalComponent } from '../../../components/modal/modal.component';
 import { ModalDto, modalInitializer } from '../../../components/modal/modal.dto';
-import { UserDto, UserRole, UserStatus, SuspensionInfo } from '../../../services/dtos/user.dto';
+import { UserDto, UserRole, SuspensionInfo } from '../../../services/dtos/user.dto';
 import { StageAssessment } from '../../../services/dtos/stage-assessment.dto';
 import { UsersService } from '../../../services/users.service';
 import { StudentsService } from '../../../services/students.service';
@@ -27,7 +27,10 @@ import { StudentIntroVideoComponent } from "../../home/student-intro-video/stude
 import { StudentBannerComponent } from "../../student-banner/student-banner.component";
 import { AssessmentPointsConfigService } from '../../../services/assessment-points-config.service';
 import { AlceKidsAvisoComponent } from '../../home/alce-kids-aviso/alce-kids-aviso.component';
-import { getDashboardAgendaBlockMessage } from '../../../utils/scheduling-block-reason.util';
+import {
+  getDashboardAgendaBlockMessage,
+  isStudentSchedulingBlockedForAgenda,
+} from '../../../utils/scheduling-block-reason.util';
 import { AnnouncementViewerComponent } from '../../announcements/announcement-viewer/announcement-viewer.component';
 import { AnnouncementBannerComponent } from '../../announcements/announcement-banner/announcement-banner.component';
 import { Announcement } from '../../../services/dtos/announcement.dto';
@@ -357,7 +360,7 @@ export class StudentDashboardComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   get isAgendaBlocked(): boolean {
-    return this.userData?.status === UserStatus.BLOCK;
+    return isStudentSchedulingBlockedForAgenda(this.userData);
   }
 
   get agendaBlockMessage(): string {
