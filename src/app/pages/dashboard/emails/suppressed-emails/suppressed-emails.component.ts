@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
+  BulkCreateEmailSuppressionsResult,
   EmailSuppression,
   EmailSuppressionService,
   MatchedUser,
@@ -39,6 +40,9 @@ export class SuppressedEmailsComponent implements OnInit {
   isCreate = false;
 
   formEmail = '';
+  formEmailsBatch = '';
+  formBlockScheduling = false;
+  formSaving = false;
   formReason = '';
   formActive = true;
 
@@ -147,6 +151,9 @@ export class SuppressedEmailsComponent implements OnInit {
     this.isCreate = true;
     this.editing = null;
     this.formEmail = '';
+    this.formEmailsBatch = '';
+    this.formBlockScheduling = false;
+    this.formSaving = false;
     this.formReason = '';
     this.formActive = true;
     this.showEditModal = true;
@@ -166,28 +173,87 @@ export class SuppressedEmailsComponent implements OnInit {
     this.editing = null;
   }
 
-  saveForm(): void {
-    const email = this.formEmail.trim().toLowerCase();
-    if (!email) {
-      this.showError('El email es obligatorio.');
-      return;
-    }
+  parseBatchEmails(raw: string): string[] {
+    const parts = raw
+      .split(/[\s,;]+/)
+      .map((e) => e.trim().toLowerCase())
+      .filter(Boolean);
+    return [...new Set(parts)];
+  }
 
+  private buildBulkCreateSuccessMessage(
+    res: BulkCreateEmailSuppressionsResult,
+  ): string {
+    const lines = [`${res.processed} email(s) agregados a la lista de ban.`];
+    if (res.invalidEmails?.length) {
+      lines.push(
+        `${res.invalidEmails.length} dirección(es) inválida(s) omitida(s).`,
+      );
+    }
+    if (res.failed) {
+      lines.push(`${res.failed} no se pudieron procesar.`);
+    }
+    if (res.scheduling) {
+      const s = res.scheduling;
+      if (s.blocked > 0) {
+        lines.push(
+          `Agendamiento bloqueado para ${s.blocked} estudiante(s) (${s.uniqueUsersBlocked} único(s)).`,
+        );
+      }
+      if (s.alreadyBlocked > 0) {
+        lines.push(
+          `${s.alreadyBlocked} estudiante(s) ya tenían agendamiento bloqueado.`,
+        );
+      }
+      if (s.skippedNoUsers > 0) {
+        lines.push(
+          `${s.skippedNoUsers} email(s) sin estudiante vinculado (sin bloqueo de agenda).`,
+        );
+      }
+    }
+    return lines.join('\n');
+  }
+
+  saveForm(): void {
     if (this.isCreate) {
+      const reason = this.formReason.trim() || undefined;
+      const blockScheduling = this.formBlockScheduling;
+      const emails = this.parseBatchEmails(this.formEmailsBatch);
+      if (!emails.length) {
+        this.showError(
+          'Ingresa al menos un email (uno por línea o separados por coma).',
+        );
+        return;
+      }
+      this.formSaving = true;
       this.emailSuppressionService
-        .create({ email, reason: this.formReason.trim() || undefined })
+        .bulkCreate({ emails, reason, blockScheduling })
         .subscribe({
-          next: () => {
+          next: (res) => {
+            this.formSaving = false;
             this.closeEditModal();
-            this.showSuccess('Email agregado a la lista de ban.');
+            if (res.processed === 0) {
+              this.showError(
+                'Ningún email pudo agregarse. Revisa el formato.',
+              );
+              return;
+            }
+            this.showSuccess(this.buildBulkCreateSuccessMessage(res));
             this.fetch();
           },
           error: (err) => {
+            this.formSaving = false;
             this.showError(
-              err?.error?.message || 'No se pudo agregar el email.',
+              err?.error?.message || 'No se pudo procesar los emails.',
             );
           },
         });
+      return;
+    }
+
+    const email = this.formEmail.trim().toLowerCase();
+    if (!email) {
+      this.showError('El email es obligatorio.');
       return;
     }
 

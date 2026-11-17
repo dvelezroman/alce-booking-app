@@ -62,6 +62,29 @@ export interface FilterEmailSuppressions {
 export interface CreateEmailSuppressionPayload {
   email: string;
   reason?: string;
+  blockScheduling?: boolean;
+}
+
+export interface BulkCreateEmailSuppressionsPayload {
+  emails: string[];
+  reason?: string;
+  blockScheduling?: boolean;
+}
+
+export interface BulkCreateEmailSuppressionsSchedulingResult {
+  blocked: number;
+  alreadyBlocked: number;
+  skippedNoUsers: number;
+  uniqueUsersBlocked: number;
+  failed: number;
+}
+
+export interface BulkCreateEmailSuppressionsResult {
+  processed: number;
+  invalidEmails: string[];
+  failed: number;
+  failures?: { email: string; message: string }[];
+  scheduling?: BulkCreateEmailSuppressionsSchedulingResult;
 }
 
 export interface UpdateEmailSuppressionPayload {
@@ -163,6 +186,15 @@ export class EmailSuppressionService {
     payload: CreateEmailSuppressionPayload,
   ): Observable<EmailSuppression> {
     return this.http.post<EmailSuppression>(this.apiUrl, payload);
+  }
+
+  bulkCreate(
+    payload: BulkCreateEmailSuppressionsPayload,
+  ): Observable<BulkCreateEmailSuppressionsResult> {
+    return this.http.post<BulkCreateEmailSuppressionsResult>(
+      `${this.apiUrl}/bulk`,
+      payload,
+    );
   }
 
   update(
