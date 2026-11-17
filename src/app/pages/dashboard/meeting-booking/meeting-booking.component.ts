@@ -40,6 +40,10 @@ import { StageProgressService } from '../../../services/stage-progress';
 import { StudentStageProgressComponent } from "../../../components/student/student-stage-progress/student-stage-progress.component";
 import { StudentSuspensionModalComponent } from "../../../components/home/student-suspension-modal/student-suspension-modal.component";
 import { TimeService } from '../../../services/time.service';
+import {
+  getStudentMeetingLinkStatus,
+  markStudentMeetingLinkOpened,
+} from '../../../utils/student-meeting-access.util';
 
 
 @Component({
@@ -639,23 +643,18 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
   calculateLinkStatus() {
     if (!this.selectedMeeting) return;
 
-    const LINK_ACTIVE_BUFFER_MINUTES_BEFORE = 5 * 60 * 1000;
-    const LINK_ACTIVE_BUFFER_MINUTES_AFTER = 6 * 60 * 1000;
-    const timeZoneOffset = new Date().getTimezoneOffset() / 60;
-    const meetingStart = new Date(this.selectedMeeting.date).getTime() + (timeZoneOffset * 60 * 60 * 1000);
+    const formattedLink = this.getFormattedLink(
+      this.selectedMeeting.link,
+    );
 
-    const now = Date.now();
-
-    const start = meetingStart - LINK_ACTIVE_BUFFER_MINUTES_BEFORE;
-    const end = meetingStart + LINK_ACTIVE_BUFFER_MINUTES_AFTER;
-
-    if (now < start) {
-      this.linkStatus = 'not-clickable';
-    } else if (now >= start && now <= end) {
-      this.linkStatus = 'clickable';
-    } else {
+    if (!formattedLink) {
       this.linkStatus = 'not-available';
+      return;
     }
+
+    this.linkStatus = getStudentMeetingLinkStatus(
+      this.selectedMeeting,
+    );
   }
 
   getMeetingLinkMessage(): string {
@@ -670,6 +669,19 @@ export class MeetingBookingComponent implements OnInit, AfterViewInit {
 
   handleMeetingAssistanceClick(meetingId?: number) {
     if (!meetingId) return;
+
+    if (this.linkStatus !== 'clickable') {
+      return;
+    }
+
+    if (this.selectedMeeting) {
+      markStudentMeetingLinkOpened(
+        this.selectedMeeting,
+        this.meetings,
+      );
+    }
+
+    this.calculateLinkStatus();
 
     this.bookingService.clickAssistanceByStudent(meetingId).subscribe({
       next: () => {

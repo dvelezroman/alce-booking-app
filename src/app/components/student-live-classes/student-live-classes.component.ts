@@ -17,6 +17,10 @@ import {
 import { UserDto } from '../../services/dtos/user.dto';
 import { selectUserData } from '../../store/user.selector';
 import { Router } from '@angular/router';
+import {
+  canStudentEnterMeeting,
+  markStudentMeetingLinkOpened,
+} from '../../utils/student-meeting-access.util';
 
 @Component({
   selector: 'app-student-live-classes',
@@ -439,7 +443,12 @@ export class StudentLiveClassesComponent implements OnInit, OnDestroy {
       .clickAssistanceByStudent(meetingId)
       .subscribe({
         next: () => {
-          console.log('Asistencia registrada');
+          const meeting = this.meetings.find(
+            (item) => item.id === meetingId,
+          );
+          if (meeting) {
+            markStudentMeetingLinkOpened(meeting);
+          }
         },
 
         error: () => {
@@ -461,6 +470,8 @@ export class StudentLiveClassesComponent implements OnInit, OnDestroy {
     if (!this.hasValidLink(meeting)) {
       return;
     }
+
+    markStudentMeetingLinkOpened(meeting, this.meetings);
 
     if (meeting.id) {
       this.handleMeetingAssistanceClick(meeting.id);
@@ -528,77 +539,7 @@ export class StudentLiveClassesComponent implements OnInit, OnDestroy {
       return false;
     }
 
-    const LINK_ACTIVE_BEFORE =
-      5 * 60 * 1000;
-
-    const LINK_ACTIVE_AFTER =
-      6 * 60 * 1000;
-
-    const rawDate =
-      meeting.localdate ??
-      meeting.date;
-
-    const rawHour =
-      meeting.localhour ??
-      meeting.hour;
-
-    if (
-      !rawDate ||
-      rawHour === null ||
-      rawHour === undefined
-    ) {
-      return false;
-    }
-
-    const datePart =
-      String(rawDate).slice(0, 10);
-
-    const [
-      year,
-      month,
-      day,
-    ] = datePart
-      .split('-')
-      .map(Number);
-
-    const hour = Number(rawHour);
-
-    if (
-      !year ||
-      !month ||
-      !day ||
-      Number.isNaN(hour) ||
-      hour < 0 ||
-      hour > 23
-    ) {
-      return false;
-    }
-
-    const meetingStart =
-      Date.UTC(
-        year,
-        month - 1,
-        day,
-        hour + 5,
-        0,
-        0,
-        0
-      );
-
-    const now = Date.now();
-
-    const availableFrom =
-      meetingStart -
-      LINK_ACTIVE_BEFORE;
-
-    const availableUntil =
-      meetingStart +
-      LINK_ACTIVE_AFTER;
-
-    return (
-      now >= availableFrom &&
-      now <= availableUntil
-    );
+    return canStudentEnterMeeting(meeting);
   }
 
   // ================================

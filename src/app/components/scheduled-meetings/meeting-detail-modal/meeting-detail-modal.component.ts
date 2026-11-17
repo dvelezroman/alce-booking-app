@@ -12,11 +12,13 @@ import {
 } from '@angular/core'
 import { MeetingDTO } from '../../../services/dtos/booking.dto'
 import { BookingService } from '../../../services/booking.service'
+import {
+  getStudentMeetingLinkStatus,
+  markStudentMeetingLinkOpened,
+  StudentMeetingLinkStatus,
+} from '../../../utils/student-meeting-access.util'
 
-type MeetingLinkStatus =
-  | 'clickable'
-  | 'not-clickable'
-  | 'not-available'
+type MeetingLinkStatus = StudentMeetingLinkStatus
 
 @Component({
   selector: 'app-meeting-detail-modal',
@@ -142,6 +144,10 @@ export class MeetingDetailModalComponent
       return
     }
 
+    if (this.selectedMeeting) {
+      markStudentMeetingLinkOpened(this.selectedMeeting)
+    }
+
     this.bookingService
       .clickAssistanceByStudent(meetingId)
       .subscribe({
@@ -155,6 +161,9 @@ export class MeetingDetailModalComponent
           )
         },
       })
+
+    this.calculateLinkStatus()
+    this.changeDetectorRef.markForCheck()
   }
 
   private handleModalState(): void {
@@ -188,114 +197,23 @@ export class MeetingDetailModalComponent
     }, oneMinute)
   }
 
- private calculateLinkStatus(): void {
-  const meeting = this.selectedMeeting
+  private calculateLinkStatus(): void {
+    const meeting = this.selectedMeeting
 
-  if (!meeting) {
-    this.linkStatus = 'not-available'
-    return
+    if (!meeting) {
+      this.linkStatus = 'not-available'
+      return
+    }
+
+    const link = this.getFormattedLink(meeting.link)
+
+    if (!link) {
+      this.linkStatus = 'not-available'
+      return
+    }
+
+    this.linkStatus = getStudentMeetingLinkStatus(meeting)
   }
-
-  const link = this.getFormattedLink(
-    meeting.link
-  )
-
-  if (!link) {
-    this.linkStatus = 'not-available'
-    return
-  }
-
-  const meetingStart =
-    this.getMeetingStartTimestamp(meeting)
-
-  if (meetingStart === null) {
-    this.linkStatus = 'not-available'
-    return
-  }
-
-  const fiveMinutesBefore =
-    5 * 60 * 1000
-
-  const sixMinutesAfter =
-    6 * 60 * 1000
-
-  const now = Date.now()
-
-  const availableFrom =
-    meetingStart - fiveMinutesBefore
-
-  const availableUntil =
-    meetingStart + sixMinutesAfter
-
-  if (now < availableFrom) {
-    this.linkStatus = 'not-clickable'
-    return
-  }
-
-  if (
-    now >= availableFrom &&
-    now <= availableUntil
-  ) {
-    this.linkStatus = 'clickable'
-    return
-  }
-
-  this.linkStatus = 'not-available'
-}
-
- private getMeetingStartTimestamp(
-  meeting: MeetingDTO
-): number | null {
-  const rawDate =
-    meeting.localdate ??
-    meeting.date;
-
-  const rawHour =
-    meeting.localhour ??
-    meeting.hour;
-
-  if (
-    !rawDate ||
-    rawHour === null ||
-    rawHour === undefined
-  ) {
-    return null;
-  }
-
-  const datePart =
-    String(rawDate).slice(0, 10);
-
-  const [
-    year,
-    month,
-    day,
-  ] = datePart
-    .split('-')
-    .map(Number);
-
-  const hour = Number(rawHour);
-
-  if (
-    !year ||
-    !month ||
-    !day ||
-    Number.isNaN(hour) ||
-    hour < 0 ||
-    hour > 23
-  ) {
-    return null;
-  }
-
-  return Date.UTC(
-    year,
-    month - 1,
-    day,
-    hour + 5,
-    0,
-    0,
-    0
-  );
-}
 
   private hasHttpProtocol(
     link: string

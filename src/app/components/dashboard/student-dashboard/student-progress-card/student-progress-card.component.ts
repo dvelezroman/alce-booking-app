@@ -15,6 +15,13 @@ import {
 import {
   BookingService,
 } from '../../../../services/booking.service';
+import {
+  canStudentEnterMeeting,
+  getStudentMeetingAccessEndUtcMs,
+  getStudentMeetingStartUtcMs,
+  markStudentMeetingLinkOpened,
+  STUDENT_CLASS_ACCESS_BEFORE_MS,
+} from '../../../../utils/student-meeting-access.util';
 
 
 @Component({
@@ -36,13 +43,6 @@ export class StudentProgressCardComponent {
   /* =========================
      CLASS ACCESS
   ========================= */
-
-  private readonly CLASS_ACCESS_BEFORE_MS =
-    5 * 60 * 1000;
-
-  private readonly CLASS_ACCESS_AFTER_MS =
-    6 * 60 * 1000;
-
 
   constructor(
     private readonly bookingService: BookingService,
@@ -102,9 +102,7 @@ export class StudentProgressCardComponent {
     return (
       this.meetings.find(
         (meeting) =>
-          this.isMeetingInAccessWindow(
-            meeting
-          )
+          canStudentEnterMeeting(meeting)
       ) ?? null
     );
   }
@@ -128,11 +126,9 @@ export class StudentProgressCardComponent {
     }
 
     const meetingStart =
-      this.getMeetingTimestamp(
-        meeting
-      );
+      getStudentMeetingStartUtcMs(meeting);
 
-    if (!meetingStart) {
+    if (meetingStart === null) {
       return null;
     }
 
@@ -184,6 +180,13 @@ export class StudentProgressCardComponent {
     }
 
     if (this.isMeetingStarted) {
+      if (this.activeMeeting?.linkOpened) {
+        return (
+          'Ya ingresaste a esta clase. ' +
+          'Puedes volver a abrir el enlace hasta que termine la hora de la clase.'
+        );
+      }
+
       return (
         'Tu clase ya comenzó. ' +
         'Puedes ingresar hasta 6 minutos después de la hora programada.'
@@ -307,7 +310,7 @@ export class StudentProgressCardComponent {
     const availableFrom =
       new Date(
         meetingStart -
-        this.CLASS_ACCESS_BEFORE_MS
+        STUDENT_CLASS_ACCESS_BEFORE_MS
       );
 
     return this.formatTimeFromDate(
@@ -333,14 +336,17 @@ export class StudentProgressCardComponent {
       return null;
     }
 
-    const closeTime =
-      new Date(
-        meetingStart +
-        this.CLASS_ACCESS_AFTER_MS
+    const accessEnd =
+      getStudentMeetingAccessEndUtcMs(
+        meeting
       );
 
+    if (!accessEnd) {
+      return null;
+    }
+
     return this.formatTimeFromDate(
-      closeTime
+      new Date(accessEnd)
     );
   }
 
@@ -373,12 +379,8 @@ export class StudentProgressCardComponent {
     }
 
     return (
-      this.isMeetingInAccessWindow(
-        meeting
-      ) &&
-      this.hasValidLink(
-        meeting
-      )
+      canStudentEnterMeeting(meeting) &&
+      this.hasValidLink(meeting)
     );
   }
 
@@ -391,11 +393,7 @@ export class StudentProgressCardComponent {
       return;
     }
 
-    if (
-      !this.isMeetingInAccessWindow(
-        meeting
-      )
-    ) {
+    if (!canStudentEnterMeeting(meeting)) {
       return;
     }
 
@@ -412,35 +410,29 @@ export class StudentProgressCardComponent {
       return;
     }
 
+    markStudentMeetingLinkOpened(
+      meeting,
+      this.meetings,
+    );
+
+    const openLink = () => {
+      this.openClassLink(finalUrl);
+    };
+
     if (meeting.id) {
       this.bookingService
         .clickAssistanceByStudent(
           meeting.id
         )
         .subscribe({
-          next: () => {
-            this.openClassLink(
-              finalUrl
-            );
-          },
-
-          error: () => {
-            /*
-             * Aunque falle el registro,
-             * permitimos ingresar a la clase.
-             */
-            this.openClassLink(
-              finalUrl
-            );
-          },
+          next: openLink,
+          error: openLink,
         });
 
       return;
     }
 
-    this.openClassLink(
-      finalUrl
-    );
+    openLink();
   }
 
 
@@ -657,102 +649,13 @@ export class StudentProgressCardComponent {
      ACCESS WINDOW
   ========================= */
 
-  private isMeetingInAccessWindow(
-    meeting: MeetingDTO
-  ): boolean {
-    const meetingStart =
-      this.getMeetingTimestamp(
-        meeting
-      );
-
-    if (!meetingStart) {
-      return false;
-    }
-
-    const now =
-      Date.now();
-
-    const availableFrom =
-      meetingStart -
-      this.CLASS_ACCESS_BEFORE_MS;
-
-    const availableUntil =
-      meetingStart +
-      this.CLASS_ACCESS_AFTER_MS;
-
-    return (
-      now >= availableFrom &&
-      now <= availableUntil
-    );
-  }
-
-
-  /* =========================
-     MEETING TIMESTAMP
-  ========================= */
-
   private getMeetingTimestamp(
     meeting: MeetingDTO
   ): number {
-    const rawDate =
-      meeting.localdate ??
-      meeting.date;
-
-    const rawHour =
-      meeting.localhour ??
-      meeting.hour;
-
-    if (
-      !rawDate ||
-      rawHour === null ||
-      rawHour === undefined
-    ) {
-      return 0;
-    }
-
-    const datePart =
-      String(rawDate).slice(
-        0,
-        10
-      );
-
-    const [
-      year,
-      month,
-      day,
-    ] = datePart
-      .split('-')
-      .map(Number);
-
-    const hour =
-      Number(rawHour);
-
-    if (
-      !year ||
-      !month ||
-      !day ||
-      Number.isNaN(hour)
-    ) {
-      return 0;
-    }
-
-    /*
-     * Mantiene exactamente la lógica
-     * utilizada actualmente en
-     * StudentLiveClassesComponent
-     * para Ecuador.
-     */
-    return Date.UTC(
-      year,
-      month - 1,
-      day,
-      hour + 5,
-      0,
-      0,
-      0
+    return (
+      getStudentMeetingStartUtcMs(meeting) ?? 0
     );
   }
-
 
   /* =========================
      ATTENDANCE DATES
