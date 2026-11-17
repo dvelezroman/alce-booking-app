@@ -18,6 +18,7 @@ import {
 } from '../../../services/dtos/student.dto';
 
 import { getMeetingObservationText } from '../../../shared/utils/meeting-observation.util';
+import { meetingHasReinforcement } from '../../../shared/utils/meeting-reinforcement.util';
 
 
 @Component({
@@ -324,41 +325,7 @@ export class InstructorMeetingRowComponent {
   ===================================================== */
 
   get hasReinforcement(): boolean {
-
-    const meeting =
-      this.meeting as MeetingDTO & {
-        hasReinforcement?: boolean;
-        assessments?: Array<{
-          note?: string | null;
-          resources?: unknown[];
-        }>;
-      };
-
-    if (
-      meeting.hasReinforcement
-    ) {
-      return true;
-    }
-
-    const assessment =
-      meeting
-        .assessments
-        ?.[0];
-
-    const hasNote =
-      !!assessment
-        ?.note
-        ?.trim();
-
-    const hasResources =
-      !!assessment
-        ?.resources
-        ?.length;
-
-    return (
-      hasNote ||
-      hasResources
-    );
+    return meetingHasReinforcement(this.meeting);
   }
 
 

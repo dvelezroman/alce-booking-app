@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MeetingDTO } from '../../../services/dtos/booking.dto';
 import { getMeetingObservationText } from '../../../shared/utils/meeting-observation.util';
+import { meetingHasReinforcement } from '../../../shared/utils/meeting-reinforcement.util';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -96,7 +97,7 @@ export class MeetingTableComponent {
   }
 
   hasReinforcement(meeting: MeetingDTO): boolean {
-    return meeting.hasReinforcement === true;
+    return meetingHasReinforcement(meeting);
   }
 
   onEvaluationClick(meeting: MeetingDTO) {
