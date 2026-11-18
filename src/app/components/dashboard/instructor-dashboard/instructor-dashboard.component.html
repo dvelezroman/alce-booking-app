@@ -34,6 +34,12 @@
     </div>
   </section>
 
+  <app-announcement-banner
+    *ngIf="announcementUser"
+    [announcements]="announcements"
+    [user]="announcementUser"
+  ></app-announcement-banner>
+
   <!-- LAYOUT PRINCIPAL -->
   <div class="dashboard-layout">
 
@@ -45,12 +51,6 @@
       ></app-instructor-summary-card>
       <app-instructor-scheduling-pending-summary></app-instructor-scheduling-pending-summary>
       <app-instructor-quick-actions></app-instructor-quick-actions>
-
-      <app-announcement-banner
-        *ngIf="announcementUser"
-        [announcements]="announcements"
-        [user]="announcementUser"
-      ></app-announcement-banner>
 
       <!-- SIGUIENTE FILA -->
 
