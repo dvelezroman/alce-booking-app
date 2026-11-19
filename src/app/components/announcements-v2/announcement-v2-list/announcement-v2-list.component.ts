@@ -11,6 +11,10 @@ import {
   Announcement,
 } from '../../../services/dtos/announcement.dto';
 
+import {
+  formatAnnouncementCalendarDate,
+} from '../../../shared/utils/announcement-calendar-date.util';
+
 
 type AnnouncementFilter =
   | 'all'
@@ -227,24 +231,7 @@ export class AnnouncementV2ListComponent {
       return 'Sin fecha';
     }
 
-    const date = new Date(value);
-
-    if (
-      Number.isNaN(
-        date.getTime(),
-      )
-    ) {
-      return value;
-    }
-
-    return new Intl.DateTimeFormat(
-      'es-EC',
-      {
-        day: '2-digit',
-        month: 'short',
-        year: 'numeric',
-      },
-    ).format(date);
+    return formatAnnouncementCalendarDate(value);
   }
 
   getValidityLabel(

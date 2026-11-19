@@ -4,6 +4,10 @@ import { StudentClassification } from '../../services/dtos/student.dto';
 import { UserRole } from '../../services/dtos/user.dto';
 import { bannerHasVisual } from './announcement-media.util';
 import { isAnnouncementScheduledForDate } from './announcement-show-schedule.util';
+import {
+  isAnnouncementBeforeStartOnCalendar,
+  isAnnouncementExpiredOnCalendar,
+} from './announcement-calendar-date.util';
 
 export type AnnouncementSurface = 'modal' | 'banner';
 
@@ -32,27 +36,12 @@ export function isAnnouncementForSurface(
   return mode === 'banner' || mode === 'both';
 }
 
-/** End date is inclusive through the full local calendar day. */
+/** End date is inclusive through the full calendar day in America/Guayaquil. */
 export function isAnnouncementExpired(
   endDate: string | null | undefined,
   now: Date,
 ): boolean {
-  if (!endDate) {
-    return false;
-  }
-
-  const parsed = new Date(endDate);
-  const inclusiveEnd = new Date(
-    parsed.getFullYear(),
-    parsed.getMonth(),
-    parsed.getDate(),
-    23,
-    59,
-    59,
-    999,
-  );
-
-  return now > inclusiveEnd;
+  return isAnnouncementExpiredOnCalendar(endDate, now);
 }
 
 export function filterAnnouncementsForUser(
@@ -68,7 +57,10 @@ export function filterAnnouncementsForUser(
 
     if (
       announcement.startDate &&
-      new Date(announcement.startDate) > now
+      isAnnouncementBeforeStartOnCalendar(
+        announcement.startDate,
+        now,
+      )
     ) {
       return false;
     }

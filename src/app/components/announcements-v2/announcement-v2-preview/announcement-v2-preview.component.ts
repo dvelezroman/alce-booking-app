@@ -25,6 +25,10 @@ import {
 } from '../../../services/dtos/student.dto';
 
 import {
+  formatAnnouncementCalendarDate,
+} from '../../../shared/utils/announcement-calendar-date.util';
+
+import {
   ActionButton,
 } from '../announcement-v2-actions/announcement-v2-actions.component';
 
@@ -381,34 +385,7 @@ export class AnnouncementV2PreviewComponent
   private formatDate(
     value: string,
   ): string {
-
-    const date =
-      new Date(
-        `${value}T00:00:00`,
-      );
-
-
-    if (
-      Number.isNaN(
-        date.getTime(),
-      )
-    ) {
-      return value;
-    }
-
-
-    return (
-      new Intl.DateTimeFormat(
-        'es-EC',
-        {
-          day: '2-digit',
-          month: '2-digit',
-          year: 'numeric',
-        },
-      ).format(
-        date,
-      )
-    );
+    return formatAnnouncementCalendarDate(value);
   }
 
 

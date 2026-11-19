@@ -31,6 +31,12 @@ import {
   UserRole,
 } from '../../../services/dtos/user.dto';
 
+import {
+  announcementApiDateToForm,
+  announcementFormDateToApiEnd,
+  announcementFormDateToApiStart,
+} from '../../../shared/utils/announcement-calendar-date.util';
+
 
 /* =========================================================
    SERVICES
@@ -451,19 +457,14 @@ export class AnnouncementsComponent
   toISODate(
     date?: string,
   ): string | null {
-
-    if (
-      !date
-    ) {
+    if (!date) {
       return null;
     }
 
-    return new Date(
-      date + 'T00:00:00',
-    ).toISOString();
+    return announcementFormDateToApiStart(date);
   }
 
-  /** Inclusive end date through end of local day. */
+  /** Inclusive end date through end of calendar day (America/Guayaquil). */
   toISOEndDate(
     date?: string,
   ): string | null {
@@ -471,9 +472,7 @@ export class AnnouncementsComponent
       return null;
     }
 
-    return new Date(
-      date + 'T23:59:59.999',
-    ).toISOString();
+    return announcementFormDateToApiEnd(date);
   }
 
 
@@ -844,20 +843,13 @@ export class AnnouncementsComponent
       a.isActive;
 
 
-    this.formStartDate =
-      a.startDate
-        ? a.startDate.split(
-            'T',
-          )[0]
-        : undefined;
+    this.formStartDate = a.startDate
+      ? announcementApiDateToForm(a.startDate)
+      : undefined;
 
-
-    this.formEndDate =
-      a.endDate
-        ? a.endDate.split(
-            'T',
-          )[0]
-        : undefined;
+    this.formEndDate = a.endDate
+      ? announcementApiDateToForm(a.endDate)
+      : undefined;
 
 
     this.formShowMode =
