@@ -4,6 +4,7 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnInit,
   Output,
   SimpleChanges
 } from '@angular/core';
@@ -19,6 +20,9 @@ import {
   StageAssessmentResource
 } from '../../../services/dtos/stage-resources.dto';
 
+import { Stage } from '../../../services/dtos/student.dto';
+import { StagesService } from '../../../services/stages.service';
+
 
 @Component({
   selector: 'app-stage-resource-form-modal',
@@ -30,7 +34,7 @@ import {
   templateUrl: './stage-resource-form-modal.component.html',
   styleUrl: './stage-resource-form-modal.component.scss'
 })
-export class StageResourceFormModalComponent implements OnChanges {
+export class StageResourceFormModalComponent implements OnInit, OnChanges {
 
   /* =========================
      INPUTS
@@ -78,20 +82,12 @@ export class StageResourceFormModalComponent implements OnChanges {
      STAGES
   ========================= */
 
-  stages = [
-    { id: 1, label: 'Stage 1' },
-    { id: 2, label: 'Stage 2' },
-    { id: 3, label: 'Stage 3' },
-    { id: 4, label: 'Stage 4' },
-    { id: 5, label: 'Stage 5' },
-    { id: 6, label: 'Stage 6' },
-    { id: 7, label: 'Stage 7' },
-    { id: 8, label: 'Stage 8' }
-  ];
+  stages: { id: number; label: string }[] = [];
 
 
   constructor(
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private stagesService: StagesService,
   ) {
 
     this.resourceForm = this.fb.group({
@@ -126,6 +122,61 @@ export class StageResourceFormModalComponent implements OnChanges {
     });
   }
 
+
+  ngOnInit(): void {
+    this.loadStages();
+  }
+
+  private loadStages(): void {
+    this.stagesService.getAll().subscribe({
+      next: (stages) => {
+        this.stages = this.prepareStages(stages).map((s) => ({
+          id: s.id,
+          label: this.stageLabel(s),
+        }));
+      },
+      error: () => {
+        this.stages = [];
+      },
+    });
+  }
+
+  private prepareStages(stages: Stage[]): Stage[] {
+    const valid = this.filterValidStages(stages);
+    return this.sortStages(valid);
+  }
+
+  private filterValidStages(stages: Stage[]): Stage[] {
+    return stages.filter((s) => {
+      const num = s.number?.trim().toUpperCase();
+      if (num === 'ACTIVITIES') {
+        return true;
+      }
+      return /^STG\s*(1?\d|0)$/.test(num);
+    });
+  }
+
+  private sortStages(stages: Stage[]): Stage[] {
+    const activities = stages.find(
+      (s) => s.number.toUpperCase() === 'ACTIVITIES',
+    );
+    const list = stages.filter(
+      (s) => s.number.toUpperCase() !== 'ACTIVITIES',
+    );
+
+    list.sort((a, b) => {
+      const aNum = parseInt(a.number.replace('STG', '').trim(), 10);
+      const bNum = parseInt(b.number.replace('STG', '').trim(), 10);
+      return aNum - bNum;
+    });
+
+    return activities ? [activities, ...list] : list;
+  }
+
+  private stageLabel(stage: Stage): string {
+    const desc = stage.description?.trim();
+    return desc ? `${stage.number} — ${desc}` : stage.number;
+  }
 
   /* =========================
      CHANGES
