@@ -1,14 +1,17 @@
 import { UserRole, UserStatus } from "./user.dto";
 
+export type UsersReportExportFormat = 'xlsx' | 'csv';
+
 /**
- * Filtros para descargar el Excel general de usuarios
- * Endpoint: GET /v0/reports/users/excel
+ * Filtros para descargar el listado de usuarios (Excel o CSV)
+ * Endpoints: GET /reports/users/excel | GET /reports/users/csv
  */
 export interface UsersExcelFilterDto {
   role?: UserRole;
   status?: UserStatus;
   stageId?: number;
   noClasses?: boolean | null;
+  format?: UsersReportExportFormat;
 }
 
 /**

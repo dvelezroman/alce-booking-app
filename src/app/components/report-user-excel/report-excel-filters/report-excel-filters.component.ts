@@ -11,11 +11,14 @@ import { FormsModule } from '@angular/forms';
 import {
   UsersExcelFilterDto,
   AbsentStudentsExcelFilterDto,
+  UsersReportExportFormat,
 } from '../../../services/dtos/reports.dto';
 
 import {
   Stage,
 } from '../../../services/dtos/student.dto';
+
+import { UserRole, UserStatus } from '../../../services/dtos/user.dto';
 
 export type ReportExcelMode =
   | 'users'
@@ -61,6 +64,20 @@ export class ReportExcelFiltersComponent {
 
   selectedStageId:
     number | null = null;
+
+  readonly userRoles = Object.values(UserRole);
+
+  readonly userStatuses = Object.values(UserStatus);
+
+  readonly exportFormats: UsersReportExportFormat[] = ['xlsx', 'csv'];
+
+  selectedRole: UserRole | null = UserRole.STUDENT;
+
+  selectedStatus: UserStatus | null = null;
+
+  selectedExportFormat: UsersReportExportFormat = 'xlsx';
+
+  noClassesOnly = false;
 
 
   /* =========================
@@ -184,28 +201,30 @@ export class ReportExcelFiltersComponent {
   ========================= */
 
   private emitUsers(): void {
+    const filters: UsersExcelFilterDto = {
+      format: this.selectedExportFormat,
+      ...(this.selectedRole ? { role: this.selectedRole } : {}),
+      ...(this.selectedStatus ? { status: this.selectedStatus } : {}),
+      ...(this.selectedStageId != null
+        ? { stageId: this.selectedStageId }
+        : {}),
+      ...(this.noClassesOnly &&
+      this.selectedRole === UserRole.STUDENT
+        ? { noClasses: true }
+        : {}),
+    };
 
-    const filters =
-      {
-        ...(this.fromDate
-          ? { from: this.fromDate }
-          : {}),
+    this.usersRequested.emit(filters);
+  }
 
-        ...(this.toDate
-          ? { to: this.toDate }
-          : {}),
+  get showNoClassesFilter(): boolean {
+    return this.selectedRole === UserRole.STUDENT;
+  }
 
-        ...(this.selectedStageId
-          ? {
-              stageId:
-                this.selectedStageId,
-            }
-          : {}),
-      } as UsersExcelFilterDto;
-
-    this.usersRequested.emit(
-      filters,
-    );
+  get exportFormatHint(): string {
+    return this.selectedExportFormat === 'csv'
+      ? 'El archivo se descargará automáticamente en formato CSV (UTF-8).'
+      : 'El archivo se descargará automáticamente en formato Excel.';
   }
 
 
@@ -270,5 +289,10 @@ export class ReportExcelFiltersComponent {
 
     this.selectedStageId =
       null;
+
+    this.selectedRole = UserRole.STUDENT;
+    this.selectedStatus = null;
+    this.selectedExportFormat = 'xlsx';
+    this.noClassesOnly = false;
   }
 }

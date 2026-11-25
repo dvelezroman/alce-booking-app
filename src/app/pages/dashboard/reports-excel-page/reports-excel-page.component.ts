@@ -143,9 +143,11 @@ export class ReportsExcelPageComponent implements OnInit {
   handleUsersFilters(
     filters: UsersExcelFilterDto,
   ): void {
-    this.handleDownloadUsersExcel(
-      filters,
-    );
+    if (filters.format === 'csv') {
+      this.handleDownloadUsersCsv(filters);
+    } else {
+      this.handleDownloadUsersExcel(filters);
+    }
   }
 
   handleAbsentFilters(
@@ -188,6 +190,34 @@ export class ReportsExcelPageComponent implements OnInit {
         error: (err) => {
           console.error(
             'Error al descargar Excel de usuarios:',
+            err,
+          );
+
+          this.loading = false;
+        },
+      });
+  }
+
+  handleDownloadUsersCsv(
+    filters: UsersExcelFilterDto,
+  ): void {
+    this.loading = true;
+
+    this.reportsService
+      .downloadUsersCsv(filters)
+      .subscribe({
+        next: (blob) => {
+          this.downloadFile(
+            blob,
+            'reporte_usuarios.csv',
+          );
+
+          this.loading = false;
+        },
+
+        error: (err) => {
+          console.error(
+            'Error al descargar CSV de usuarios:',
             err,
           );
 

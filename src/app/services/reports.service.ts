@@ -268,15 +268,33 @@ export class ReportsService {
     });
   }
 
-  downloadUsersExcel(filters: UsersExcelFilterDto) {
+  private usersReportHttpParams(filters: UsersExcelFilterDto): HttpParams {
     let params = new HttpParams();
 
     if (filters.role) params = params.set('role', filters.role);
     if (filters.status) params = params.set('status', filters.status);
-    if (filters.stageId !== undefined && filters.stageId !== null) params = params.set('stageId', filters.stageId.toString());
-    if (filters.noClasses !== undefined && filters.noClasses !== null) params = params.set('noClasses', String(filters.noClasses));
+    if (filters.stageId !== undefined && filters.stageId !== null) {
+      params = params.set('stageId', filters.stageId.toString());
+    }
+    if (filters.noClasses !== undefined && filters.noClasses !== null) {
+      params = params.set('noClasses', String(filters.noClasses));
+    }
 
-    return this.http.get(`${this.apiUrl}/users/excel`, { params, responseType: 'blob' });
+    return params;
+  }
+
+  downloadUsersExcel(filters: UsersExcelFilterDto) {
+    return this.http.get(`${this.apiUrl}/users/excel`, {
+      params: this.usersReportHttpParams(filters),
+      responseType: 'blob',
+    });
+  }
+
+  downloadUsersCsv(filters: UsersExcelFilterDto) {
+    return this.http.get(`${this.apiUrl}/users/csv`, {
+      params: this.usersReportHttpParams(filters),
+      responseType: 'blob',
+    });
   }
 
   downloadStudentsWithoutMeetingsExcel(filters: AbsentStudentsExcelFilterDto) {

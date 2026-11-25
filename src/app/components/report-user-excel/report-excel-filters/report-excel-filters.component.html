@@ -58,37 +58,58 @@
 
     <div class="report-excel-filters__grid">
 
-      <!-- FROM -->
       <div class="report-excel-filters__field">
 
-        <label for="users-from">
-          Fecha desde
+        <label for="users-role">
+          Rol
         </label>
 
-        <input
-          id="users-from"
-          type="date"
-          [(ngModel)]="fromDate"/>
+        <select
+          id="users-role"
+          [(ngModel)]="selectedRole">
+
+          <option [ngValue]="null">
+            Todos los roles
+          </option>
+
+          <option
+            *ngFor="let role of userRoles"
+            [ngValue]="role">
+
+            {{ role }}
+
+          </option>
+
+        </select>
 
       </div>
 
-
-      <!-- TO -->
       <div class="report-excel-filters__field">
 
-        <label for="users-to">
-          Fecha hasta
+        <label for="users-status">
+          Estado
         </label>
 
-        <input
-          id="users-to"
-          type="date"
-          [(ngModel)]="toDate"/>
+        <select
+          id="users-status"
+          [(ngModel)]="selectedStatus">
+
+          <option [ngValue]="null">
+            Todos los estados
+          </option>
+
+          <option
+            *ngFor="let status of userStatuses"
+            [ngValue]="status">
+
+            {{ status }}
+
+          </option>
+
+        </select>
 
       </div>
 
-
-      <!-- STAGE -->
       <div class="report-excel-filters__field">
 
         <label for="users-stage">
@@ -112,6 +133,43 @@
           </option>
 
         </select>
+
+      </div>
+
+      <div class="report-excel-filters__field">
+
+        <label for="users-format">
+          Formato
+        </label>
+
+        <select
+          id="users-format"
+          [(ngModel)]="selectedExportFormat">
+
+          <option
+            *ngFor="let format of exportFormats"
+            [ngValue]="format">
+
+            {{ format === 'xlsx' ? 'Excel (.xlsx)' : 'CSV (.csv)' }}
+
+          </option>
+
+        </select>
+
+      </div>
+
+      <div
+        *ngIf="showNoClassesFilter"
+        class="report-excel-filters__field report-excel-filters__field--checkbox">
+
+        <label for="users-no-classes">
+          Solo estudiantes sin clases programadas
+        </label>
+
+        <input
+          id="users-no-classes"
+          type="checkbox"
+          [(ngModel)]="noClassesOnly"/>
 
       </div>
 
@@ -292,8 +350,7 @@
       </span>
 
       <span>
-        El archivo se descargará automáticamente
-        en formato Excel.
+        {{ currentMode === 'users' ? exportFormatHint : 'El archivo se descargará automáticamente en formato Excel.' }}
       </span>
 
     </div>

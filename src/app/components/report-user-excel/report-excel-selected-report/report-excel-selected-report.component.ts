@@ -44,7 +44,7 @@ export class ReportExcelSelectedReportComponent {
 
       case 'users':
       default:
-        return 'Genera un reporte general con la información de los usuarios del sistema.';
+        return 'Descarga el listado con datos personales y de contacto. Por defecto incluye estudiantes; elige Excel o CSV.';
     }
   }
 }
